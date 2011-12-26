@@ -2,14 +2,14 @@
 
 INCLUDE(external/external-itk-hide.cmake)
 
-SET(ITK_BASE_DIR ${SIMI_QT_BINARY_DIR}/itk CACHE PATH "Directory for ITK source and builds")
-SET(ITK_GIT_URL "git://itk.org/ITK.git" CACHE STRING "Git clone path for ITK")
-SET(ITK_GIT_TAG "v4.0.0" CACHE STRING "Git tag to checkout, usally a version")
+SET(ITK_BASE_DIR ${SIMI_QT_BINARY_DIR}/itk CACHE PATH "Directory for ITK library source and builds")
+SET(ITK_GIT_URL "git://itk.org/ITK.git" CACHE STRING "Git clone path for ITK library")
+SET(ITK_GIT_TAG "v4.0.0" CACHE STRING "Git tag to checkout, usually a version")
 
 ITK_DISPLAY_OPTIONS(ON)
 
 IF(NOT ITK_BUILD_TYPE)
-  set(ITK_BUILD_TYPE Debug CACHE STRING "Choose the type of build." FORCE)
+  set(ITK_BUILD_TYPE Debug CACHE STRING "Build type for the ITK library" FORCE)
   # Set the possible values of build type for cmake-gui/ccmake
   set_property(CACHE ITK_BUILD_TYPE PROPERTY STRINGS "Debug" "Release" "MinSizeRel" "RelWithDebInfo")
 ENDIF()

@@ -2,7 +2,7 @@ PROJECT(SIMI_QT)
 
 cmake_minimum_required(VERSION 2.8)
 
-SET(DO_SUPER_BUILD ON CACHE BOOL "Build Simi-Qt as an external project. Set false to use system libraries.")
+SET(DO_SUPER_BUILD ON CACHE BOOL "Build Simi-Qt as an external project along with selected libraries. Set to OFF to use system libraries.")
 
 #We hide this to prevent confusion as this option does nothing
 #during a super build and when it isn't a super build the option
@@ -13,7 +13,7 @@ IF(DO_SUPER_BUILD)
 	INCLUDE(ExternalProject)
 
 	#User can disable and use system library instead
-	SET(BUILD_ITK ON CACHE BOOL "Build ITK")
+	SET(BUILD_ITK ON CACHE BOOL "Build ITK library. Set to OFF to use system library.")
 
 	#Add external projects to this list
 	SET(SIMI_QT_DEP "")
