@@ -9,8 +9,16 @@ macro(ITK_DISPLAY_OPTION display)
 	else()
 		set(_CLEAR FORCE)
 	endif()
-	mark_as_advanced(${_CLEAR} ITK_BASE_DIR)
-	mark_as_advanced(${_CLEAR} ITK_GIT_URL)
-	mark_as_advanced(${_CLEAR} ITK_GIT_TAG)
-	mark_as_advanced(${_CLEAR} ITK_BUILD_TYPE)
+
+	SET(ITK_VARIABLES 
+		ITK_BASE_DIR
+		ITK_GIT_URL
+		ITK_GIT_TAG
+		ITK_BUILD_TYPE
+		BUILD_ITK
+	)
+
+	foreach(ITK_VARIABLE ${ITK_VARIABLES})
+		mark_as_advanced(${_CLEAR} ${ITK_VARIABLE})
+	endforeach(ITK_VARIABLE)
 endmacro(ITK_DISPLAY_OPTION)
