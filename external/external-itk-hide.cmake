@@ -1,9 +1,11 @@
-#If we're not building ITK we should hide (mark as advanced) the cache variables set so we don't confuse the user
-
+# ITK_DISPLAY_OPTIONS( [ON | OFF])
 #
-#display =ON mark as normal cache value
-#display =OFF mark as advanced cache value
-macro(ITK_DISPLAY_OPTION display)
+# Show or hide (marks as advanced) cache variables
+# for building the ITK library. Usually we want to hide
+# these variables when we are not doing a superbuild
+# so we don't confuse the user with options that are not
+# relevant.
+macro(ITK_DISPLAY_OPTIONS display)
 	IF(${display})
 		set(_CLEAR CLEAR)
 	else()
@@ -21,4 +23,4 @@ macro(ITK_DISPLAY_OPTION display)
 	foreach(ITK_VARIABLE ${ITK_VARIABLES})
 		mark_as_advanced(${_CLEAR} ${ITK_VARIABLE})
 	endforeach(ITK_VARIABLE)
-endmacro(ITK_DISPLAY_OPTION)
+endmacro(ITK_DISPLAY_OPTIONS)

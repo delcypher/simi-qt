@@ -23,7 +23,7 @@ IF(DO_SUPER_BUILD)
 ELSE()
 	#Hide ITK options as not doing super build
 	INCLUDE(external/external-itk-hide.cmake)
-	ITK_DISPLAY_OPTION(OFF)
+	ITK_DISPLAY_OPTIONS(OFF)
 
 	#Build Simi-Qt as a normal project
 	INCLUDE(simi-qt-cache-build.cmake)

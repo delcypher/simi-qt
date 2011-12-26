@@ -6,7 +6,7 @@ SET(ITK_BASE_DIR ${SIMI_QT_BINARY_DIR}/itk CACHE PATH "Directory for ITK source 
 SET(ITK_GIT_URL "git://itk.org/ITK.git" CACHE STRING "Git clone path for ITK")
 SET(ITK_GIT_TAG "v4.0.0" CACHE STRING "Git tag to checkout, usally a version")
 
-ITK_DISPLAY_OPTION(ON)
+ITK_DISPLAY_OPTIONS(ON)
 
 IF(NOT ITK_BUILD_TYPE)
   set(ITK_BUILD_TYPE Debug CACHE STRING "Choose the type of build." FORCE)
