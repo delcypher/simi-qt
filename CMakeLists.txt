@@ -4,6 +4,11 @@ cmake_minimum_required(VERSION 2.8)
 
 SET(DO_SUPER_BUILD ON CACHE BOOL "Build Simi-Qt as an external project. Set false to use system libraries.")
 
+#We hide this to prevent confusion as this option does nothing
+#during a super build and when it isn't a super build the option
+#SQ_BUILD_TYPE is used
+MARK_AS_ADVANCED(CMAKE_BUILD_TYPE)
+
 IF(DO_SUPER_BUILD)
 	INCLUDE(ExternalProject)
 
