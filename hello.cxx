@@ -4,12 +4,13 @@
 #include <QHBoxLayout>
 #include <QSlider>
 #include <QSpinBox>
+#include <vtkMath.h>
 
 int main(int argc, char* argv[])
 {
 	typedef itk::Image< unsigned short, 3 > ImageType;
 	ImageType::Pointer image = ImageType::New();
-	std::cout << "ITK Hello World !" << std::endl;
+	std::cout << "ITK Hello World !" << vtkMath::Gaussian(0.0,2.0) << std::endl;
 
 	QApplication app(argc,argv);
 	QWidget* window = new QWidget;

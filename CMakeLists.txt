@@ -15,13 +15,32 @@ IF(DO_SUPER_BUILD)
 	#User can disable and use system library instead
 	SET(BUILD_ITK ON CACHE BOOL "Build ITK library. Set to OFF to use system library.")
 
+	#User can disable and use system library instead
+	SET(BUILD_VTK ON CACHE BOOL "Build VTK library. Set to OFF to use system library.")
+
+	#Make sure superbuild options are visible
+	INCLUDE(external/external-superbuild-hide.cmake)
+	SB_DISPLAY_OPTIONS(ON)
+
 	#Add external projects to this list
 	SET(SIMI_QT_DEP "")
 
 	IF(BUILD_ITK)
 		INCLUDE(external/external-itk.cmake)
+	ELSE()
+		#Hide ITK build options
+		INCLUDE(external/external-itk-hide.cmake)
+		ITK_DISPLAY_OPTIONS(OFF)
 	ENDIF()
 	
+	IF(BUILD_VTK)
+		INCLUDE(external/external-vtk.cmake)
+	ELSE()
+		#Hide VTK build options
+		INCLUDE(external/external-vtk-hide.cmake)
+		VTK_DISPLAY_OPTIONS(OFF)
+	ENDIF()
+
 	#Build Simi-Qt as external project
 	INCLUDE(external/external-simi-qt.cmake)
 	
@@ -29,6 +48,14 @@ ELSE()
 	#Hide ITK options as not doing super build
 	INCLUDE(external/external-itk-hide.cmake)
 	ITK_DISPLAY_OPTIONS(OFF)
+
+	#Hide VTK options as not doing super build
+	INCLUDE(external/external-vtk-hide.cmake)
+	VTK_DISPLAY_OPTIONS(OFF)
+
+	#Hide superbuild options as not doing super build
+	INCLUDE(external/external-superbuild-hide.cmake)
+	SB_DISPLAY_OPTIONS(OFF)
 
 	#Build Simi-Qt as a normal project
 	INCLUDE(simi-qt-cache-build.cmake)
@@ -45,11 +72,20 @@ ELSE()
 		"ITK not found. Please set ITK_DIR.")
 	ENDIF(ITK_FOUND)
 
+	FIND_PACKAGE(VTK)
+	IF(VTK_FOUND)
+		INCLUDE(${VTK_USE_FILE})
+	ELSE(VTK_FOUND)
+		MESSAGE(FATAL_ERROR
+		"VTK not found. Please set VTK_DIR.")
+	ENDIF(VTK_FOUND)
+
+
 	FIND_PACKAGE(Qt4 REQUIRED QtCore QtGui)
 	INCLUDE(${QT_USE_FILE})
 
 	
 	ADD_EXECUTABLE(HelloWorld hello.cxx )
-	TARGET_LINK_LIBRARIES(HelloWorld ITKCommon ${QT_LIBRARIES})
+	TARGET_LINK_LIBRARIES(HelloWorld ITKCommon ${QT_LIBRARIES} ${VTK_LIBRARIES})
 
 ENDIF()
