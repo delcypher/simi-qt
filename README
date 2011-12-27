@@ -1,16 +1,19 @@
-SIMI-Qt (Structure Identification in Medication Imaging - Qt)
+SIMI-Qt (Structure Identification in Medical Imaging - Qt)
 By Tom Brzozowski, Dan Liew, Bill Papaefstratiou, My Pijika,  
 
+* Description
+---
 
-BUILDING
+* BUILDING
 1. Make sure cmake is installed
-2. Make sure the Qt development libraries and header files are installed. (when Qt is addded to project)
+2. Make sure the Qt development libraries and header files are installed.
 3. Prepare an simi-qt as an "out of source build" by running
 
 $ mkdir build-dir
 $ cd build-dir
 $ ccmake /path/to/simi-qt-source-root/
 
+Note you can use cmake-gui instead of ccmake if you prefer.
 4. Now select the options you want.
 
 DO_SUPERBUILD - 
@@ -19,13 +22,19 @@ can build the ones you want for project development
 	
 	Select from:
 	BUILD_ITK
+	BUILD_VTK
 
 	You will be presented with options that will let you choose your source for
 	the libraries. Note this must be a git repository.
 
-If you already have VTK an ITK installed on your system or you have already built them 
-using the superbuild then you should disable DO_SUPERBUILD.
+If you already have VTK and ITK installed on your system or you have already built them 
+using the superbuild then you should disable DO_SUPERBUILD and reconfigure.
 
-5. Generate the makefile from within ccmake
+SQ_BUILD_TYPE - 
+This specifies what the build type should be for the project. Note this has no affect on how the 
+ITK and VTK libraries are built.
+
+
+5. Generate the makefile from within ccmake or cmake-gui
 6. Run
 $ make
