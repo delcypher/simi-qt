@@ -10,7 +10,16 @@ SET(DO_SUPER_BUILD ON CACHE BOOL "Build Simi-Qt as an external project along wit
 MARK_AS_ADVANCED(CMAKE_BUILD_TYPE)
 
 IF(DO_SUPER_BUILD)
-	INCLUDE(ExternalProject)
+	#Workaround: Cmake <2.8.4 ExternalProjects Module doesn't support CMAKE_CACHE_ARGS option
+	IF( ${CMAKE_MINOR_VERSION}.${CMAKE_PATCH_VERSION} GREATER 8.3 )
+		#Use system's ExternalProject module
+		MESSAGE(STATUS "Using system's External Project module")
+		INCLUDE(ExternalProject)
+	ELSE()
+		#Use ExternalProject module from cmake 2.8.7 release
+		MESSAGE(WARNING "Using Project's ExternalProject module rather than system's" )
+		INCLUDE(external/ExternalProject.cmake)
+	ENDIF()
 
 	#User can disable and use system library instead
 	SET(BUILD_ITK ON CACHE BOOL "Build ITK library. Set to OFF to use system library.")
