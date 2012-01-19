@@ -11,7 +11,7 @@ By Tom Brzozowski, Dan Liew, Bill Papaefstratiou, My Pijika, Wasin Chaivaranont
 
 $ mkdir build-dir
 $ cd build-dir
-$ ccmake /path/to/simi-qt-source-root/
+$ cmake-gui /path/to/simi-qt-source-root/
 
 Note you can use cmake-gui instead of ccmake if you prefer.
 4. Now select the options you want.
@@ -38,3 +38,31 @@ ITK and VTK libraries are built.
 5. Generate the makefile from within ccmake or cmake-gui
 6. Run
 $ make
+
+* Development with QtCreator
+Here's how to setup the project to work the QtCreator IDE
+
+1. You need to ensure you have ITK and VTK installed or you have built them previously using "DO_SUPERBUILD".
+
+2. Run the following commands (can use ccmake instead of cmake-gui but if you're using QtCreator you'll probably prefer cmake-gui)
+
+$ cd build-dir/
+$ cmake-gui /path/to/simi-qt-source-root/
+
+2. Press "configure".
+3. Select "Unix Makefiles" and press "finish".
+
+4. If ITK and/or VTK are installed as system libraries cmake should automatically find them. If you built them using "DO_SUPERBUILD" then modify ITK_DIR and VTK_DIR to point to where they were built.
+
+5. Press "Configure again".
+6. Now exit.
+
+7. Launch QtCreator
+8. Click on File > Open File or Project
+9. Select /path/to/simi-qt-source-root/CMakeLists.txt
+10. A "CMake Wizard" dialog will appear. Click "Run CMake".
+11. Click finish.
+
+You're done!
+
+
