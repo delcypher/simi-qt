@@ -1,3 +1,14 @@
+# This file handles the complexity of doing a "super build".
+#
+# The superbuild builds the libraries VTK and ITK and the simi-qt code
+# all as external projects. It is provided to setup the development environment
+# so that the libraries are the correct versions and have the correct build options
+#
+# Look at "src/CMakeList.txt" for the actuall building of the simi-qt
+# project.
+#
+#
+
 PROJECT(SIMI_QT)
 
 cmake_minimum_required(VERSION 2.8)
@@ -72,29 +83,5 @@ ELSE()
 	#Use cache value to set build type 
 	SET(CMAKE_BUILD_TYPE ${SQ_BUILD_TYPE} CACHE STRING "" FORCE)
 
-	FIND_PACKAGE(ITK)
-
-	IF(ITK_FOUND)
-		INCLUDE(${ITK_USE_FILE})
-	ELSE(ITK_FOUND)
-		MESSAGE(FATAL_ERROR
-		"ITK not found. Please set ITK_DIR.")
-	ENDIF(ITK_FOUND)
-
-	FIND_PACKAGE(VTK)
-	IF(VTK_FOUND)
-		INCLUDE(${VTK_USE_FILE})
-	ELSE(VTK_FOUND)
-		MESSAGE(FATAL_ERROR
-		"VTK not found. Please set VTK_DIR.")
-	ENDIF(VTK_FOUND)
-
-
-	FIND_PACKAGE(Qt4 REQUIRED QtCore QtGui)
-	INCLUDE(${QT_USE_FILE})
-
-	
-	ADD_EXECUTABLE(HelloWorld hello.cxx )
-	TARGET_LINK_LIBRARIES(HelloWorld ITKCommon ${QT_LIBRARIES} ${VTK_LIBRARIES})
-
+	ADD_SUBDIRECTORY( src/ )
 ENDIF()
