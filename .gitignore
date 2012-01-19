@@ -1,3 +1,6 @@
 #Ignore temporary files
 *.swp
 *~
+
+#Ignore Qt creators project settings file because it specific to a user's build environment and so should NOT be tracked.
+CMakeLists.txt.user
