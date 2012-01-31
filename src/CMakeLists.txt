@@ -22,7 +22,7 @@ FIND_PACKAGE(Qt4 REQUIRED QtCore QtGui)
 INCLUDE(${QT_USE_FILE})
 
 #Source file definitions
-SET(SIMI_SOURCES hello.cxx)
+SET(SIMI_SOURCES hello.cpp)
 
 #Headers that need to have moc run on them (generates moc_*.cpp)
 SET(SIMI_HEADERS )
