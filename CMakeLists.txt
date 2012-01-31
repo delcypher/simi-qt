@@ -9,7 +9,7 @@
 #
 #
 
-PROJECT(SIMI_QT)
+PROJECT(simi-qt)
 
 cmake_minimum_required(VERSION 2.8)
 
