@@ -21,5 +21,34 @@ ENDIF(VTK_FOUND)
 FIND_PACKAGE(Qt4 REQUIRED QtCore QtGui)
 INCLUDE(${QT_USE_FILE})
 
-ADD_EXECUTABLE(HelloWorld hello.cxx )
-TARGET_LINK_LIBRARIES(HelloWorld ITKCommon ${QT_LIBRARIES} ${VTK_LIBRARIES})
+#Source file definitions
+SET(SIMI_SOURCES hello.cxx)
+
+#Headers that need to have moc run on them (generates moc_*.cpp)
+SET(SIMI_HEADERS )
+
+#User interface files (*.ui) that will have uic run on them (generates ui_*.h)
+SET(SIMI_FORMS )
+
+#Resources files that will have rcc run on them (generates qrc_*.cpp)
+SET(SIMI_RESOURCES )
+
+#Run Qt intermediate programs
+#QT4_WRAP_CPP(SIMI_HEADERS_MOC ${SIMI_HEADERS})
+#QT4_WRAP_UI(SIMI_FORMS_HEADERS ${SIMI_FORMS})
+#QT4_ADD_RESOURCES(SIMI_RESOURCES_RCC ${SIMI_RESOURCES})
+
+#Need to add build directory as include path so that CMake can find intermediate files (from moc, uic and rcc)
+INCLUDE_DIRECTORIES(${CMAKE_CURRENT_BINARY_DIR})
+
+ADD_EXECUTABLE(${CMAKE_PROJECT_NAME}
+		${SIMI_SOURCES}
+		${SIMI_HEADERS_MOC}
+		${SIMI_FORMS_HEADERS}
+		${SIMI_RESOURCES_RCC}
+		)
+
+TARGET_LINK_LIBRARIES(${CMAKE_PROJECT_NAME} 
+			ITKCommon 
+			${QT_LIBRARIES} 
+			${VTK_LIBRARIES})
