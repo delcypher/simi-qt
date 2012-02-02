@@ -9,7 +9,7 @@ int main(int argc, char* argv[])
 {
 	QApplication app(argc,argv);
 
-	if(argc < 1)
+        if(argc < 2)
 	{
 		std::cerr << "Usage: " << std::endl << argv[0] << " <image filename>" << std::endl;
 		return -1;
