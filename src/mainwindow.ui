@@ -27,8 +27,8 @@
    <widget class="QPushButton" name="pushButton">
     <property name="geometry">
      <rect>
-      <x>580</x>
-      <y>90</y>
+      <x>570</x>
+      <y>50</y>
       <width>85</width>
       <height>27</height>
      </rect>
@@ -63,12 +63,15 @@
     </property>
     <addaction name="actionConstrast"/>
     <addaction name="actionZoom_out"/>
+    <addaction name="separator"/>
     <addaction name="actionSlice_up"/>
     <addaction name="actionSlide_down"/>
+    <addaction name="separator"/>
     <addaction name="actionPan_left"/>
     <addaction name="actionPan_right"/>
     <addaction name="actionPan_up"/>
     <addaction name="actionPan_down"/>
+    <addaction name="separator"/>
     <addaction name="actionRe_centre"/>
    </widget>
    <widget class="QMenu" name="menuHelp">

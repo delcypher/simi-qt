@@ -22,20 +22,20 @@ FIND_PACKAGE(Qt4 REQUIRED QtCore QtGui)
 INCLUDE(${QT_USE_FILE})
 
 #Source file definitions
-SET(SIMI_SOURCES hello.cpp)
+SET(SIMI_SOURCES main.cpp mainwindow.cpp)
 
 #Headers that need to have moc run on them (generates moc_*.cpp)
-SET(SIMI_HEADERS )
+SET(SIMI_HEADERS mainwindow.h )
 
 #User interface files (*.ui) that will have uic run on them (generates ui_*.h)
-SET(SIMI_FORMS )
+SET(SIMI_FORMS mainwindow.ui )
 
 #Resources files that will have rcc run on them (generates qrc_*.cpp)
 SET(SIMI_RESOURCES )
 
 #Run Qt intermediate programs
-#QT4_WRAP_CPP(SIMI_HEADERS_MOC ${SIMI_HEADERS})
-#QT4_WRAP_UI(SIMI_FORMS_HEADERS ${SIMI_FORMS})
+QT4_WRAP_UI(SIMI_FORMS_HEADERS ${SIMI_FORMS})
+QT4_WRAP_CPP(SIMI_HEADERS_MOC ${SIMI_HEADERS})
 #QT4_ADD_RESOURCES(SIMI_RESOURCES_RCC ${SIMI_RESOURCES})
 
 #Need to add build directory as include path so that CMake can find intermediate files (from moc, uic and rcc)
@@ -51,4 +51,7 @@ ADD_EXECUTABLE(${CMAKE_PROJECT_NAME}
 TARGET_LINK_LIBRARIES(${CMAKE_PROJECT_NAME} 
 			ITKCommon 
 			${QT_LIBRARIES} 
-			${VTK_LIBRARIES})
+			${VTK_LIBRARIES}
+			QVTK
+			)
+			
