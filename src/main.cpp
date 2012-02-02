@@ -21,7 +21,7 @@ int main(int argc, char* argv[])
 
 	if(!info.isReadable())
 	{
-		std::cerr << "Error: Image " << filename.toStdString() << "is not readable!" << std::endl;
+		std::cerr << "Error: Image " << filename.toStdString() << " is not readable!" << std::endl;
 		return -2;
 	}
 
