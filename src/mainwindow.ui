@@ -17,24 +17,11 @@
    <widget class="QVTKWidget" name="qvtkWidget">
     <property name="geometry">
      <rect>
-      <x>40</x>
-      <y>30</y>
+      <x>10</x>
+      <y>10</y>
       <width>421</width>
       <height>391</height>
      </rect>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="pushButton">
-    <property name="geometry">
-     <rect>
-      <x>570</x>
-      <y>50</y>
-      <width>85</width>
-      <height>27</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Load</string>
     </property>
    </widget>
   </widget>
@@ -56,6 +43,7 @@
     <addaction name="actionSave_Segmentation"/>
     <addaction name="actionLoad_State"/>
     <addaction name="actionSave_State"/>
+    <addaction name="actionExit"/>
    </widget>
    <widget class="QMenu" name="menuImage">
     <property name="title">
@@ -176,6 +164,16 @@
     <string>Documentation</string>
    </property>
   </action>
+  <action name="actionExit">
+   <property name="text">
+    <string>Exit</string>
+   </property>
+  </action>
+  <action name="actionAbout_Qt">
+   <property name="text">
+    <string>About Qt</string>
+   </property>
+  </action>
  </widget>
  <customwidgets>
   <customwidget>
@@ -185,5 +183,22 @@
   </customwidget>
  </customwidgets>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>actionExit</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>399</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>
