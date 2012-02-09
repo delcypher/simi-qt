@@ -67,6 +67,7 @@
      <string>Help</string>
     </property>
     <addaction name="actionAbout"/>
+    <addaction name="actionAboutQt"/>
     <addaction name="actionDocumentation"/>
    </widget>
    <addaction name="menuFile"/>
@@ -169,7 +170,7 @@
     <string>Exit</string>
    </property>
   </action>
-  <action name="actionAbout_Qt">
+  <action name="actionAboutQt">
    <property name="text">
     <string>About Qt</string>
    </property>
