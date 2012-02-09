@@ -4,6 +4,12 @@
 
 MainWindow::MainWindow(QString& filepath) : mFilepath(filepath)
 {
-	setupUi(this); //set up user interface
+	ui = new Ui::MainWindow;
+	ui->setupUi(this); //set up user interface
 
+}
+
+MainWindow::~MainWindow()
+{
+	delete ui;
 }
