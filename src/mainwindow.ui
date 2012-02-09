@@ -24,6 +24,19 @@
      </rect>
     </property>
    </widget>
+   <widget class="QPushButton" name="doSomething">
+    <property name="geometry">
+     <rect>
+      <x>610</x>
+      <y>20</y>
+      <width>85</width>
+      <height>27</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>PushButton</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -53,7 +66,7 @@
     <addaction name="actionZoom_out"/>
     <addaction name="separator"/>
     <addaction name="actionSlice_up"/>
-    <addaction name="actionSlide_down"/>
+    <addaction name="actionSlice_down"/>
     <addaction name="separator"/>
     <addaction name="actionPan_left"/>
     <addaction name="actionPan_right"/>
@@ -115,7 +128,7 @@
     <string>Slice up</string>
    </property>
   </action>
-  <action name="actionSlide_down">
+  <action name="actionSlice_down">
    <property name="text">
     <string>Slide down</string>
    </property>
