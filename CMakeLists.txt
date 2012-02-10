@@ -45,6 +45,14 @@ IF(DO_SUPER_BUILD)
 	#Add external projects to this list
 	SET(SIMI_QT_DEP "")
 
+	IF(BUILD_VTK)
+		INCLUDE(external/external-vtk.cmake)
+	ELSE()
+		#Hide VTK build options
+		INCLUDE(external/external-vtk-hide.cmake)
+		VTK_DISPLAY_OPTIONS(OFF)
+	ENDIF()
+
 	IF(BUILD_ITK)
 		INCLUDE(external/external-itk.cmake)
 	ELSE()
@@ -53,13 +61,6 @@ IF(DO_SUPER_BUILD)
 		ITK_DISPLAY_OPTIONS(OFF)
 	ENDIF()
 	
-	IF(BUILD_VTK)
-		INCLUDE(external/external-vtk.cmake)
-	ELSE()
-		#Hide VTK build options
-		INCLUDE(external/external-vtk-hide.cmake)
-		VTK_DISPLAY_OPTIONS(OFF)
-	ENDIF()
 
 	#Build Simi-Qt as external project
 	INCLUDE(external/external-simi-qt.cmake)
