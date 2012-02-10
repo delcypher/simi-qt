@@ -10,6 +10,7 @@ MainWindow::MainWindow() : mFilepath(""), currentSlice(0)
 	ui = new Ui::MainWindow;
 	ui->setupUi(this); //set up user interface
 
+
 	//Setup About Qt Dialog
 	connect(ui->actionAboutQt,SIGNAL(triggered()),qApp,SLOT(aboutQt()));
 
@@ -48,6 +49,7 @@ void MainWindow::on_actionOpen_Image_triggered()
 			//Okay so load the image
 			mFilepath = newImagePath;
 			loadImage();
+			setWindowModified(false); //because we've loaded new image nothing can be modified
 		}
 
 	}
