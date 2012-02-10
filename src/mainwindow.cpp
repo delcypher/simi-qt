@@ -37,7 +37,8 @@ void MainWindow::on_actionOpen_Image_triggered()
 		//Should do Image clean up here!
 		if(!reader == 0)
 		{
-			reader->CloseVTKFile();
+            reader->CloseVTKFile();
+            mFilepath.clear();
 		}
 
 
@@ -62,14 +63,16 @@ void MainWindow::on_actionOpen_Image_triggered()
 
 void MainWindow::on_actionSlice_up_triggered()
 {
-	imageView->SetSlice(++currentSlice);
+    if(!mFilepath.isEmpty() && imageView != 0)
+        imageView->SetSlice(++currentSlice);
 
 }
 
 
 void MainWindow::on_actionSlice_down_triggered()
 {
-	imageView->SetSlice(--currentSlice);
+    if(!mFilepath.isEmpty() && imageView != 0)
+        imageView->SetSlice(--currentSlice);
 
 }
 
