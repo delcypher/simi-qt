@@ -5,7 +5,7 @@
 
 
 
-MainWindow::MainWindow(QString& filepath) : mFilepath(filepath), currentSlice(0)
+MainWindow::MainWindow() : mFilepath(""), currentSlice(0)
 {
 	ui = new Ui::MainWindow;
 	ui->setupUi(this); //set up user interface
@@ -17,12 +17,6 @@ MainWindow::MainWindow(QString& filepath) : mFilepath(filepath), currentSlice(0)
 	reader = vtkStructuredPointsReader::New();
 	imageView = vtkImageViewer2::New();
 
-
-
-
-
-
-
 }
 
 MainWindow::~MainWindow()
@@ -30,10 +24,64 @@ MainWindow::~MainWindow()
 	delete ui;
 }
 
-void MainWindow::on_doSomething_clicked()
+void MainWindow::on_actionOpen_Image_triggered()
+{
+	QString newImagePath;
+
+	std::cerr << "Opening image" << std::endl;
+	//check okay to open image
+	if(!isWindowModified())
+	{
+
+		//Should do Image clean up here!
+		if(!reader == 0)
+		{
+			reader->CloseVTKFile();
+		}
+
+
+		newImagePath = QFileDialog::getOpenFileName(this,
+							    tr("Open Image"),
+							    tr("VTK Structured points (*.vtk)"));
+		if(!newImagePath.isEmpty())
+		{
+			//Okay so load the image
+			mFilepath = newImagePath;
+			loadImage();
+		}
+
+	}
+	else
+	{
+		// offer to save stuff
+	}
+}
+
+
+void MainWindow::on_actionSlice_up_triggered()
+{
+	imageView->SetSlice(++currentSlice);
+
+}
+
+
+void MainWindow::on_actionSlice_down_triggered()
+{
+	imageView->SetSlice(--currentSlice);
+
+}
+
+bool MainWindow::loadImage()
 {
 	reader->SetFileName(mFilepath.toStdString().c_str());
 	reader->Update();
+
+	if(!reader->IsFileStructuredPoints())
+	{
+		std::cerr << "Error invalid file?" << std::endl;
+	}
+
+
 	imageView->SetInputConnection(reader->GetOutputPort());
 
 
@@ -52,22 +100,4 @@ void MainWindow::on_doSomething_clicked()
 	ui->qvtkWidget->SetRenderWindow(imageView->GetRenderWindow());
 	imageView->SetSlice(currentSlice);
 	imageView->SetupInteractor(ui->qvtkWidget->GetRenderWindow()->GetInteractor());
-
-
-}
-
-
-void MainWindow::on_actionSlice_up_triggered()
-{
-	std::cerr << "hello";
-	imageView->SetSlice(++currentSlice);
-
-}
-
-
-void MainWindow::on_actionSlice_down_triggered()
-{
-	std::cerr << "hello222";
-	imageView->SetSlice(--currentSlice);
-
 }

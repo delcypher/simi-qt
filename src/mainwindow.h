@@ -18,13 +18,15 @@ class MainWindow : public QMainWindow
 	Q_OBJECT
 
 	public:
-		MainWindow(QString& filepath );
+		MainWindow();
 		~MainWindow();
 	
 private slots:
-		void on_doSomething_clicked();
+		void on_actionOpen_Image_triggered();
 		void on_actionSlice_up_triggered();
 		void on_actionSlice_down_triggered();
+
+		bool loadImage();
 
 private:
 		QString mFilepath;
