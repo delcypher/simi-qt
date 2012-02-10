@@ -2,7 +2,7 @@
 
 INCLUDE(external/external-vtk-hide.cmake)
 
-SET(VTK_BASE_DIR ${SIMI_QT_BINARY_DIR}/vtk CACHE PATH "Directory for VTK library source and builds")
+SET(VTK_BASE_DIR ${PROJECT_BINARY_DIR}/vtk CACHE PATH "Directory for VTK library source and builds")
 SET(VTK_GIT_URL "git://vtk.org/VTK.git" CACHE STRING "Git clone path for VTK library")
 SET(VTK_GIT_TAG "v5.8.0" CACHE STRING "Git tag to checkout, usually a version")
 

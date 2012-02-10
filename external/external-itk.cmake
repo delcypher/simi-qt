@@ -2,7 +2,7 @@
 
 INCLUDE(external/external-itk-hide.cmake)
 
-SET(ITK_BASE_DIR ${SIMI_QT_BINARY_DIR}/itk CACHE PATH "Directory for ITK library source and builds")
+SET(ITK_BASE_DIR ${PROJECT_BINARY_DIR}/itk CACHE PATH "Directory for ITK library source and builds")
 SET(ITK_GIT_URL "git://itk.org/ITK.git" CACHE STRING "Git clone path for ITK library")
 SET(ITK_GIT_TAG "v4.0.0" CACHE STRING "Git tag to checkout, usually a version")
 
