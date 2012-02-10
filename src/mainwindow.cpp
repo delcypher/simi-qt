@@ -73,6 +73,13 @@ void MainWindow::on_actionSlice_down_triggered()
 
 }
 
+
+void MainWindow::on_actionAbout_triggered()
+{
+	QMessageBox::about(this,tr("About Simi Qt"),
+			   "Stuff");
+}
+
 bool MainWindow::loadImage()
 {
 	reader->SetFileName(mFilepath.toStdString().c_str());

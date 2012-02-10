@@ -25,6 +25,7 @@ private slots:
 		void on_actionOpen_Image_triggered();
 		void on_actionSlice_up_triggered();
 		void on_actionSlice_down_triggered();
+		void on_actionAbout_triggered();
 
 		bool loadImage();
 
