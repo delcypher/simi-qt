@@ -2,6 +2,8 @@
 
 #include "mainwindow.h"
 #include <iostream>
+#include <cstring>
+#include <QDebug>
 
 
 
@@ -33,15 +35,6 @@ void MainWindow::on_actionOpen_Image_triggered()
 	//check okay to open image
 	if(!isWindowModified())
 	{
-
-		//Should do Image clean up here!
-		if(!reader == 0)
-		{
-            reader->CloseVTKFile();
-            mFilepath.clear();
-		}
-
-
 		newImagePath = QFileDialog::getOpenFileName(this,
 							    tr("Open Image"),
 							    tr("VTK Structured points (*.vtk)"));
@@ -85,12 +78,22 @@ void MainWindow::on_actionAbout_triggered()
 
 bool MainWindow::loadImage()
 {
+
+    //If We had image open before we should clean up
+    if(!reader == 0)
+    {
+        qDebug() << "Attempting Image clean up";
+        reader->CloseVTKFile();
+    }
+
+
+
 	reader->SetFileName(mFilepath.toStdString().c_str());
 	reader->Update();
 
 	if(!reader->IsFileStructuredPoints())
 	{
-		std::cerr << "Error invalid file?" << std::endl;
+        qWarning() << "Error invalid file";
 	}
 
 
