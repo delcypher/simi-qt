@@ -38,8 +38,6 @@ private:
 		vtkSmartPointer<vtkStructuredPointsReader> reader;
 		vtkImageViewer2* imageView;
 
-		int currentSlice;
-
 
 
 };

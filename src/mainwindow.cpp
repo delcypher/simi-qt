@@ -6,7 +6,7 @@
 #include <QDebug>
 
 
-MainWindow::MainWindow() : imageInfo(""), workPath(QDir::home()), currentSlice(0)
+MainWindow::MainWindow() : imageInfo(""), workPath(QDir::home())
 {
 	ui = new Ui::MainWindow;
 	ui->setupUi(this); //set up user interface
@@ -69,16 +69,18 @@ void MainWindow::on_actionOpen_Image_triggered()
 
 void MainWindow::on_actionSlice_up_triggered()
 {
-    if(imageInfo.exists() && imageView != 0)
-        imageView->SetSlice(++currentSlice);
+    if(imageInfo.exists() && imageView != 0 && imageView->GetSliceMax() != imageView->GetSlice())
+        imageView->SetSlice(imageView->GetSlice() +1);
+
+
 
 }
 
 
 void MainWindow::on_actionSlice_down_triggered()
 {
-    if(imageInfo.exists() && imageView != 0)
-        imageView->SetSlice(--currentSlice);
+    if(imageInfo.exists() && imageView != 0 && imageView->GetSliceMin() != imageView->GetSlice())
+        imageView->SetSlice(imageView->GetSlice() -1);
 
 }
 
@@ -127,7 +129,7 @@ bool MainWindow::loadImage()
 	imageView->SetColorWindow(range[0]-range[1]); //width in dataset to use
 
 	ui->qvtkWidget->SetRenderWindow(imageView->GetRenderWindow());
-	imageView->SetSlice(currentSlice);
+    imageView->SetSlice(0);
 	imageView->SetupInteractor(ui->qvtkWidget->GetRenderWindow()->GetInteractor());
 
     return true;
