@@ -3,6 +3,8 @@
 
 #include <QMainWindow>
 #include <QString>
+#include <QDir>
+#include <QFileInfo>
 #include "ui_mainwindow.h"
 
 #include "vtkImageViewer2.h"
@@ -30,7 +32,8 @@ private slots:
 		bool loadImage();
 
 private:
-		QString mFilepath;
+        QFileInfo imageInfo;
+        QDir workPath; //Directory used file open dialogs
 		Ui::MainWindow* ui; //handle to user interface
 		vtkSmartPointer<vtkStructuredPointsReader> reader;
 		vtkImageViewer2* imageView;

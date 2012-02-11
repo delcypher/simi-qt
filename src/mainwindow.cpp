@@ -6,8 +6,7 @@
 #include <QDebug>
 
 
-
-MainWindow::MainWindow() : mFilepath(""), currentSlice(0)
+MainWindow::MainWindow() : imageInfo(""), workPath(QDir::home()), currentSlice(0)
 {
 	ui = new Ui::MainWindow;
 	ui->setupUi(this); //set up user interface
@@ -32,18 +31,32 @@ void MainWindow::on_actionOpen_Image_triggered()
 	QString newImagePath;
 
 	std::cerr << "Opening image" << std::endl;
-	//check okay to open image
+
+    //check okay to open image
 	if(!isWindowModified())
 	{
 		newImagePath = QFileDialog::getOpenFileName(this,
 							    tr("Open Image"),
+                                workPath.absolutePath(),
 							    tr("VTK Structured points (*.vtk)"));
+
 		if(!newImagePath.isEmpty())
 		{
-			//Okay so load the image
-			mFilepath = newImagePath;
-			loadImage();
+            imageInfo.setFile(newImagePath);
+
+            //Load the image
+            if(!loadImage())
+            {
+                qDebug() << "Loading image failed!";
+                return ;
+            }
+
+            //Update the work path to the location of the new image
+            workPath.setPath(imageInfo.absolutePath());
+
+
 			setWindowModified(false); //because we've loaded new image nothing can be modified
+
 		}
 
 	}
@@ -56,7 +69,7 @@ void MainWindow::on_actionOpen_Image_triggered()
 
 void MainWindow::on_actionSlice_up_triggered()
 {
-    if(!mFilepath.isEmpty() && imageView != 0)
+    if(imageInfo.exists() && imageView != 0)
         imageView->SetSlice(++currentSlice);
 
 }
@@ -64,7 +77,7 @@ void MainWindow::on_actionSlice_up_triggered()
 
 void MainWindow::on_actionSlice_down_triggered()
 {
-    if(!mFilepath.isEmpty() && imageView != 0)
+    if(imageInfo.exists() && imageView != 0)
         imageView->SetSlice(--currentSlice);
 
 }
@@ -88,12 +101,13 @@ bool MainWindow::loadImage()
 
 
 
-	reader->SetFileName(mFilepath.toStdString().c_str());
+    reader->SetFileName(imageInfo.absoluteFilePath().toAscii());
 	reader->Update();
 
 	if(!reader->IsFileStructuredPoints())
 	{
         qWarning() << "Error invalid file";
+        return false;
 	}
 
 
@@ -115,4 +129,6 @@ bool MainWindow::loadImage()
 	ui->qvtkWidget->SetRenderWindow(imageView->GetRenderWindow());
 	imageView->SetSlice(currentSlice);
 	imageView->SetupInteractor(ui->qvtkWidget->GetRenderWindow()->GetInteractor());
+
+    return true;
 }
