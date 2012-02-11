@@ -21,6 +21,8 @@ MainWindow::MainWindow() : imageInfo(""), workPath(QDir::home())
 	reader = vtkStructuredPointsReader::New();
 	imageView = vtkImageViewer2::New();
 
+    setWindowTitle(PROGRAM_NAME);
+
 }
 
 MainWindow::~MainWindow()
@@ -58,6 +60,11 @@ void MainWindow::on_actionOpen_Image_triggered()
 
 
 			setWindowModified(false); //because we've loaded new image nothing can be modified
+
+            //set window title
+            QString newWindowTitle(PROGRAM_NAME);
+            newWindowTitle.append(" - ").append(imageInfo.fileName());
+            setWindowTitle(newWindowTitle);
 
 		}
 
