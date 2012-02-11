@@ -21,6 +21,16 @@ ENDIF(VTK_FOUND)
 FIND_PACKAGE(Qt4 REQUIRED QtCore QtGui)
 INCLUDE(${QT_USE_FILE})
 
+#Attempt to detect version from git
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}")
+include(GetGitRevisionDescription)
+git_get_exact_tag(SIMI_VERSION --tags)
+
+if(NOT SIMI_VERSION)
+	get_git_head_revision(SIMI_REFSPEC SIMI_HASHVAR)
+	set(SIMI_VERSION "<br/><b>Refspec:</b> ${SIMI_REFSPEC}<br/><b>SHA1:</b>${SIMI_HASHVAR}")
+endif()
+
 #Build compile time constant file
 configure_file(compiletimeconstants.h.in ${CMAKE_CURRENT_BINARY_DIR}/compiletimeconstants.h @ONLY)
 
