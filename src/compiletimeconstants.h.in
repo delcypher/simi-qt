@@ -1,0 +1,3 @@
+const char PROGRAM_NAME[] = "Simi Qt";
+const char PROGRAM_VERSION[] = "xxx";
+const char PROGRAM_AUTHORS[] = "Tom Brzozowski<br>Dan Liew<br>Bill Papaefstratiou<br>My Pijika<br>Wasin Chaivaranont";

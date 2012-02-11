@@ -21,6 +21,10 @@ ENDIF(VTK_FOUND)
 FIND_PACKAGE(Qt4 REQUIRED QtCore QtGui)
 INCLUDE(${QT_USE_FILE})
 
+#Build compile time constant file
+configure_file(compiletimeconstants.h.in ${CMAKE_CURRENT_BINARY_DIR}/compiletimeconstants.h @ONLY)
+
+
 #Source file definitions
 SET(SIMI_SOURCES main.cpp mainwindow.cpp)
 

@@ -4,6 +4,8 @@
 #include <iostream>
 #include <cstring>
 #include <QDebug>
+#include <QTextStream>
+#include "compiletimeconstants.h"
 
 
 MainWindow::MainWindow() : imageInfo(""), workPath(QDir::home())
@@ -87,8 +89,15 @@ void MainWindow::on_actionSlice_down_triggered()
 
 void MainWindow::on_actionAbout_triggered()
 {
-	QMessageBox::about(this,tr("About Simi Qt"),
-			   "Stuff");
+    QString about;
+    QTextStream aboutTS(&about);
+
+    aboutTS << "<h2>" << PROGRAM_NAME << "</h2>" <<
+             "<p><b>Version:</b> " << PROGRAM_VERSION << "</p>" <<
+             "<p>" << PROGRAM_NAME << " is a program for structure identification in medical images.</p>" <<
+             "<p><b>Authors</b>:<br>" << PROGRAM_AUTHORS << "</p>";
+
+    QMessageBox::about(this,tr("About ") + PROGRAM_NAME, about);
 }
 
 bool MainWindow::loadImage()
