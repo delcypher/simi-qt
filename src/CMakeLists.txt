@@ -34,6 +34,11 @@ endif()
 #Build compile time constant file
 configure_file(compiletimeconstants.h.in ${CMAKE_CURRENT_BINARY_DIR}/compiletimeconstants.h @ONLY)
 
+#Enable Compiler warnings for g++
+if(CMAKE_COMPILER_IS_GNUCXX)
+	MESSAGE(STATUS "Enabling warnings for GNU compiler")
+	add_definitions(-Wall)
+endif()
 
 #Source file definitions
 SET(SIMI_SOURCES main.cpp mainwindow.cpp)
