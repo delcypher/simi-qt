@@ -41,13 +41,13 @@ if(CMAKE_COMPILER_IS_GNUCXX)
 endif()
 
 #Source file definitions
-SET(SIMI_SOURCES main.cpp mainwindow.cpp)
+SET(SIMI_SOURCES main.cpp mainwindow.cpp contrastdialog.cpp)
 
 #Headers that need to have moc run on them (generates moc_*.cpp)
-SET(SIMI_HEADERS mainwindow.h )
+SET(SIMI_HEADERS mainwindow.h contrastdialog.h)
 
 #User interface files (*.ui) that will have uic run on them (generates ui_*.h)
-SET(SIMI_FORMS mainwindow.ui )
+SET(SIMI_FORMS mainwindow.ui contrastdialog.ui)
 
 #Resources files that will have rcc run on them (generates qrc_*.cpp)
 SET(SIMI_RESOURCES )

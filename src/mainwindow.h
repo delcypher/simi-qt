@@ -7,6 +7,9 @@
 #include <QFileInfo>
 #include "ui_mainwindow.h"
 
+//dialogs
+#include "contrastdialog.h"
+
 #include "vtkImageViewer2.h"
 #include "vtkSmartPointer.h"
 #include "vtkRenderer.h"
