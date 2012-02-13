@@ -23,23 +23,19 @@ class MainWindow : public QMainWindow
 		MainWindow();
 		~MainWindow();
 	
-private slots:
+	private slots:
 		void on_actionOpen_Image_triggered();
 		void on_actionSlice_up_triggered();
 		void on_actionSlice_down_triggered();
 		void on_actionAbout_triggered();
-
 		bool loadImage();
 
-private:
-        QFileInfo imageInfo;
-        QDir workPath; //Directory used file open dialogs
+	private:
+		QFileInfo imageInfo;
+		QDir workPath; //Directory used file open dialogs
 		Ui::MainWindow* ui; //handle to user interface
 		vtkSmartPointer<vtkStructuredPointsReader> reader;
 		vtkImageViewer2* imageView;
-
-
-
 };
 
 #endif
