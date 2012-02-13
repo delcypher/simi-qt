@@ -31,6 +31,7 @@ class MainWindow : public QMainWindow
 		void on_actionSlice_up_triggered();
 		void on_actionSlice_down_triggered();
 		void on_actionAbout_triggered();
+		void on_actionContrast_triggered();
 		bool loadImage();
 
 	signals:
@@ -42,6 +43,8 @@ class MainWindow : public QMainWindow
 		Ui::MainWindow* ui; //handle to user interface
 		vtkSmartPointer<vtkStructuredPointsReader> reader;
 		vtkImageViewer2* imageView;
+
+		ContrastDialog* contrastDialog;
 };
 
 #endif

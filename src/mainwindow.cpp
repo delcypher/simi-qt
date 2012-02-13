@@ -17,6 +17,8 @@ MainWindow::MainWindow() : imageInfo(""), workPath(QDir::home())
 	//Setup About Qt Dialog
 	connect(ui->actionAboutQt,SIGNAL(triggered()),qApp,SLOT(aboutQt()));
 
+	contrastDialog = new ContrastDialog(this); //setup pointer to ContrastDialog
+
 	reader = vtkStructuredPointsReader::New();
 	imageView = vtkImageViewer2::New();
 
@@ -146,4 +148,10 @@ bool MainWindow::loadImage()
 	imageView->SetupInteractor(ui->qvtkWidget->GetRenderWindow()->GetInteractor());
 
 	return true;
+}
+
+void MainWindow::on_actionContrast_triggered()
+{
+	if(contrastDialog != 0)
+		contrastDialog->show();
 }
