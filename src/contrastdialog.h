@@ -4,6 +4,7 @@
 #include <QDialog>
 #include "ui_contrastdialog.h"
 
+
 class ContrastDialog : public QDialog
 {
 	Q_OBJECT
@@ -11,9 +12,26 @@ class ContrastDialog : public QDialog
 	public:
 		ContrastDialog(QWidget* parent=0);
 		~ContrastDialog();
+		bool setIntensityRange(double minI,double maxI);
 
-	private:
+
+	signals:
+		void contrastChanged(double colourWindow, double colourLevel);
+
+
+private slots:
+		void on_minIntensitySpinBox_valueChanged(int minI );
+
+		void on_maxIntensitySpinBox_valueChanged(int maxI );
+
+private:
 		Ui::ContrastDialog* ui;
+		double minimumIntensity;
+		double maximumIntensity;
+		double calculateColourWindow();
+		double calculateColourLevel();
+
+
 };
 
 #endif

@@ -18,6 +18,8 @@ MainWindow::MainWindow() : imageInfo(""), workPath(QDir::home())
 	connect(ui->actionAboutQt,SIGNAL(triggered()),qApp,SLOT(aboutQt()));
 
 	contrastDialog = new ContrastDialog(this); //setup pointer to ContrastDialog
+	connect(contrastDialog,SIGNAL(contrastChanged(double,double)),
+			this,SLOT(contrastChanged(double,double)));
 
 	reader = vtkStructuredPointsReader::New();
 	imageView = vtkImageViewer2::New();
@@ -130,10 +132,15 @@ bool MainWindow::loadImage()
 	}
 
 
+
 	imageView->SetInputConnection(reader->GetOutputPort());
 
-	double range[2];
+	double range[2]; //[0]:min, [0]:max
 	reader->GetOutput()->GetScalarRange(range);
+
+
+	//inform dialog about the intensity range to use
+	contrastDialog->setIntensityRange(range[0],range[1]);
 
 	// vtkSmartPointer<vtkRenderWindowInteractor> iren =
 	//   vtkSmartPointer<vtkRenderWindowInteractor>::New();
@@ -155,3 +162,18 @@ void MainWindow::on_actionContrast_triggered()
 	if(contrastDialog != 0)
 		contrastDialog->show();
 }
+
+void MainWindow::contrastChanged(double colourWindow, double colourLevel)
+{
+	if(imageView ==0)
+		return;
+
+	//adjust the contrast based on what the dialog told us
+	imageView->SetColorWindow(colourWindow);
+	imageView->SetColorLevel(colourLevel);
+	ui->qvtkWidget->update();//update
+
+	qDebug() << "contrastChanged(): colourWindow:" << colourWindow << " colourLevel:" << colourLevel ;
+}
+
+

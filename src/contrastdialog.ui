@@ -6,56 +6,56 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>311</width>
-    <height>101</height>
+    <width>260</width>
+    <height>96</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
-  <widget class="QWidget" name="layoutWidget">
+  <widget class="QWidget" name="">
    <property name="geometry">
     <rect>
-     <x>30</x>
+     <x>20</x>
      <y>20</y>
-     <width>240</width>
-     <height>62</height>
+     <width>228</width>
+     <height>59</height>
     </rect>
    </property>
-   <layout class="QHBoxLayout" name="horizontalLayout">
-    <item>
-     <layout class="QGridLayout" name="gridLayout_2">
-      <item row="0" column="0">
-       <widget class="QSlider" name="minIntensitySlider">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1">
-       <widget class="QSpinBox" name="minIntensitySpinBox"/>
-      </item>
-      <item row="1" column="0">
-       <widget class="QSlider" name="maxIntensitySlider">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1">
-       <widget class="QSpinBox" name="maxIntensitySpinBox"/>
-      </item>
-     </layout>
-    </item>
-    <item>
-     <widget class="QDialogButtonBox" name="buttonBox">
-      <property name="orientation">
-       <enum>Qt::Vertical</enum>
-      </property>
-      <property name="standardButtons">
-       <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="0" column="0" rowspan="2" colspan="2">
+     <widget class="QLabel" name="label">
+      <property name="text">
+       <string>Min intensity:</string>
       </property>
      </widget>
+    </item>
+    <item row="0" column="2" rowspan="2">
+     <widget class="QSpinBox" name="minIntensitySpinBox"/>
+    </item>
+    <item row="1" column="1">
+     <widget class="QSlider" name="minIntensitySlider">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="0">
+     <widget class="QLabel" name="label_2">
+      <property name="text">
+       <string>Max intensity:</string>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="1">
+     <widget class="QSlider" name="maxIntensitySlider">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="2">
+     <widget class="QSpinBox" name="maxIntensitySpinBox"/>
     </item>
    </layout>
   </widget>
@@ -63,34 +63,66 @@
  <resources/>
  <connections>
   <connection>
-   <sender>buttonBox</sender>
-   <signal>accepted()</signal>
-   <receiver>ContrastDialog</receiver>
-   <slot>accept()</slot>
+   <sender>minIntensitySlider</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>minIntensitySpinBox</receiver>
+   <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>248</x>
-     <y>254</y>
+     <x>93</x>
+     <y>41</y>
     </hint>
     <hint type="destinationlabel">
-     <x>157</x>
-     <y>274</y>
+     <x>149</x>
+     <y>33</y>
     </hint>
    </hints>
   </connection>
   <connection>
-   <sender>buttonBox</sender>
-   <signal>rejected()</signal>
-   <receiver>ContrastDialog</receiver>
-   <slot>reject()</slot>
+   <sender>minIntensitySpinBox</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>minIntensitySlider</receiver>
+   <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>316</x>
-     <y>260</y>
+     <x>147</x>
+     <y>45</y>
     </hint>
     <hint type="destinationlabel">
-     <x>286</x>
-     <y>274</y>
+     <x>85</x>
+     <y>39</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>maxIntensitySlider</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>maxIntensitySpinBox</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>87</x>
+     <y>69</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>152</x>
+     <y>77</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>maxIntensitySpinBox</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>maxIntensitySlider</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>155</x>
+     <y>57</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>63</x>
+     <y>70</y>
     </hint>
    </hints>
   </connection>

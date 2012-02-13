@@ -34,6 +34,9 @@ class MainWindow : public QMainWindow
 		void on_actionContrast_triggered();
 		bool loadImage();
 
+	public slots:
+		void contrastChanged(double colourWindow, double colourLevel);
+
 	signals:
 		void sliceChanged(int sliceNumber);
 
