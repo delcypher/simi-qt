@@ -121,10 +121,22 @@
    <property name="text">
     <string>Slice up</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+Up</string>
+   </property>
+   <property name="shortcutContext">
+    <enum>Qt::ApplicationShortcut</enum>
+   </property>
   </action>
   <action name="actionSlice_down">
    <property name="text">
     <string>Slide down</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Down</string>
+   </property>
+   <property name="shortcutContext">
+    <enum>Qt::ApplicationShortcut</enum>
    </property>
   </action>
   <action name="actionSlice_left">
