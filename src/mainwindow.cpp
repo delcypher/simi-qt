@@ -76,14 +76,20 @@ void MainWindow::on_actionOpen_Image_triggered()
 void MainWindow::on_actionSlice_up_triggered()
 {
 	if(imageInfo.exists() && imageView != 0 && imageView->GetSliceMax() != imageView->GetSlice())
+	{
 		imageView->SetSlice(imageView->GetSlice() +1);
+		emit sliceChanged(imageView->GetSlice());
+	}
 }
 
 
 void MainWindow::on_actionSlice_down_triggered()
 {
 	if(imageInfo.exists() && imageView != 0 && imageView->GetSliceMin() != imageView->GetSlice())
+	{
 		imageView->SetSlice(imageView->GetSlice() -1);
+		emit sliceChanged(imageView->GetSlice());
+	}
 
 }
 

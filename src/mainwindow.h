@@ -30,6 +30,9 @@ class MainWindow : public QMainWindow
 		void on_actionAbout_triggered();
 		bool loadImage();
 
+	signals:
+		void sliceChanged(int sliceNumber);
+
 	private:
 		QFileInfo imageInfo;
 		QDir workPath; //Directory used file open dialogs
