@@ -45,7 +45,7 @@ class MainWindow : public QMainWindow
 		QDir workPath; //Directory used file open dialogs
 		Ui::MainWindow* ui; //handle to user interface
 		vtkSmartPointer<vtkStructuredPointsReader> reader;
-		vtkImageViewer2* imageView;
+                vtkSmartPointer<vtkImageViewer2> imageView;
 
 		ContrastDialog* contrastDialog;
 };
