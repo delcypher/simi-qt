@@ -50,12 +50,12 @@ SET(SIMI_HEADERS mainwindow.h contrastdialog.h)
 SET(SIMI_FORMS mainwindow.ui contrastdialog.ui)
 
 #Resources files that will have rcc run on them (generates qrc_*.cpp)
-SET(SIMI_RESOURCES )
+SET(SIMI_RESOURCES mainwindow.qrc )
 
 #Run Qt intermediate programs
 QT4_WRAP_UI(SIMI_FORMS_HEADERS ${SIMI_FORMS})
 QT4_WRAP_CPP(SIMI_HEADERS_MOC ${SIMI_HEADERS})
-#QT4_ADD_RESOURCES(SIMI_RESOURCES_RCC ${SIMI_RESOURCES})
+QT4_ADD_RESOURCES(SIMI_RESOURCES_RCC ${SIMI_RESOURCES})
 
 #Need to add build directory as include path so that CMake can find intermediate files (from moc, uic and rcc)
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_BINARY_DIR})

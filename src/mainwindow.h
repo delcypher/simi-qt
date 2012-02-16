@@ -31,7 +31,6 @@ class MainWindow : public QMainWindow
 		void on_actionSlice_up_triggered();
 		void on_actionSlice_down_triggered();
 		void on_actionAbout_triggered();
-		void on_actionContrast_triggered();
 		bool loadImage();
 
 	public slots:

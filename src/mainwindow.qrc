@@ -1,0 +1,7 @@
+<RCC>
+  <qresource>
+    <file>icons/cursor_hand.png</file>
+    <file>icons/red-snipper-target-md.png</file>
+    <file>icons/draw-brush.png</file>
+  </qresource>
+</RCC>

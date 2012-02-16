@@ -157,11 +157,6 @@ bool MainWindow::loadImage()
 	return true;
 }
 
-void MainWindow::on_actionContrast_triggered()
-{
-	if(contrastDialog != 0)
-		contrastDialog->show();
-}
 
 void MainWindow::contrastChanged(double colourWindow, double colourLevel)
 {

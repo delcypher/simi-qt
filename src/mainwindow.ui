@@ -6,15 +6,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>600</height>
+    <width>1052</width>
+    <height>676</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QVTKWidget" name="qvtkWidget">
+   <widget class="QVTKWidget" name="qvtkWidget" native="true">
     <property name="geometry">
      <rect>
       <x>10</x>
@@ -30,8 +30,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>800</width>
-     <height>19</height>
+     <width>1052</width>
+     <height>20</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -70,18 +70,145 @@
     <addaction name="actionAboutQt"/>
     <addaction name="actionDocumentation"/>
    </widget>
-   <widget class="QMenu" name="menuImage_2">
-    <property name="title">
-     <string>Image</string>
-    </property>
-    <addaction name="actionContrast"/>
-   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuImage"/>
-   <addaction name="menuImage_2"/>
    <addaction name="menuHelp"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <widget class="QToolBar" name="toolBar">
+   <property name="windowTitle">
+    <string>toolBar</string>
+   </property>
+   <property name="movable">
+    <bool>false</bool>
+   </property>
+   <property name="iconSize">
+    <size>
+     <width>20</width>
+     <height>20</height>
+    </size>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>LeftToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="actionHandtool"/>
+   <addaction name="actionPen"/>
+   <addaction name="actionCrosshair"/>
+  </widget>
+  <widget class="QDockWidget" name="parameterDock">
+   <property name="minimumSize">
+    <size>
+     <width>350</width>
+     <height>38</height>
+    </size>
+   </property>
+   <property name="features">
+    <set>QDockWidget::DockWidgetFloatable|QDockWidget::DockWidgetMovable</set>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>2</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_4">
+    <widget class="QGroupBox" name="contrastGroupBox">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>20</y>
+       <width>331</width>
+       <height>111</height>
+      </rect>
+     </property>
+     <property name="title">
+      <string>Contrast</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_2">
+      <item row="0" column="0">
+       <layout class="QGridLayout" name="gridLayout">
+        <item row="0" column="0">
+         <widget class="QLabel" name="minimumIntensityLabel">
+          <property name="text">
+           <string>Minimum Intensity: </string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QSlider" name="minIntensitySlider">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="2">
+         <widget class="QSpinBox" name="minIntensitySpinBox"/>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="maximumIntensityLabel">
+          <property name="text">
+           <string>Maximum Intensity: </string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QSlider" name="maxIntensitySlider">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="2">
+         <widget class="QSpinBox" name="maxIntensitySpinBox"/>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </widget>
+    <widget class="QGroupBox" name="brightnessGroupBox">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>140</y>
+       <width>331</width>
+       <height>71</height>
+      </rect>
+     </property>
+     <property name="title">
+      <string>Brightness</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_4">
+      <item row="0" column="0">
+       <layout class="QGridLayout" name="gridLayout_3">
+        <item row="0" column="0">
+         <widget class="QSlider" name="brightnessSlider">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QSpinBox" name="brightnessSpinBox"/>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </widget>
+    <widget class="QGroupBox" name="segmentationGroupBox">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>220</y>
+       <width>311</width>
+       <height>151</height>
+      </rect>
+     </property>
+     <property name="title">
+      <string>Segmentation</string>
+     </property>
+    </widget>
+   </widget>
+  </widget>
   <action name="actionOpen_Image">
    <property name="text">
     <string>Open Image</string>
@@ -139,16 +266,6 @@
     <enum>Qt::ApplicationShortcut</enum>
    </property>
   </action>
-  <action name="actionSlice_left">
-   <property name="text">
-    <string>Slice left</string>
-   </property>
-  </action>
-  <action name="actionSlice_right">
-   <property name="text">
-    <string>Slice right</string>
-   </property>
-  </action>
   <action name="actionPan_left">
    <property name="text">
     <string>Pan left</string>
@@ -194,9 +311,40 @@
     <string>About Qt</string>
    </property>
   </action>
-  <action name="actionContrast">
+  <action name="actionHandtool">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset>
+     <normaloff>:/icons/cursor_hand.png</normaloff>:/icons/cursor_hand.png</iconset>
+   </property>
    <property name="text">
-    <string>Contrast</string>
+    <string>Handtool</string>
+   </property>
+  </action>
+  <action name="actionPen">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset>
+     <normaloff>:/icons/draw-brush.png</normaloff>:/icons/draw-brush.png</iconset>
+   </property>
+   <property name="text">
+    <string>Pen</string>
+   </property>
+  </action>
+  <action name="actionCrosshair">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset>
+     <normaloff>:/icons/red-snipper-target-md.png</normaloff>:/icons/red-snipper-target-md.png</iconset>
+   </property>
+   <property name="text">
+    <string>Crosshair</string>
    </property>
   </action>
  </widget>
