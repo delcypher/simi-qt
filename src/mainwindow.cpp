@@ -6,6 +6,7 @@
 #include <QDebug>
 #include <QTextStream>
 #include "compiletimeconstants.h"
+#include "customInteractorStyle.h"
 
 
 MainWindow::MainWindow() : imageInfo(""), workPath(QDir::home())
@@ -144,8 +145,17 @@ bool MainWindow::loadImage()
 
 	ui->qvtkWidget->SetRenderWindow(imageView->GetRenderWindow());
 	imageView->SetSlice(0);
-	imageView->SetupInteractor(ui->qvtkWidget->GetRenderWindow()->GetInteractor());
 
+	// Comment the line below and line 158 out if you want the default interactor back
+	vtkSmartPointer<CustomInteractorStyle> customStyle = new CustomInteractorStyle;
+
+	vtkSmartPointer<vtkRenderWindowInteractor> renwin = vtkRenderWindowInteractor::New();
+
+	renwin = ui->qvtkWidget->GetRenderWindow()->GetInteractor();
+	imageView->SetupInteractor(renwin);
+
+	// Comment the line below and line 150 out if you want the default interactor back
+	renwin->SetInteractorStyle(customStyle);
 
 	contrastControlSetup();
 	sliceControlSetup();

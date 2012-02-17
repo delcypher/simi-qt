@@ -41,7 +41,7 @@ if(CMAKE_COMPILER_IS_GNUCXX)
 endif()
 
 #Source file definitions
-SET(SIMI_SOURCES main.cpp mainwindow.cpp)
+SET(SIMI_SOURCES main.cpp mainwindow.cpp customInteractorStyle.cpp)
 
 #Headers that need to have moc run on them (generates moc_*.cpp)
 SET(SIMI_HEADERS mainwindow.h)
