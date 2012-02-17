@@ -97,6 +97,7 @@
    <addaction name="actionHandtool"/>
    <addaction name="actionPen"/>
    <addaction name="actionCrosshair"/>
+   <addaction name="actionErase"/>
   </widget>
   <widget class="QDockWidget" name="parameterDock">
    <property name="minimumSize">
@@ -345,6 +346,18 @@
    </property>
    <property name="text">
     <string>Crosshair</string>
+   </property>
+  </action>
+  <action name="actionErase">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="mainwindow.qrc">
+     <normaloff>:/icons/draw-eraser-2.png</normaloff>:/icons/draw-eraser-2.png</iconset>
+   </property>
+   <property name="text">
+    <string>erase</string>
    </property>
   </action>
  </widget>
