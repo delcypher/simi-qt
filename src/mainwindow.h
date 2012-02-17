@@ -33,8 +33,12 @@ class MainWindow : public QMainWindow
 		void on_actionAbout_triggered();
 		bool loadImage();
 
-	public slots:
-		void contrastChanged(double colourWindow, double colourLevel);
+        void on_minIntensitySlider_valueChanged(int value);
+
+        void on_maxIntensitySlider_valueChanged(int value);
+
+public slots:
+		void changeContrast(double colourWindow, double colourLevel);
 
 	signals:
 		void sliceChanged(int sliceNumber);
@@ -47,6 +51,10 @@ class MainWindow : public QMainWindow
                 vtkSmartPointer<vtkImageViewer2> imageView;
 
 		ContrastDialog* contrastDialog;
+
+		//setup methods
+		void contrastControlSetup();
+		void changeContrast();
 };
 
 #endif

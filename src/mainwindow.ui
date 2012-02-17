@@ -14,7 +14,7 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QVTKWidget" name="qvtkWidget" native="true">
+   <widget class="QVTKWidget" name="qvtkWidget">
     <property name="geometry">
      <rect>
       <x>10</x>
@@ -31,7 +31,7 @@
      <x>0</x>
      <y>0</y>
      <width>1052</width>
-     <height>20</height>
+     <height>24</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -102,7 +102,7 @@
    <property name="minimumSize">
     <size>
      <width>350</width>
-     <height>38</height>
+     <height>36</height>
     </size>
    </property>
    <property name="features">
@@ -128,7 +128,7 @@
       <item row="0" column="0">
        <layout class="QGridLayout" name="gridLayout">
         <item row="0" column="0">
-         <widget class="QLabel" name="minimumIntensityLabel">
+         <widget class="QLabel" name="minIntensityLabel">
           <property name="text">
            <string>Minimum Intensity: </string>
           </property>
@@ -145,7 +145,7 @@
          <widget class="QSpinBox" name="minIntensitySpinBox"/>
         </item>
         <item row="1" column="0">
-         <widget class="QLabel" name="maximumIntensityLabel">
+         <widget class="QLabel" name="minIntensityLabel_2">
           <property name="text">
            <string>Maximum Intensity: </string>
           </property>
@@ -316,7 +316,7 @@
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset>
+    <iconset resource="mainwindow.qrc">
      <normaloff>:/icons/cursor_hand.png</normaloff>:/icons/cursor_hand.png</iconset>
    </property>
    <property name="text">
@@ -328,7 +328,7 @@
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset>
+    <iconset resource="mainwindow.qrc">
      <normaloff>:/icons/draw-brush.png</normaloff>:/icons/draw-brush.png</iconset>
    </property>
    <property name="text">
@@ -340,7 +340,7 @@
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset>
+    <iconset resource="mainwindow.qrc">
      <normaloff>:/icons/red-snipper-target-md.png</normaloff>:/icons/red-snipper-target-md.png</iconset>
    </property>
    <property name="text">
@@ -355,7 +355,9 @@
    <header>QVTKWidget.h</header>
   </customwidget>
  </customwidgets>
- <resources/>
+ <resources>
+  <include location="mainwindow.qrc"/>
+ </resources>
  <connections>
   <connection>
    <sender>actionExit</sender>
@@ -370,6 +372,102 @@
     <hint type="destinationlabel">
      <x>399</x>
      <y>299</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>minIntensitySlider</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>minIntensitySpinBox</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>886</x>
+     <y>108</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1008</x>
+     <y>105</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>minIntensitySpinBox</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>minIntensitySlider</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>989</x>
+     <y>113</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>877</x>
+     <y>107</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>maxIntensitySlider</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>maxIntensitySpinBox</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>880</x>
+     <y>144</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1015</x>
+     <y>142</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>maxIntensitySpinBox</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>maxIntensitySlider</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>1003</x>
+     <y>142</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>906</x>
+     <y>145</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>brightnessSlider</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>brightnessSpinBox</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>854</x>
+     <y>230</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>977</x>
+     <y>230</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>brightnessSpinBox</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>brightnessSlider</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>998</x>
+     <y>221</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>901</x>
+     <y>230</y>
     </hint>
    </hints>
   </connection>

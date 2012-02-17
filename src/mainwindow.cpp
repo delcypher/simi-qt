@@ -17,9 +17,6 @@ MainWindow::MainWindow() : imageInfo(""), workPath(QDir::home())
 	//Setup About Qt Dialog
 	connect(ui->actionAboutQt,SIGNAL(triggered()),qApp,SLOT(aboutQt()));
 
-	contrastDialog = new ContrastDialog(this); //setup pointer to ContrastDialog
-	connect(contrastDialog,SIGNAL(contrastChanged(double,double)),
-			this,SLOT(contrastChanged(double,double)));
 
 	reader = vtkStructuredPointsReader::New();
 	imageView = vtkImageViewer2::New();
@@ -135,30 +132,28 @@ bool MainWindow::loadImage()
 
 	imageView->SetInputConnection(reader->GetOutputPort());
 
-	double range[2]; //[0]:min, [0]:max
-	reader->GetOutput()->GetScalarRange(range);
 
 
-	//inform dialog about the intensity range to use
-	contrastDialog->setIntensityRange(range[0],range[1]);
+
+
 
 	// vtkSmartPointer<vtkRenderWindowInteractor> iren =
 	//   vtkSmartPointer<vtkRenderWindowInteractor>::New();
 	// image_view->SetupInteractor( iren );
 	imageView->GetRenderer()->ResetCamera();
 
-	imageView->SetColorLevel((range[0]+range[1])/2.0); //half way point in data set
-	imageView->SetColorWindow(range[0]-range[1]); //width in dataset to use
 
 	ui->qvtkWidget->SetRenderWindow(imageView->GetRenderWindow());
 	imageView->SetSlice(0);
 	imageView->SetupInteractor(ui->qvtkWidget->GetRenderWindow()->GetInteractor());
 
+    contrastControlSetup();
+
 	return true;
 }
 
 
-void MainWindow::contrastChanged(double colourWindow, double colourLevel)
+void MainWindow::changeContrast(double colourWindow, double colourLevel)
 {
 	if(imageView ==0)
 		return;
@@ -168,7 +163,51 @@ void MainWindow::contrastChanged(double colourWindow, double colourLevel)
 	imageView->SetColorLevel(colourLevel);
 	ui->qvtkWidget->update();//update
 
-	qDebug() << "contrastChanged(): colourWindow:" << colourWindow << " colourLevel:" << colourLevel ;
+    qDebug() << "contrastChanged(): colourWindow:" << colourWindow << " colourLevel:" << colourLevel ;
+}
+
+void MainWindow::contrastControlSetup()
+{
+    //setup the ranges on the contrast sliders appropriately
+    double range[2]; //[0]:min, [1]:max
+    reader->GetOutput()->GetScalarRange(range);
+    qDebug() << "Min intensity range:" <<  range[0] << ", Max intensity:" << range[1] ;
+    ui->minIntensitySlider->setRange(static_cast<int>(range[0]),static_cast<int>(range[1]));
+    ui->maxIntensitySlider->setRange(static_cast<int>(range[0]),static_cast<int>(range[1]));
+    ui->minIntensitySpinBox->setRange(static_cast<int>(range[0]),static_cast<int>(range[1]));
+    ui->maxIntensitySpinBox->setRange(static_cast<int>(range[0]),static_cast<int>(range[1]));
+
+    imageView->SetColorLevel((range[0]+range[1])/2.0); //half way point in data set
+	imageView->SetColorWindow(range[1]-range[0]); //width in dataset to use
+
+    ui->minIntensitySlider->setValue(static_cast<int>(range[0]));
+    ui->maxIntensitySlider->setValue(static_cast<int>(range[1]));
+
+}
+
+void MainWindow::changeContrast()
+{
+    imageView->SetColorLevel( (static_cast<double>(ui->maxIntensitySpinBox->value()) + static_cast<double>(ui->minIntensitySpinBox->value()) )/2.0 );
+    imageView->SetColorWindow(  static_cast<double>(ui->maxIntensitySpinBox->value()) - static_cast<double>(ui->minIntensitySpinBox->value()) );
+    ui->qvtkWidget->update();
 }
 
 
+
+void MainWindow::on_minIntensitySlider_valueChanged(int value)
+{
+    //prevent minimum being > maximum
+    if(value > ui->maxIntensitySpinBox->value())
+	    ui->minIntensitySpinBox->setValue(ui->maxIntensitySpinBox->value());
+
+   changeContrast();
+}
+
+void MainWindow::on_maxIntensitySlider_valueChanged(int value)
+{
+	//prevent maximum being < minimum
+	if(value < ui->minIntensitySpinBox->value())
+		ui->maxIntensitySpinBox->setValue(ui->minIntensitySpinBox->value());
+
+    changeContrast();
+}
