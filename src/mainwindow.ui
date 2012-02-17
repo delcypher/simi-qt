@@ -31,7 +31,7 @@
      <x>0</x>
      <y>0</y>
      <width>1052</width>
-     <height>24</height>
+     <height>19</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -102,7 +102,7 @@
    <property name="minimumSize">
     <size>
      <width>350</width>
-     <height>36</height>
+     <height>41</height>
     </size>
    </property>
    <property name="features">
@@ -112,11 +112,53 @@
     <number>2</number>
    </attribute>
    <widget class="QWidget" name="dockWidgetContents_4">
+    <widget class="QGroupBox" name="sliceGroupBox">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>10</y>
+       <width>331</width>
+       <height>71</height>
+      </rect>
+     </property>
+     <property name="title">
+      <string>Slice</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_4">
+      <item row="0" column="0">
+       <layout class="QGridLayout" name="gridLayout_3">
+        <item row="0" column="0">
+         <widget class="QSlider" name="sliceSlider">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QSpinBox" name="sliceSpinBox"/>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </widget>
+    <widget class="QGroupBox" name="segmentationGroupBox">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>220</y>
+       <width>311</width>
+       <height>151</height>
+      </rect>
+     </property>
+     <property name="title">
+      <string>Segmentation</string>
+     </property>
+    </widget>
     <widget class="QGroupBox" name="contrastGroupBox">
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>20</y>
+       <y>80</y>
        <width>331</width>
        <height>111</height>
       </rect>
@@ -164,48 +206,6 @@
        </layout>
       </item>
      </layout>
-    </widget>
-    <widget class="QGroupBox" name="brightnessGroupBox">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>140</y>
-       <width>331</width>
-       <height>71</height>
-      </rect>
-     </property>
-     <property name="title">
-      <string>Brightness</string>
-     </property>
-     <layout class="QGridLayout" name="gridLayout_4">
-      <item row="0" column="0">
-       <layout class="QGridLayout" name="gridLayout_3">
-        <item row="0" column="0">
-         <widget class="QSlider" name="brightnessSlider">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="1">
-         <widget class="QSpinBox" name="brightnessSpinBox"/>
-        </item>
-       </layout>
-      </item>
-     </layout>
-    </widget>
-    <widget class="QGroupBox" name="segmentationGroupBox">
-     <property name="geometry">
-      <rect>
-       <x>20</x>
-       <y>220</y>
-       <width>311</width>
-       <height>151</height>
-      </rect>
-     </property>
-     <property name="title">
-      <string>Segmentation</string>
-     </property>
     </widget>
    </widget>
   </widget>
@@ -440,9 +440,9 @@
    </hints>
   </connection>
   <connection>
-   <sender>brightnessSlider</sender>
+   <sender>sliceSlider</sender>
    <signal>valueChanged(int)</signal>
-   <receiver>brightnessSpinBox</receiver>
+   <receiver>sliceSpinBox</receiver>
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
@@ -456,9 +456,9 @@
    </hints>
   </connection>
   <connection>
-   <sender>brightnessSpinBox</sender>
+   <sender>sliceSpinBox</sender>
    <signal>valueChanged(int)</signal>
-   <receiver>brightnessSlider</receiver>
+   <receiver>sliceSlider</receiver>
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">

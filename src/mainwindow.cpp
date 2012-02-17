@@ -17,6 +17,9 @@ MainWindow::MainWindow() : imageInfo(""), workPath(QDir::home())
 	//Setup About Qt Dialog
 	connect(ui->actionAboutQt,SIGNAL(triggered()),qApp,SLOT(aboutQt()));
 
+	connect(this,SIGNAL(sliceChanged(int)), ui->sliceSpinBox, SLOT(setValue(int)));
+	connect(this,SIGNAL(sliceChanged(int)), ui->sliceSlider, SLOT(setValue(int)));
+
 
 	reader = vtkStructuredPointsReader::New();
 	imageView = vtkImageViewer2::New();
@@ -133,10 +136,6 @@ bool MainWindow::loadImage()
 	imageView->SetInputConnection(reader->GetOutputPort());
 
 
-
-
-
-
 	// vtkSmartPointer<vtkRenderWindowInteractor> iren =
 	//   vtkSmartPointer<vtkRenderWindowInteractor>::New();
 	// image_view->SetupInteractor( iren );
@@ -147,7 +146,9 @@ bool MainWindow::loadImage()
 	imageView->SetSlice(0);
 	imageView->SetupInteractor(ui->qvtkWidget->GetRenderWindow()->GetInteractor());
 
-    contrastControlSetup();
+
+	contrastControlSetup();
+	sliceControlSetup();
 
 	return true;
 }
@@ -156,37 +157,37 @@ bool MainWindow::loadImage()
 
 void MainWindow::contrastControlSetup()
 {
-    //setup the ranges on the contrast sliders appropriately
-    double range[2]; //[0]:min, [1]:max
-    reader->GetOutput()->GetScalarRange(range);
-    qDebug() << "Min intensity range:" <<  range[0] << ", Max intensity:" << range[1] ;
-    ui->minIntensitySlider->setRange(static_cast<int>(range[0]),static_cast<int>(range[1]));
-    ui->maxIntensitySlider->setRange(static_cast<int>(range[0]),static_cast<int>(range[1]));
-    ui->minIntensitySpinBox->setRange(static_cast<int>(range[0]),static_cast<int>(range[1]));
-    ui->maxIntensitySpinBox->setRange(static_cast<int>(range[0]),static_cast<int>(range[1]));
+	double range[2]; //[0]:min, [1]:max
+	reader->GetOutput()->GetScalarRange(range);
+	//setup the ranges on the contrast sliders appropriately
+	qDebug() << "Min intensity range:" <<  range[0] << ", Max intensity:" << range[1] ;
+	ui->minIntensitySlider->setRange(static_cast<int>(range[0]),static_cast<int>(range[1]));
+	ui->maxIntensitySlider->setRange(static_cast<int>(range[0]),static_cast<int>(range[1]));
+	ui->minIntensitySpinBox->setRange(static_cast<int>(range[0]),static_cast<int>(range[1]));
+	ui->maxIntensitySpinBox->setRange(static_cast<int>(range[0]),static_cast<int>(range[1]));
 
-    imageView->SetColorLevel((range[0]+range[1])/2.0); //half way point in data set
+	imageView->SetColorLevel((range[0]+range[1])/2.0); //half way point in data set
 	imageView->SetColorWindow(range[1]-range[0]); //width in dataset to use
 
-    ui->minIntensitySlider->setValue(static_cast<int>(range[0]));
-    ui->maxIntensitySlider->setValue(static_cast<int>(range[1]));
+	ui->minIntensitySlider->setValue(static_cast<int>(range[0]));
+	ui->maxIntensitySlider->setValue(static_cast<int>(range[1]));
 
 }
 
 void MainWindow::changeContrast()
 {
-    imageView->SetColorLevel( (static_cast<double>(ui->maxIntensitySpinBox->value()) + static_cast<double>(ui->minIntensitySpinBox->value()) )/2.0 );
-    imageView->SetColorWindow(  static_cast<double>(ui->maxIntensitySpinBox->value()) - static_cast<double>(ui->minIntensitySpinBox->value()) );
-    ui->qvtkWidget->update();
+	imageView->SetColorLevel( (static_cast<double>(ui->maxIntensitySpinBox->value()) + static_cast<double>(ui->minIntensitySpinBox->value()) )/2.0 );
+	imageView->SetColorWindow(  static_cast<double>(ui->maxIntensitySpinBox->value()) - static_cast<double>(ui->minIntensitySpinBox->value()) );
+	ui->qvtkWidget->update();
 }
 
 
 
 void MainWindow::on_minIntensitySlider_valueChanged(int value)
 {
-    //prevent minimum being > maximum
-    if(value > ui->maxIntensitySpinBox->value())
-	    ui->minIntensitySpinBox->setValue(ui->maxIntensitySpinBox->value());
+	//prevent minimum being > maximum
+	if(value > ui->maxIntensitySpinBox->value())
+		ui->minIntensitySpinBox->setValue(ui->maxIntensitySpinBox->value());
 
    changeContrast();
 }
@@ -197,5 +198,18 @@ void MainWindow::on_maxIntensitySlider_valueChanged(int value)
 	if(value < ui->minIntensitySpinBox->value())
 		ui->maxIntensitySpinBox->setValue(ui->minIntensitySpinBox->value());
 
-    changeContrast();
+	changeContrast();
+}
+
+
+void MainWindow::on_sliceSlider_valueChanged(int value)
+{
+	if(imageView != 0)
+		imageView->SetSlice(value);
+}
+
+void MainWindow::sliceControlSetup()
+{
+	ui->sliceSlider->setRange(imageView->GetSliceMin(), imageView->GetSliceMax() );
+	ui->sliceSpinBox->setRange(imageView->GetSliceMin(), imageView->GetSliceMax() );
 }

@@ -33,11 +33,10 @@ class MainWindow : public QMainWindow
 		bool loadImage();
 
         void on_minIntensitySlider_valueChanged(int value);
+	void on_maxIntensitySlider_valueChanged(int value);
+	void on_sliceSlider_valueChanged(int value);
 
-        void on_maxIntensitySlider_valueChanged(int value);
-
-
-	signals:
+signals:
 		void sliceChanged(int sliceNumber);
 
 	private:
@@ -50,6 +49,9 @@ class MainWindow : public QMainWindow
 
 		//setup methods
 		void contrastControlSetup();
+		void sliceControlSetup();
+
+
 		void changeContrast();
 };
 
