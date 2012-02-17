@@ -153,18 +153,6 @@ bool MainWindow::loadImage()
 }
 
 
-void MainWindow::changeContrast(double colourWindow, double colourLevel)
-{
-	if(imageView ==0)
-		return;
-
-	//adjust the contrast based on what the dialog told us
-	imageView->SetColorWindow(colourWindow);
-	imageView->SetColorLevel(colourLevel);
-	ui->qvtkWidget->update();//update
-
-    qDebug() << "contrastChanged(): colourWindow:" << colourWindow << " colourLevel:" << colourLevel ;
-}
 
 void MainWindow::contrastControlSetup()
 {

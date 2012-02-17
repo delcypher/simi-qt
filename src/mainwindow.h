@@ -7,8 +7,7 @@
 #include <QFileInfo>
 #include "ui_mainwindow.h"
 
-//dialogs
-#include "contrastdialog.h"
+
 
 #include "vtkImageViewer2.h"
 #include "vtkSmartPointer.h"
@@ -37,8 +36,6 @@ class MainWindow : public QMainWindow
 
         void on_maxIntensitySlider_valueChanged(int value);
 
-public slots:
-		void changeContrast(double colourWindow, double colourLevel);
 
 	signals:
 		void sliceChanged(int sliceNumber);
@@ -50,7 +47,6 @@ public slots:
 		vtkSmartPointer<vtkStructuredPointsReader> reader;
                 vtkSmartPointer<vtkImageViewer2> imageView;
 
-		ContrastDialog* contrastDialog;
 
 		//setup methods
 		void contrastControlSetup();
