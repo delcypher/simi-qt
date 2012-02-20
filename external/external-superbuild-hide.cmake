@@ -13,7 +13,6 @@ macro(SB_DISPLAY_OPTIONS display)
 	endif()
 
 	SET(SB_VARIABLES 
-		BUILD_ITK
 		BUILD_VTK
 	)
 

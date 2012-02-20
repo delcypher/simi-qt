@@ -33,9 +33,6 @@ IF(DO_SUPER_BUILD)
 	ENDIF()
 
 	#User can disable and use system library instead
-	SET(BUILD_ITK ON CACHE BOOL "Build ITK library. Set to OFF to use system library.")
-
-	#User can disable and use system library instead
 	SET(BUILD_VTK ON CACHE BOOL "Build VTK library. Set to OFF to use system library.")
 
 	#Make sure superbuild options are visible
@@ -53,23 +50,10 @@ IF(DO_SUPER_BUILD)
 		VTK_DISPLAY_OPTIONS(OFF)
 	ENDIF()
 
-	IF(BUILD_ITK)
-		INCLUDE(external/external-itk.cmake)
-	ELSE()
-		#Hide ITK build options
-		INCLUDE(external/external-itk-hide.cmake)
-		ITK_DISPLAY_OPTIONS(OFF)
-	ENDIF()
-	
-
 	#Build Simi-Qt as external project
 	INCLUDE(external/external-simi-qt.cmake)
 	
 ELSE()
-	#Hide ITK options as not doing super build
-	INCLUDE(external/external-itk-hide.cmake)
-	ITK_DISPLAY_OPTIONS(OFF)
-
 	#Hide VTK options as not doing super build
 	INCLUDE(external/external-vtk-hide.cmake)
 	VTK_DISPLAY_OPTIONS(OFF)
