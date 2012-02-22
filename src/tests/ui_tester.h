@@ -1,20 +1,27 @@
 #include <QObject>
 #include <QtTest/QtTest>
+#include "mainwindow.h"
 
 class UiTester: public QObject
 {
 	Q_OBJECT
+	private:
+		MainWindow* mw;
 	private slots:
-
 	void initTestCase()
-	{ qDebug("called before everything else"); }
+	{ mw = new MainWindow(); mw->show(); }
 
-	void myFirstTest()
-	{ QVERIFY(1 == 1); }
+	/* Check that minimum intensity slider can't be made > maximum intensity slider */
+	void consistentMinimumSlider()
+	{ 
+		
+	}
 
 	void mySecondTest()
 	{ QVERIFY(1 != 2); }
 
 	void cleanupTestCase()
-	{ qDebug("called after myFirstTest and mySecondTest");}
+	{ 
+		delete mw;
+	}
 };
