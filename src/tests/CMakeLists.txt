@@ -16,6 +16,18 @@ unset(SIMI_HEADERS_MOC)
 unset(SIMI_FORMS_HEADERS)
 unset(SIMI_RESOURCES_RCC)
 
+#If using GNU compiler enable coverage generation
+IF(CMAKE_COMPILER_IS_GNUCXX)
+	MESSAGE(STATUS "Enabling coverage generation for GNU compiler")
+	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fprofile-arcs -ftest-coverage")
+	SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fprofile-arcs -ftest-coverage -lgcov")
+	SET(COVERAGE_LIB gcov)
+ELSE()
+	SET(COVERAGE_LIB "")
+ENDIF()
+
+
+#Include parent directory for mainwindow.h
 INCLUDE_DIRECTORIES("${CMAKE_SOURCE_DIR}/src")
 
 PREPEND_SOURCES(SIMI_F SIMI_FORMS "../")
@@ -30,9 +42,6 @@ QT4_ADD_RESOURCES(SIMI_RESOURCES_RCC ${SIMI_R})
 
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_BINARY_DIR})
 
-#Include parent directory for mainwindow.h
-#MESSAGE(FATAL "including ${CMAKE_CURRENT_SOURCE_DIR}/../")
-
 
 ADD_EXECUTABLE(ui_tester
 		${UI_TEST_HEADERS_MOC}
@@ -46,5 +55,6 @@ TARGET_LINK_LIBRARIES(ui_tester
 			${QT_LIBRARIES} 
 			${VTK_LIBRARIES}
 			QVTK
+			${COVERAGE_LIB}
 			)
 ADD_TEST(UserInterfaceTester ui_tester)
