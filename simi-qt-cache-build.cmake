@@ -15,3 +15,6 @@ SQ_SET_CACHE(SQ_BUILD_TYPE "Debug" STRING "Build type for the simi-qt component"
 set_property(CACHE SQ_BUILD_TYPE PROPERTY STRINGS "Debug" "Release" "MinSizeRel" "RelWithDebInfo")
 
 SQ_SET_CACHE(BUILD_WITH_VERSION_INFO TRUE BOOL "Use Git to put tag or ref information into the compiled application.")
+
+SQ_SET_CACHE(BUILD_TESTING FALSE BOOL "Build unit tests")
+

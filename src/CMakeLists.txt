@@ -68,4 +68,8 @@ TARGET_LINK_LIBRARIES(${CMAKE_PROJECT_NAME}
 			${VTK_LIBRARIES}
 			QVTK
 			)
-			
+	
+IF(BUILD_TESTING)
+	INCLUDE(cmake/prependlist.cmake)
+	ADD_SUBDIRECTORY( tests/ )
+ENDIF()

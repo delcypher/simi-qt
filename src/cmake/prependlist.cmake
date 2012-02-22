@@ -1,0 +1,8 @@
+FUNCTION(PREPEND_SOURCES output list path)
+	SET(TEMP_LIST)
+	MESSAGE(STATUS "the length ${thelength}")
+	foreach(list_element ${${list}})
+		LIST(APPEND TEMP_LIST "${path}${list_element}")
+	endforeach()
+	SET(${output} ${TEMP_LIST} PARENT_SCOPE)
+ENDFUNCTION()
