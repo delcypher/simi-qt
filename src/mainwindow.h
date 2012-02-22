@@ -17,6 +17,9 @@
 #include "vtkRenderWindowInteractor.h"
 #include "vtkStructuredPointsReader.h"
 
+//Forward Declare UiTester
+class UiTester;
+
 class MainWindow : public QMainWindow
 {
 	Q_OBJECT
@@ -53,6 +56,9 @@ signals:
 
 
 		void changeContrast();
+
+		//Friend class for UI testing.
+		friend class UiTester;
 };
 
 #endif
