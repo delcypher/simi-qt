@@ -8,8 +8,14 @@ ELSE(VTK_FOUND)
 	"VTK not found. Please set VTK_DIR.")
 ENDIF(VTK_FOUND)
 
+#Decide if we should request QtTest library
+IF(BUILD_TESTING)
+	SET(QTEST_LIB QtTest)
+ELSE()
+	SET(QTEST_LIB "")
+ENDIF()
 
-FIND_PACKAGE(Qt4 REQUIRED QtCore QtGui)
+FIND_PACKAGE(Qt4 REQUIRED QtCore QtGui ${QTEST_LIB})
 INCLUDE(${QT_USE_FILE})
 
 #Try and retrieve build information if wanted
@@ -40,6 +46,9 @@ endif()
 SET(SIMI_SOURCES main.cpp mainwindow.cpp customInteractorStyle.cpp)
 
 #Headers that need to have moc run on them (generates moc_*.cpp)
+# Note that new cmake >=2.8.6 supports the variable AUTOMOC which means
+# using QT4_WRAP_CPP isn't necessary but because most development machines
+# we have are using have old version we'e stuck with the old way of making this work
 SET(SIMI_HEADERS mainwindow.h)
 
 #User interface files (*.ui) that will have uic run on them (generates ui_*.h)
