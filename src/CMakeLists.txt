@@ -9,13 +9,7 @@ ELSE(VTK_FOUND)
 ENDIF(VTK_FOUND)
 
 #Decide if we should request QtTest library
-IF(BUILD_TESTING)
-	SET(QTEST_LIB QtTest)
-ELSE()
-	SET(QTEST_LIB "")
-ENDIF()
-
-FIND_PACKAGE(Qt4 REQUIRED QtCore QtGui ${QTEST_LIB})
+FIND_PACKAGE(Qt4 REQUIRED QtCore QtGui QtTest)
 INCLUDE(${QT_USE_FILE})
 
 #Try and retrieve build information if wanted
@@ -78,7 +72,6 @@ TARGET_LINK_LIBRARIES(${CMAKE_PROJECT_NAME}
 			QVTK
 			)
 	
-IF(BUILD_TESTING)
-	INCLUDE(cmake/prependlist.cmake)
-	ADD_SUBDIRECTORY( tests/ )
-ENDIF()
+
+#Add tests but don't built from target 'all'
+ADD_SUBDIRECTORY( tests/ EXCLUDE_FROM_ALL)

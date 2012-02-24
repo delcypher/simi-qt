@@ -4,11 +4,13 @@
 # but we're stuck with < CMake 2.86
 # so everything is a bit clunky
 
+INCLUDE("cmake/prependlist.cmake")
 
 ###User Interface unit test
 
 #Remove main.cpp and use our own
 LIST(REMOVE_ITEM SIMI_SOURCES "main.cpp")
+PREPEND_SOURCES(SIMI_PREPEND_SOURCES SIMI_SOURCES "../")
 
 #Unset variables from parent directory as they stop build from working
 unset(SIMI_HEADERS_MOC)

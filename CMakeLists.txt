@@ -65,9 +65,7 @@ ELSE()
 	#Build Simi-Qt as a normal project
 	INCLUDE(simi-qt-cache-build.cmake)
 
-	IF(BUILD_TESTING)
-		ENABLE_TESTING(TRUE)
-	ENDIF()
+	ENABLE_TESTING(TRUE)
 
 	#Use cache value to set build type 
 	SET(CMAKE_BUILD_TYPE ${SQ_BUILD_TYPE} CACHE STRING "" FORCE)

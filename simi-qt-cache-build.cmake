@@ -16,5 +16,3 @@ set_property(CACHE SQ_BUILD_TYPE PROPERTY STRINGS "Debug" "Release" "MinSizeRel"
 
 SQ_SET_CACHE(BUILD_WITH_VERSION_INFO TRUE BOOL "Use Git to put tag or ref information into the compiled application.")
 
-SQ_SET_CACHE(BUILD_TESTING FALSE BOOL "Build unit tests")
-
