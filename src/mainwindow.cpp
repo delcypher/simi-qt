@@ -138,7 +138,7 @@ bool MainWindow::loadImage()
 
 
 	// vtkSmartPointer<vtkRenderWindowInteractor> iren =
-	//   vtkSmartPointer<vtkRenderWindowInteractor>::New();
+	// vtkSmartPointer<vtkRenderWindowInteractor>::New();
 	// image_view->SetupInteractor( iren );
 	imageView->GetRenderer()->ResetCamera();
 
@@ -146,15 +146,15 @@ bool MainWindow::loadImage()
 	ui->qvtkWidget->SetRenderWindow(imageView->GetRenderWindow());
 	imageView->SetSlice(0);
 
-	// Comment the line below and line 158 out if you want the default interactor back
+	// Setup custom interactor style
 	vtkSmartPointer<CustomInteractorStyle> customStyle = new CustomInteractorStyle;
 
 	vtkSmartPointer<vtkRenderWindowInteractor> renwin = vtkRenderWindowInteractor::New();
+	customStyle->SetDefaultRenderer(imageView->GetRenderer());
 
 	renwin = ui->qvtkWidget->GetRenderWindow()->GetInteractor();
 	imageView->SetupInteractor(renwin);
 
-	// Comment the line below and line 150 out if you want the default interactor back
 	renwin->SetInteractorStyle(customStyle);
 
 	contrastControlSetup();
