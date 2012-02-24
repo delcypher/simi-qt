@@ -1,19 +1,34 @@
 #include "customInteractorStyle.h"
 #include <QDebug>
 
-
-void CustomInteractorStyle::OnMouseWheelForward()
+void CustomInteractorStyle::OnLeftButtonDown()
 {
-	qDebug() << "Wheel Forward";
+	// Get the location of the click (in window coordinates)
+	int* pos = this->GetInteractor()->GetEventPosition();
+
+	vtkSmartPointer<vtkCellPicker> picker = vtkSmartPointer<vtkCellPicker>::New();
+	//picker->SetTolerance(0.0005);
+
+	// Pick from this location.
+	picker->Pick(pos[0], pos[1], 0, this->GetDefaultRenderer());
+
+	if(picker->GetCellId() != -1)
+	{
+		qDebug() << "GetCellID is: " << picker->GetCellId();
+		qDebug() << "GetPickPosition is:" << *picker->GetPickPosition();
+		qDebug() << "GetPointIJK is:" << *picker->GetPointIJK();
+	}
+	else
+	{
+		qDebug() << "Out of image.";
+	}
+
+	// Forward events
+	vtkInteractorStyleImage::OnLeftButtonDown();
 }
 
-void CustomInteractorStyle::OnMouseWheelBackward()
+void CustomInteractorStyle::OnRightButtonDown()
 {
-	qDebug() << "Wheel Backward";
-}
-
-void CustomInteractorStyle::OnLeftButtonUp()
-{
-	qDebug() << "Picker implementation here";
+	qDebug() << "Zoom via scroll wheel; right mouse button is disabled";
 }
 
