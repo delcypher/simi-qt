@@ -9,7 +9,6 @@
 
 #Remove main.cpp and use our own
 LIST(REMOVE_ITEM SIMI_SOURCES "main.cpp")
-PREPEND_SOURCES(SIMI_PREPEND_SOURCES SIMI_SOURCES "../")
 
 #Unset variables from parent directory as they stop build from working
 unset(SIMI_HEADERS_MOC)
@@ -20,7 +19,7 @@ unset(SIMI_RESOURCES_RCC)
 IF(CMAKE_COMPILER_IS_GNUCXX)
 	MESSAGE(STATUS "Enabling coverage generation for GNU compiler")
 	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fprofile-arcs -ftest-coverage")
-	SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fprofile-arcs -ftest-coverage -lgcov")
+	SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fprofile-arcs -ftest-coverage")
 	SET(COVERAGE_LIB gcov)
 ELSE()
 	SET(COVERAGE_LIB "")
