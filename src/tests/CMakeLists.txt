@@ -18,15 +18,7 @@ unset(SIMI_FORMS_HEADERS)
 unset(SIMI_RESOURCES_RCC)
 
 #If using GNU compiler enable coverage generation
-IF(CMAKE_COMPILER_IS_GNUCXX)
-	MESSAGE(STATUS "Enabling coverage generation for GNU compiler")
-	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fprofile-arcs -ftest-coverage")
-	SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fprofile-arcs -ftest-coverage")
-	SET(COVERAGE_LIB gcov)
-ELSE()
-	SET(COVERAGE_LIB "")
-ENDIF()
-
+INCLUDE("cmake/lcov.cmake")
 
 #Include parent directory for mainwindow.h
 INCLUDE_DIRECTORIES("${CMAKE_SOURCE_DIR}/src")
