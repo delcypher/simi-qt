@@ -33,12 +33,14 @@ IF(CMAKE_COMPILER_IS_GNUCXX)
 		ADD_CUSTOM_COMMAND(TARGET coverage_clean
 					POST_BUILD
 					COMMAND ${LCOV_TOOL} -d "${LCOV_SCAN_DIR}" --zerocounters
+					COMMENT "Zeroing counters"
 					)
 
 		#Add coverage_gen target to generate 
 		ADD_CUSTOM_TARGET(coverage_gen)
 		ADD_CUSTOM_COMMAND(TARGET coverage_gen
 					POST_BUILD
+					COMMENT "Cleaning up HTML directory ${COVERAGE_HTML_DIR}"
 					COMMAND ${CMAKE_COMMAND} -E remove_directory "${COVERAGE_HTML_DIR}"
 					COMMAND ${CMAKE_COMMAND} -E make_directory "${COVERAGE_HTML_DIR}"
 					COMMAND ${LCOV_TOOL} -d "${LCOV_SCAN_DIR}" --capture --output-file "${COVERAGE_INFO_FILE}"
