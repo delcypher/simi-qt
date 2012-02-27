@@ -9,18 +9,20 @@ void CustomInteractorStyle::OnLeftButtonDown()
 	vtkSmartPointer<vtkCellPicker> picker = vtkSmartPointer<vtkCellPicker>::New();
 	//picker->SetTolerance(0.0005);
 
+	qDebug() << "Window position is:" << pos[0] << pos[1] << endl;
+
 	// Pick from this location.
 	picker->Pick(pos[0], pos[1], 0, this->GetDefaultRenderer());
 
 	if(picker->GetCellId() != -1)
 	{
 		qDebug() << "GetCellID is: " << picker->GetCellId();
-		qDebug() << "GetPickPosition is:" << *picker->GetPickPosition();
-		qDebug() << "GetPointIJK is:" << *picker->GetPointIJK();
+		qDebug() << "GetPickPosition is:" << picker->GetPickPosition()[0] << picker->GetPickPosition()[1] << picker->GetPickPosition()[2];
+		qDebug() << "GetPointIJK is:" << picker->GetPointIJK()[0] << picker->GetPointIJK()[1] << picker->GetPointIJK()[2] << endl;
 	}
 	else
 	{
-		qDebug() << "Out of image.";
+		qDebug() << "Out of image." << endl;
 	}
 
 	// Forward events

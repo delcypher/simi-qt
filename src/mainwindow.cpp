@@ -142,6 +142,31 @@ bool MainWindow::loadImage()
 	// image_view->SetupInteractor( iren );
 	imageView->GetRenderer()->ResetCamera();
 
+	/* ****************************************************************************** */
+	/* START ADD ACTORS EXPERIMENT */
+
+	// Create a cube
+	// vtkSmartPointer<vtkCubeSource> cubeSource = vtkSmartPointer<vtkCubeSource>::New();
+	// cubeSource->SetXLength(50);
+	// cubeSource->SetYLength(50);
+	// cubeSource->SetZLength(60);
+	vtkSmartPointer<vtkImageData> cubeSource = vtkSmartPointer<vtkImageData>::New();
+	cubeSource->SetDimensions(50,50,60);
+
+
+	// Create a mapper and actor
+	vtkSmartPointer<vtkImageMapper> mapper = vtkSmartPointer<vtkImageMapper>::New();
+	mapper->SetInput(cubeSource);
+	vtkSmartPointer<vtkActor2D> actor = vtkSmartPointer<vtkActor2D>::New();
+	actor->SetMapper(mapper);
+	// actor->SetPosition(0.0, 0.0, 120);
+	actor->SetPosition(50, 50);
+
+	// Add actor to viewer
+	imageView->GetRenderer()->AddActor(actor);
+
+	/* END EXPERIMENT */
+	/* ****************************************************************************** */
 
 	ui->qvtkWidget->SetRenderWindow(imageView->GetRenderWindow());
 	imageView->SetSlice(0);
