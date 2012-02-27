@@ -7,6 +7,7 @@
 #include <QTextStream>
 #include "compiletimeconstants.h"
 #include "customInteractorStyle.h"
+#include "vtkCamera.h"
 
 
 MainWindow::MainWindow() : imageInfo(""), workPath(QDir::home())
@@ -140,7 +141,10 @@ bool MainWindow::loadImage()
 	// vtkSmartPointer<vtkRenderWindowInteractor> iren =
 	// vtkSmartPointer<vtkRenderWindowInteractor>::New();
 	// image_view->SetupInteractor( iren );
+
+	//flip view by 180 degrees so we aren't upside down
 	imageView->GetRenderer()->ResetCamera();
+	imageView->GetRenderer()->GetActiveCamera()->Roll(180);
 
 	/* ****************************************************************************** */
 	/* START ADD ACTORS EXPERIMENT */
