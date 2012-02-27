@@ -17,6 +17,16 @@
 #include "vtkRenderWindowInteractor.h"
 #include "vtkStructuredPointsReader.h"
 
+/* EXTRA HEADERS FOR EXPERIMENT */
+
+#include "vtkPolyData.h"
+#include "vtkSmartPointer.h"
+#include "vtkImageMapper.h"
+#include "vtkActor2D.h"
+
+/* END EXTRA HEADERS */
+
+
 //Forward Declare UiTester
 class UiTester;
 
