@@ -41,11 +41,18 @@ IF(CMAKE_COMPILER_IS_GNUCXX)
 		ADD_CUSTOM_COMMAND(TARGET coverage_gen
 					POST_BUILD
 					COMMENT "Cleaning up HTML directory ${COVERAGE_HTML_DIR}"
+					#Remove old directories
 					COMMAND ${CMAKE_COMMAND} -E remove_directory "${COVERAGE_HTML_DIR}"
 					COMMAND ${CMAKE_COMMAND} -E make_directory "${COVERAGE_HTML_DIR}"
+					#Do capture
 					COMMAND ${LCOV_TOOL} -d "${LCOV_SCAN_DIR}" --capture --output-file "${COVERAGE_INFO_FILE}"
+					#Remove system header file includes
 					COMMAND ${LCOV_TOOL} -d "${LCOV_SCAN_DIR}" --remove "${COVERAGE_INFO_FILE}" '/usr/include/*' --output-file "${COVERAGE_INFO_FILE}"
-					COMMAND ${GENHTML_TOOL} -o "${COVERAGE_HTML_DIR}" --title "Unit tests" "${COVERAGE_INFO_FILE}"
+					#Remove vtk header files
+					COMMAND ${LCOV_TOOL} -d "${LCOV_SCAN_DIR}" --remove "${COVERAGE_INFO_FILE}" 'vtk*.h' --output-file "${COVERAGE_INFO_FILE}"
+					#Remove Qt intermediate build files
+					COMMAND ${LCOV_TOOL} -d "${LCOV_SCAN_DIR}" --remove "${COVERAGE_INFO_FILE}" '${CMAKE_BINARY_DIR}/*' --output-file "${COVERAGE_INFO_FILE}"
+					COMMAND ${GENHTML_TOOL} -o "${COVERAGE_HTML_DIR}" --title "Unit tests " "${COVERAGE_INFO_FILE}"
 					)
 
 
