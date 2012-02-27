@@ -17,11 +17,10 @@ Note you can use cmake-gui instead of ccmake if you prefer.
 4. Now select the options you want.
 
 DO_SUPERBUILD - 
-If you do not have the VTK and/or ITK libraries installed then the superbuild mode
-can build the ones you want for project development
+If you do not have the VTK library installed then the superbuild mode
+can build build it for project development
 	
 	Select from:
-	BUILD_ITK
 	BUILD_VTK
 
 	You will be presented with options that will let you choose your source for
@@ -31,8 +30,7 @@ If you already have VTK and ITK installed on your system or you have already bui
 using the superbuild then you should disable DO_SUPERBUILD and reconfigure.
 
 SQ_BUILD_TYPE - 
-This specifies what the build type should be for the project. Note this has no affect on how the 
-ITK and VTK libraries are built.
+This specifies what the build type should be for the project. Note this has no affect on how the VTK library is built.
 
 
 5. Generate the makefile from within ccmake or cmake-gui
@@ -52,7 +50,7 @@ $ cmake-gui /path/to/simi-qt-source-root/
 2. Press "configure".
 3. Select "Unix Makefiles" and press "finish".
 
-4. If ITK and/or VTK are installed as system libraries cmake should automatically find them. If you built them using "DO_SUPERBUILD" then modify ITK_DIR and VTK_DIR to point to where they were built.
+4. If VTK is installed as a system library cmake should automatically find them. If you built them using "DO_SUPERBUILD" then modify VTK_DIR to point to where it was built.
 
 5. Press "Configure again".
 6. Now exit.
@@ -65,4 +63,31 @@ $ cmake-gui /path/to/simi-qt-source-root/
 
 You're done!
 
+COVERAGE INFORMATION
+Coverage information can be gathered for unit tests that have been exectued using lcov. Note this requires you to be using the GNU C++ compiler.
+
+Steps
+1. Change into the build directory
+2. run
+$ make help
+... all (the default if no target is provided)
+... clean
+... depend
+... edit_cache
+... rebuild_cache
+... test
+... simi-qt
+... coverage_clean
+... coverage_gen
+... ui_tester
+
+3. All targets that have "_tester" as a suffix are unit tests. Build the ones you want and run them once.
+
+4. Run the following the generate the coverage information as a HTML document in "build-dir/coverage_html/"
+$ make coverage_gen
+
+Note that everything in "build-dir/coverage_html" will be deleted prior to generating the coverage information as a HTML page.
+
+5. To reset the execution counters run
+$ make coverage_clean
 
