@@ -25,6 +25,11 @@ void CustomInteractorStyle::OnLeftButtonDown()
 		qDebug() << "Out of image." << endl;
 	}
 
+
+    //If CTRL key is pressed then leave function so we don't call parent's method that will allow rotation.
+    if(this->GetInteractor()->GetControlKey())
+        return;
+
 	// Forward events
 	vtkInteractorStyleImage::OnLeftButtonDown();
 }
