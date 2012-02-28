@@ -14,12 +14,13 @@ class CustomInteractorStyle : public vtkInteractorStyleImage
 		virtual void OnMouseWheelBackward() { zoomIn();}
 		bool zoomIn();
 		bool zoomOut();
-		void resetZoom();
+		void forceZoom();
 
 	private:
 		vtkStructuredPoints* img;
 		double minScale; // smallest height of viewport (i.e. max zoom)
 		double maxScale; //largest height of viewport (i.e. min zoom)
 		double zoomScaleStep; //the just in scale when calling zoom methods
+		double currentZoomLevel;
 
 };

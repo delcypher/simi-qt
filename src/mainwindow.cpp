@@ -244,7 +244,13 @@ void MainWindow::on_maxIntensitySlider_valueChanged(int value)
 void MainWindow::on_sliceSlider_valueChanged(int value)
 {
 	if(imageView != 0)
+	{
 		imageView->SetSlice(value);
+
+		//work around bug where zoom level changes on calling SetSlice()
+		customStyle->forceZoom();
+		ui->qvtkWidget->update();
+	}
 }
 
 void MainWindow::sliceControlSetup()

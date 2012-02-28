@@ -19,7 +19,8 @@ CustomInteractorStyle::CustomInteractorStyle(vtkStructuredPoints *img, vtkRender
 	maxScale = (extent[3] - extent[2] +1)*spacing[1]/2.0;
 	minScale = maxScale/800;
 
-	resetZoom();
+	currentZoomLevel = maxScale;
+	forceZoom();
 }
 
 void CustomInteractorStyle::OnLeftButtonDown()
@@ -62,13 +63,14 @@ void CustomInteractorStyle::OnRightButtonDown()
 
 bool CustomInteractorStyle::zoomIn()
 {
-	double newScale= ( this->GetCurrentRenderer()->GetActiveCamera()->GetParallelScale() ) - zoomScaleStep;
+	double newScale= currentZoomLevel - zoomScaleStep;
 
 	if(newScale >= minScale)
 	{
 		this->GetCurrentRenderer()->GetActiveCamera()->SetParallelScale(newScale);
 		this->GetInteractor()->GetRenderWindow()->Render();
 		qDebug() << "Set parallel scale:" << newScale;
+		currentZoomLevel = newScale;
 		return true;
 	}
 	else
@@ -81,13 +83,14 @@ bool CustomInteractorStyle::zoomIn()
 
 bool CustomInteractorStyle::zoomOut()
 {
-	double newScale= ( this->GetCurrentRenderer()->GetActiveCamera()->GetParallelScale() ) + zoomScaleStep;
+	double newScale= currentZoomLevel + zoomScaleStep;
 
 	if(newScale <= maxScale)
 	{
 		this->GetCurrentRenderer()->GetActiveCamera()->SetParallelScale(newScale);
 		this->GetInteractor()->GetRenderWindow()->Render();
 		qDebug() << "Set parallel scale:" << newScale;
+		currentZoomLevel = newScale;
 		return true;
 	}
 	else
@@ -97,7 +100,7 @@ bool CustomInteractorStyle::zoomOut()
 	}
 }
 
-void CustomInteractorStyle::resetZoom()
+void CustomInteractorStyle::forceZoom()
 {
-	this->GetCurrentRenderer()->GetActiveCamera()->SetParallelScale(maxScale);
+	this->GetCurrentRenderer()->GetActiveCamera()->SetParallelScale(currentZoomLevel);
 }
