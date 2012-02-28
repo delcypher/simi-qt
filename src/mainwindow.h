@@ -16,6 +16,7 @@
 #include "vtkStructuredPoints.h"
 #include "vtkRenderWindowInteractor.h"
 #include "vtkStructuredPointsReader.h"
+#include "customInteractorStyle.h"
 
 /* EXTRA HEADERS FOR EXPERIMENT */
 
@@ -57,7 +58,8 @@ signals:
 		QDir workPath; //Directory used file open dialogs
 		Ui::MainWindow* ui; //handle to user interface
 		vtkSmartPointer<vtkStructuredPointsReader> reader;
-                vtkSmartPointer<vtkImageViewer2> imageView;
+		vtkSmartPointer<vtkImageViewer2> imageView;
+		vtkSmartPointer<CustomInteractorStyle> customStyle;
 
 
 		//setup methods

@@ -6,7 +6,6 @@
 #include <QDebug>
 #include <QTextStream>
 #include "compiletimeconstants.h"
-#include "customInteractorStyle.h"
 #include "vtkCamera.h"
 
 
@@ -85,6 +84,7 @@ void MainWindow::on_actionSlice_up_triggered()
 	{
 		imageView->SetSlice(imageView->GetSlice() +1);
 		emit sliceChanged(imageView->GetSlice());
+
 	}
 }
 
@@ -176,10 +176,10 @@ bool MainWindow::loadImage()
 	imageView->SetSlice(0);
 
 	// Setup custom interactor style
-	vtkSmartPointer<CustomInteractorStyle> customStyle = new CustomInteractorStyle;
+	customStyle = new CustomInteractorStyle(reader->GetOutput(), imageView->GetRenderer());
 
 	vtkSmartPointer<vtkRenderWindowInteractor> renwin = vtkRenderWindowInteractor::New();
-	customStyle->SetDefaultRenderer(imageView->GetRenderer());
+	//customStyle->SetDefaultRenderer(imageView->GetRenderer());
 
 	renwin = ui->qvtkWidget->GetRenderWindow()->GetInteractor();
 	imageView->SetupInteractor(renwin);

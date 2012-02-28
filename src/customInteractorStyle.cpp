@@ -1,5 +1,26 @@
 #include "customInteractorStyle.h"
 #include <QDebug>
+#include <vtkRenderer.h>
+#include <vtkCamera.h>
+#include <vtkRenderWindow.h>
+
+CustomInteractorStyle::CustomInteractorStyle(vtkStructuredPoints *img, vtkRenderer* renderer) : zoomScaleStep(10)
+{
+	this->img = img;
+	this->SetCurrentRenderer(renderer);
+	this->SetDefaultRenderer(renderer);
+
+	//calculate max scale
+	int extent[6];
+	double spacing[3];
+	img->GetExtent(extent);
+	img->GetSpacing(spacing);
+	//make max scale half the size of the imagedata (in y direction)
+	maxScale = (extent[3] - extent[2] +1)*spacing[1]/2.0;
+	minScale = maxScale/800;
+
+	resetZoom();
+}
 
 void CustomInteractorStyle::OnLeftButtonDown()
 {
@@ -39,3 +60,44 @@ void CustomInteractorStyle::OnRightButtonDown()
 	qDebug() << "Zoom via scroll wheel; right mouse button is disabled";
 }
 
+bool CustomInteractorStyle::zoomIn()
+{
+	double newScale= ( this->GetCurrentRenderer()->GetActiveCamera()->GetParallelScale() ) - zoomScaleStep;
+
+	if(newScale >= minScale)
+	{
+		this->GetCurrentRenderer()->GetActiveCamera()->SetParallelScale(newScale);
+		this->GetInteractor()->GetRenderWindow()->Render();
+		qDebug() << "Set parallel scale:" << newScale;
+		return true;
+	}
+	else
+	{
+		qDebug() << "Hit zoom in limit";
+		return false;
+	}
+
+}
+
+bool CustomInteractorStyle::zoomOut()
+{
+	double newScale= ( this->GetCurrentRenderer()->GetActiveCamera()->GetParallelScale() ) + zoomScaleStep;
+
+	if(newScale <= maxScale)
+	{
+		this->GetCurrentRenderer()->GetActiveCamera()->SetParallelScale(newScale);
+		this->GetInteractor()->GetRenderWindow()->Render();
+		qDebug() << "Set parallel scale:" << newScale;
+		return true;
+	}
+	else
+	{
+		qDebug() << "Hit zoom in limit";
+		return false;
+	}
+}
+
+void CustomInteractorStyle::resetZoom()
+{
+	this->GetCurrentRenderer()->GetActiveCamera()->SetParallelScale(maxScale);
+}
