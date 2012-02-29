@@ -137,10 +137,7 @@ void MainWindow::on_actionAbout_triggered()
 
 void MainWindow::contrastControlSetup()
 {
-//	double range[2]; //[0]:min, [1]:max
-//	reader->GetOutput()->GetScalarRange(range);
-//	//setup the ranges on the contrast sliders appropriately
-//	qDebug() << "Min intensity range:" <<  range[0] << ", Max intensity:" << range[1] ;
+
 	if(imageManager!=0)
 	{
         ui->minIntensitySlider->setRange(static_cast<int>(imageManager->getMinimumIntensity()),static_cast<int>(imageManager->getMaximumIntensity()));
@@ -148,8 +145,7 @@ void MainWindow::contrastControlSetup()
         ui->minIntensitySpinBox->setRange(static_cast<int>(imageManager->getMinimumIntensity()),static_cast<int>(imageManager->getMaximumIntensity()));
         ui->maxIntensitySpinBox->setRange(static_cast<int>(imageManager->getMinimumIntensity()),static_cast<int>(imageManager->getMaximumIntensity()));
     }
-//	imageView->SetColorLevel((range[0]+range[1])/2.0); //half way point in data set
-//	imageView->SetColorWindow(range[1]-range[0]); //width in dataset to use
+
 
     //Doing this change should cause the valueChanged() signal to be emitted by the sliders
     ui->minIntensitySlider->setValue(static_cast<int>(imageManager->getMinimumIntensity()));

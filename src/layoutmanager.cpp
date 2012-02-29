@@ -67,6 +67,9 @@ void LayoutManager::ChangeSlice(int slice)
 {
 	imageViewer->SetSlice(slice);
     emit sliceChanged(slice);
+
+    //workaround bug where changing slice causes zoom to reset to something unexpected
+    forceZoom();
 }
 
 void LayoutManager::forceZoom()
