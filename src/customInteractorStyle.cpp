@@ -48,6 +48,8 @@ void CustomInteractorStyle::OnLeftButtonDown()
 	}
 
 
+	qDebug() << " value" << *(static_cast<short*>(img->GetScalarPointer(picker->GetPointIJK()[0],picker->GetPointIJK()[1], picker->GetPointIJK()[2])) );
+
     //If CTRL key is pressed then leave function so we don't call parent's method that will allow rotation.
     if(this->GetInteractor()->GetControlKey())
         return;

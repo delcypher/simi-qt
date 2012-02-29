@@ -271,7 +271,7 @@ void MainWindow::on_runAlgorithm_clicked()
 
         vtkSmartPointer<vtkImageData> visited = vtkSmartPointer<vtkImageData>::New();
         visited->SetDimensions(512,512,1);
-        visited->SetNumberOfScalarComponents(3);
+	  visited->SetNumberOfScalarComponents(3);
         visited->SetScalarTypeToUnsignedChar();
 
         //fill in image
@@ -280,20 +280,20 @@ void MainWindow::on_runAlgorithm_clicked()
                 for (int x=0; x<512; x++)
                 {
                         unsigned char* pixel = static_cast<unsigned char*>(visited->GetScalarPointer(x,y,0));
-                        pixel[0] = 0;
+				pixel[0] = 255;
                         pixel[1] = 0;
                         pixel[2] = 0;
-//                        if (x < 200)
-//                               pixel[3] = 255;
-//                        else
-//                                pixel[3] = 255;
+//				if (x < 200)
+//					 pixel[3] = 0;
+//				else
+//					  pixel[3] = 255;
 
                 }
         }
 
         // run algorithm
         cout << pos_x << " " << pos_y << " " << range_from << " " << range_to << endl;
-        flood_fill(original, visited, pos_x, pos_y, range_from, range_to, predicate1);
+	  //flood_fill(original, visited, pos_x, pos_y, range_from, range_to, predicate1);
 
         //display in front
 
@@ -302,8 +302,9 @@ void MainWindow::on_runAlgorithm_clicked()
         mapper->SetInput(visited);
         vtkSmartPointer<vtkActor2D> actor = vtkSmartPointer<vtkActor2D>::New();
         actor->SetMapper(mapper);
+
         // actor->SetPosition(0.0, 0.0, 120);
-        actor->SetPosition(0, 0);
+	  actor->SetPosition(0, 0);
 
         // Add actor to viewer
         imageView->GetRenderer()->AddActor(actor);
