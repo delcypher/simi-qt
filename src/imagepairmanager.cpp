@@ -71,6 +71,14 @@ void ImagePairManager::resetBlocking(int slice)
 
 }
 
+double ImagePairManager::getYSpacing()
+{
+    double spacing[3];
+    original->GetSpacing(spacing);
+
+    return spacing[1];
+}
+
 double ImagePairManager::getMinimumIntensity()
 {
 	double range[2];

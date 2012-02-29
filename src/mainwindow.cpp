@@ -83,6 +83,10 @@ void MainWindow::on_actionOpen_Image_triggered()
 			sliceControlSetup();
 			contrastControlSetup();
 
+			//setup zoom control
+			connect(ui->actionZoom_in,SIGNAL(triggered()), layoutManager,SLOT(zoomIn()));
+			connect(ui->actionZoom_out,SIGNAL(triggered()), layoutManager,SLOT(zoomOut()));
+
 			//Update the work path to the location of the new image
 			workPath.setPath(imageInfo.absolutePath());
 

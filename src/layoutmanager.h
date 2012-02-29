@@ -12,14 +12,25 @@ class LayoutManager : public QObject
 		LayoutManager(ImagePairManager* imageManager, QVTKWidget* vtkWidget);
 		~LayoutManager();
 		void setConstrast(double minIntensity, double maxIntensity);
+
 	
 	public slots:
 		void ChangeSlice(int slice);
+		void zoomIn();
+		void zoomOut();
+
 
 	signals:
 		void sliceChanged(int slice);
 
 	private:
+        void forceZoom();
+
 		vtkSmartPointer<vtkImageViewer2> imageViewer;
+
+		double minScale; //for zoom
+		double maxScale; //for zoom
+		double currentScale;
+		double scaleStep;
 
 };

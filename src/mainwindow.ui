@@ -49,7 +49,7 @@
     <property name="title">
      <string>View</string>
     </property>
-    <addaction name="actionConstrast"/>
+    <addaction name="actionZoom_in"/>
     <addaction name="actionZoom_out"/>
     <addaction name="separator"/>
     <addaction name="actionSlice_up"/>
@@ -288,14 +288,20 @@
     <string>Save State</string>
    </property>
   </action>
-  <action name="actionConstrast">
+  <action name="actionZoom_in">
    <property name="text">
     <string>Zoom in</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+=</string>
    </property>
   </action>
   <action name="actionZoom_out">
    <property name="text">
     <string>Zoom out</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+-</string>
    </property>
   </action>
   <action name="actionSlice_up">

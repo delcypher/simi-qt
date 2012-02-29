@@ -33,6 +33,8 @@ class ImagePairManager : public QObject
 		int getZMin() {return extentZMin;}
 		int getZMax() {return extentZMax;}
 
+		double getYSpacing();
+
 		double getMinimumIntensity();
 		double getMaximumIntensity();
 
