@@ -14,7 +14,7 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QVTKWidget" name="qvtkWidget">
+   <widget class="QVTKWidget" name="qvtkWidget" native="true">
     <property name="geometry">
      <rect>
       <x>10</x>
@@ -31,7 +31,7 @@
      <x>0</x>
      <y>0</y>
      <width>1052</width>
-     <height>19</height>
+     <height>20</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -200,7 +200,7 @@
       <rect>
        <x>10</x>
        <y>190</y>
-       <width>331</width>
+       <width>351</width>
        <height>151</height>
       </rect>
      </property>
@@ -210,7 +210,7 @@
      <widget class="QWidget" name="layoutWidget">
       <property name="geometry">
        <rect>
-        <x>0</x>
+        <x>10</x>
         <y>20</y>
         <width>321</width>
         <height>121</height>
@@ -218,41 +218,41 @@
       </property>
       <layout class="QGridLayout" name="gridLayout_6">
        <item row="0" column="1">
-        <widget class="QSlider" name="minSegIntensitySlider_2">
+        <widget class="QSlider" name="minSegIntensitySlider">
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
          </property>
         </widget>
        </item>
        <item row="0" column="2">
-        <widget class="QSpinBox" name="minSegIntensitySpinBox_2"/>
+        <widget class="QSpinBox" name="minSegIntensitySpinBox"/>
        </item>
        <item row="1" column="0">
-        <widget class="QLabel" name="maxSegIntensityLabel_2">
+        <widget class="QLabel" name="maxSegIntensityLabel">
          <property name="text">
           <string>Maximum Intensity:</string>
          </property>
         </widget>
        </item>
        <item row="1" column="1">
-        <widget class="QSlider" name="maxSegIntensitySlider_2">
+        <widget class="QSlider" name="maxSegIntensitySlider">
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
          </property>
         </widget>
        </item>
        <item row="1" column="2">
-        <widget class="QSpinBox" name="maxSegIntensitySpinBox_2"/>
+        <widget class="QSpinBox" name="maxSegIntensitySpinBox"/>
        </item>
        <item row="2" column="2">
-        <widget class="QPushButton" name="doSegmentation_2">
+        <widget class="QPushButton" name="doSegmentation">
          <property name="text">
           <string>Segment</string>
          </property>
         </widget>
        </item>
        <item row="0" column="0">
-        <widget class="QLabel" name="minSegIntensityLabel_2">
+        <widget class="QLabel" name="minSegIntensityLabel">
          <property name="text">
           <string>Minimum Intensity:</string>
          </property>
