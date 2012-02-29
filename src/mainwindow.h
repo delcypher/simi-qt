@@ -9,6 +9,7 @@
 
 #include "imagepairmanager.h"
 #include "seedpointmanager.h"
+#include "layoutmanager.h"
 
 
 //Forward Declare UiTester
@@ -25,6 +26,7 @@ class MainWindow : public QMainWindow
 		//helper classes
 		ImagePairManager* imageManager;
 		SeedPointManager* seedManager;
+		LayoutManager* layoutManager;
 
 
 	
@@ -33,14 +35,10 @@ class MainWindow : public QMainWindow
 		void on_actionSlice_up_triggered();
 		void on_actionSlice_down_triggered();
 		void on_actionAbout_triggered();
-		bool loadImage();
 
 		void on_minIntensitySlider_valueChanged(int value);
 		void on_maxIntensitySlider_valueChanged(int value);
 		void on_sliceSlider_valueChanged(int value);
-
-	signals:
-		void sliceChanged(int sliceNumber);
 
 	private:
 		QFileInfo imageInfo;

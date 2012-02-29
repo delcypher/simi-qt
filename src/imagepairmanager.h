@@ -1,3 +1,6 @@
+#ifndef IMAGEPAIRMANAGER_H
+#define IMAGEPAIRMANAGER_H
+
 #include <QObject>
 #include <QFileInfo>
 #include "vtkSmartPointer.h"
@@ -27,6 +30,12 @@ class ImagePairManager : public QObject
 		int getYDim() {return yDim;}
 		int getZDim() {return zDim;}
 
+		int getZMin() {return extentZMin;}
+		int getZMax() {return extentZMax;}
+
+		double getMinimumIntensity();
+		double getMaximumIntensity();
+
 	private:
 		vtkSmartPointer<vtkStructuredPointsReader> reader;
 
@@ -35,4 +44,10 @@ class ImagePairManager : public QObject
 		int yDim;
 		int zDim;
 
+		//Extents
+		int extentZMax;
+		int extentZMin;
+
 };
+
+#endif

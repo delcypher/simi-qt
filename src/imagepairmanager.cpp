@@ -33,6 +33,12 @@ bool ImagePairManager::loadImage(QFileInfo image)
 	yDim = dimensions[1];
 	zDim = dimensions[2];
 
+	//determine extents
+	int extent[6];
+	original->GetExtent(extent);
+	extentZMin = extent[4];
+	extentZMax = extent[5];
+
 	qDebug() << "Image opened with widths x:" << xDim << ", y:" << yDim << ", z:" << zDim ;
 
 	//now setup block/segmentation image
@@ -63,6 +69,20 @@ void ImagePairManager::resetSegmentation(int slice)
 void ImagePairManager::resetBlocking(int slice)
 {
 
+}
+
+double ImagePairManager::getMinimumIntensity()
+{
+	double range[2];
+	original->GetScalarRange(range);
+	return range[0];
+}
+
+double ImagePairManager::getMaximumIntensity()
+{
+	double range[2];
+	original->GetScalarRange(range);
+	return range[1];
 }
 
 

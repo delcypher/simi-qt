@@ -14,12 +14,12 @@ MainWindow::MainWindow() : imageInfo(""), workPath(QDir::home())
 	ui = new Ui::MainWindow;
 	ui->setupUi(this); //set up user interface
 
+	seedManager=0;
+	imageManager=0;
+	layoutManager=0;
 
 	//Setup About Qt Dialog
 	connect(ui->actionAboutQt,SIGNAL(triggered()),qApp,SLOT(aboutQt()));
-
-	connect(this,SIGNAL(sliceChanged(int)), ui->sliceSpinBox, SLOT(setValue(int)));
-	connect(this,SIGNAL(sliceChanged(int)), ui->sliceSlider, SLOT(setValue(int)));
 
 
 	setWindowTitle(PROGRAM_NAME);
@@ -66,6 +66,12 @@ void MainWindow::on_actionOpen_Image_triggered()
 				delete seedManager;
 			seedManager = new SeedPointManager(imageManager->getZDim());
 
+			//setup LayoutManager
+			if(layoutManager!=0)
+				delete layoutManager;
+			layoutManager = new LayoutManager(imageManager,ui->qvtkWidget);
+
+			sliceControlSetup();
 
 			//Update the work path to the location of the new image
 			workPath.setPath(imageInfo.absolutePath());
@@ -112,12 +118,6 @@ void MainWindow::on_actionAbout_triggered()
 	QMessageBox::about(this,tr("About ") + PROGRAM_NAME, about);
 }
 
-bool MainWindow::loadImage()
-{
-
-
-	return true;
-}
 
 
 
@@ -170,18 +170,16 @@ void MainWindow::on_maxIntensitySlider_valueChanged(int value)
 
 void MainWindow::on_sliceSlider_valueChanged(int value)
 {
-//	if(imageView != 0)
-//	{
-//		imageView->SetSlice(value);
-
-//		//work around bug where zoom level changes on calling SetSlice()
-//		customStyle->forceZoom();
-//		ui->qvtkWidget->update();
-//	}
+	if(layoutManager!=0)
+		layoutManager->ChangeSlice(value);
 }
 
 void MainWindow::sliceControlSetup()
 {
-//	ui->sliceSlider->setRange(imageView->GetSliceMin(), imageView->GetSliceMax() );
-//	ui->sliceSpinBox->setRange(imageView->GetSliceMin(), imageView->GetSliceMax() );
+	if(imageManager!=0)
+	{
+		ui->sliceSlider->setRange(imageManager->getZMin(),imageManager->getZMax());
+		ui->sliceSpinBox->setRange(imageManager->getZMin(),imageManager->getZMax());
+
+	}
 }
