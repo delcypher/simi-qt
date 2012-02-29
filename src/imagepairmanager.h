@@ -23,16 +23,16 @@ class ImagePairManager : public QObject
 		vtkSmartPointer<vtkStructuredPoints> original;
 		vtkSmartPointer<vtkImageData> segblock;
 
-		int getXWidth() {return xWidth;}
-		int getYWidth() {return yWidth;}
-		int getZWidth() {return zWidth;}
+		int getXDim() {return xDim;}
+		int getYDim() {return yDim;}
+		int getZDim() {return zDim;}
 
 	private:
 		vtkSmartPointer<vtkStructuredPointsReader> reader;
 
 		//Widths in terms of voxels
-		int xWidth;
-		int yWidth;
-		int zWidth;
+		int xDim;
+		int yDim;
+		int zDim;
 
 };

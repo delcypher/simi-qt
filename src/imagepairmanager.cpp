@@ -27,19 +27,26 @@ bool ImagePairManager::loadImage(QFileInfo image)
 	original = reader->GetOutput();
 
 	//determine the image dimensions in terms of voxels
-	int extent[6];
-	original->GetExtent(extent);
-	xWidth = extent[1] - extent[0] +1;
-	yWidth = extent[3] - extent[2] +1;
-	zWidth = extent[5] - extent[4] +1;
+	int dimensions[3];
+	original->GetDimensions(dimensions);
+	xDim = dimensions[0];
+	yDim = dimensions[1];
+	zDim = dimensions[2];
 
-	qDebug() << "Image opened with widths x:" << xWidth << ", y:" << yWidth << ", z:" << zWidth ;
+	qDebug() << "Image opened with widths x:" << xDim << ", y:" << yDim << ", z:" << zDim ;
 
 	//now setup block/segmentation image
 	segblock = vtkImageData::New();
-	segblock->SetExtent(extent);
+	segblock->SetExtent(original->GetExtent());
 	segblock->SetSpacing(original->GetSpacing());
+	segblock->SetNumberOfScalarComponents(1);
 	segblock->SetScalarTypeToChar();
+	segblock->AllocateScalars();
+
+	//Make sure everything is consistent as we have changed the dimensions.
+	segblock->Update();
+
+	qDebug() << "segblock now occupies :" << segblock->GetActualMemorySize() << "KB";
 
 	//should probably initialise now...
 
