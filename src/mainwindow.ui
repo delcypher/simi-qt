@@ -24,111 +24,6 @@
      </rect>
     </property>
    </widget>
-   <widget class="QLineEdit" name="pos_x_line">
-    <property name="geometry">
-     <rect>
-      <x>30</x>
-      <y>440</y>
-      <width>71</width>
-      <height>21</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="pos_y_line">
-    <property name="geometry">
-     <rect>
-      <x>110</x>
-      <y>440</y>
-      <width>71</width>
-      <height>21</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="from_line">
-    <property name="geometry">
-     <rect>
-      <x>190</x>
-      <y>440</y>
-      <width>71</width>
-      <height>21</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="to_line">
-    <property name="geometry">
-     <rect>
-      <x>270</x>
-      <y>440</y>
-      <width>71</width>
-      <height>21</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label">
-    <property name="geometry">
-     <rect>
-      <x>40</x>
-      <y>420</y>
-      <width>51</width>
-      <height>17</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>pos_x</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_2">
-    <property name="geometry">
-     <rect>
-      <x>120</x>
-      <y>420</y>
-      <width>51</width>
-      <height>17</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>pos_y</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_3">
-    <property name="geometry">
-     <rect>
-      <x>200</x>
-      <y>420</y>
-      <width>51</width>
-      <height>17</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>from</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_4">
-    <property name="geometry">
-     <rect>
-      <x>280</x>
-      <y>420</y>
-      <width>51</width>
-      <height>17</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>to</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="runAlgorithm">
-    <property name="geometry">
-     <rect>
-      <x>30</x>
-      <y>480</y>
-      <width>97</width>
-      <height>27</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Run</string>
-    </property>
-   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -136,7 +31,7 @@
      <x>0</x>
      <y>0</y>
      <width>1052</width>
-     <height>25</height>
+     <height>19</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -207,8 +102,8 @@
   <widget class="QDockWidget" name="parameterDock">
    <property name="minimumSize">
     <size>
-     <width>350</width>
-     <height>41</height>
+     <width>487</width>
+     <height>635</height>
     </size>
    </property>
    <property name="features">
@@ -246,19 +141,6 @@
        </layout>
       </item>
      </layout>
-    </widget>
-    <widget class="QGroupBox" name="segmentationGroupBox">
-     <property name="geometry">
-      <rect>
-       <x>20</x>
-       <y>220</y>
-       <width>311</width>
-       <height>151</height>
-      </rect>
-     </property>
-     <property name="title">
-      <string>Segmentation</string>
-     </property>
     </widget>
     <widget class="QGroupBox" name="contrastGroupBox">
      <property name="geometry">
@@ -312,6 +194,72 @@
        </layout>
       </item>
      </layout>
+    </widget>
+    <widget class="QGroupBox" name="segmentationGroupBox_2">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>190</y>
+       <width>331</width>
+       <height>151</height>
+      </rect>
+     </property>
+     <property name="title">
+      <string>Segmentation</string>
+     </property>
+     <widget class="QWidget" name="layoutWidget">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>20</y>
+        <width>321</width>
+        <height>121</height>
+       </rect>
+      </property>
+      <layout class="QGridLayout" name="gridLayout_6">
+       <item row="0" column="1">
+        <widget class="QSlider" name="minSegIntensitySlider_2">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="2">
+        <widget class="QSpinBox" name="minSegIntensitySpinBox_2"/>
+       </item>
+       <item row="1" column="0">
+        <widget class="QLabel" name="maxSegIntensityLabel_2">
+         <property name="text">
+          <string>Maximum Intensity:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QSlider" name="maxSegIntensitySlider_2">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="2">
+        <widget class="QSpinBox" name="maxSegIntensitySpinBox_2"/>
+       </item>
+       <item row="2" column="2">
+        <widget class="QPushButton" name="doSegmentation_2">
+         <property name="text">
+          <string>Segment</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="0">
+        <widget class="QLabel" name="minSegIntensityLabel_2">
+         <property name="text">
+          <string>Minimum Intensity:</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
     </widget>
    </widget>
   </widget>
@@ -500,12 +448,12 @@
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>886</x>
-     <y>108</y>
+     <x>977</x>
+     <y>160</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1008</x>
-     <y>105</y>
+     <x>1032</x>
+     <y>156</y>
     </hint>
    </hints>
   </connection>
@@ -516,12 +464,12 @@
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>989</x>
-     <y>113</y>
+     <x>1032</x>
+     <y>164</y>
     </hint>
     <hint type="destinationlabel">
-     <x>877</x>
-     <y>107</y>
+     <x>977</x>
+     <y>159</y>
     </hint>
    </hints>
   </connection>
@@ -532,12 +480,12 @@
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>880</x>
-     <y>144</y>
+     <x>977</x>
+     <y>213</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1015</x>
-     <y>142</y>
+     <x>1032</x>
+     <y>215</y>
     </hint>
    </hints>
   </connection>
@@ -548,12 +496,12 @@
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1003</x>
-     <y>142</y>
+     <x>1032</x>
+     <y>215</y>
     </hint>
     <hint type="destinationlabel">
-     <x>906</x>
-     <y>145</y>
+     <x>977</x>
+     <y>213</y>
     </hint>
    </hints>
   </connection>
@@ -564,12 +512,12 @@
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>854</x>
-     <y>230</y>
+     <x>977</x>
+     <y>105</y>
     </hint>
     <hint type="destinationlabel">
-     <x>977</x>
-     <y>230</y>
+     <x>1032</x>
+     <y>107</y>
     </hint>
    </hints>
   </connection>
@@ -580,12 +528,12 @@
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>998</x>
-     <y>221</y>
+     <x>1032</x>
+     <y>107</y>
     </hint>
     <hint type="destinationlabel">
-     <x>901</x>
-     <y>230</y>
+     <x>977</x>
+     <y>105</y>
     </hint>
    </hints>
   </connection>
