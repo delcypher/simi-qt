@@ -6,8 +6,9 @@
 #include <QDir>
 #include <QFileInfo>
 #include "ui_mainwindow.h"
-#include "imagepairmanager.h"
 
+#include "imagepairmanager.h"
+#include "seedpointmanager.h"
 
 
 //Forward Declare UiTester
@@ -22,7 +23,9 @@ class MainWindow : public QMainWindow
 		~MainWindow();
 
 		//helper classes
-		ImagePairManager imageManager;
+		ImagePairManager* imageManager;
+		SeedPointManager* seedManager;
+
 
 	
 	private slots:
