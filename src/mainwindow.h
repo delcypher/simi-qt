@@ -24,6 +24,9 @@
 #include "vtkSmartPointer.h"
 #include "vtkImageMapper.h"
 #include "vtkActor2D.h"
+#include "vtkImageActor.h"
+#include "vtkMapper2D.h"
+#include "vtkPolyDataMapper2D.h"
 
 /* END EXTRA HEADERS */
 

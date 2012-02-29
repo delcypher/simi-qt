@@ -40,7 +40,7 @@ void CustomInteractorStyle::OnLeftButtonDown()
 	{
 		qDebug() << "GetCellID is: " << picker->GetCellId();
 		qDebug() << "GetPickPosition is:" << picker->GetPickPosition()[0] << picker->GetPickPosition()[1] << picker->GetPickPosition()[2];
-		qDebug() << "GetPointIJK is:" << picker->GetPointIJK()[0] << picker->GetPointIJK()[1] << picker->GetPointIJK()[2] << endl;                
+                qDebug() << "GetPointIJK is:" << picker->GetPointIJK()[0] << picker->GetPointIJK()[1] << picker->GetPointIJK()[2] << endl;
 	}
 	else
 	{

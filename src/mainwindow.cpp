@@ -14,13 +14,11 @@ MainWindow::MainWindow() : imageInfo(""), workPath(QDir::home())
 	ui = new Ui::MainWindow;
 	ui->setupUi(this); //set up user interface
 
-
 	//Setup About Qt Dialog
 	connect(ui->actionAboutQt,SIGNAL(triggered()),qApp,SLOT(aboutQt()));
 
 	connect(this,SIGNAL(sliceChanged(int)), ui->sliceSpinBox, SLOT(setValue(int)));
 	connect(this,SIGNAL(sliceChanged(int)), ui->sliceSlider, SLOT(setValue(int)));
-
 
 	reader = vtkStructuredPointsReader::New();
 	imageView = vtkImageViewer2::New();
@@ -143,8 +141,8 @@ bool MainWindow::loadImage()
 	// image_view->SetupInteractor( iren );
 
 	//flip view by 180 degrees so we aren't upside down
-	imageView->GetRenderer()->ResetCamera();
-	imageView->GetRenderer()->GetActiveCamera()->Roll(180);
+        //imageView->GetRenderer()->ResetCamera();
+        //imageView->GetRenderer()->GetActiveCamera()->Roll(180);
 
 	/* ****************************************************************************** */
 	/* START ADD ACTORS EXPERIMENT */
@@ -154,20 +152,20 @@ bool MainWindow::loadImage()
 	// cubeSource->SetXLength(50);
 	// cubeSource->SetYLength(50);
 	// cubeSource->SetZLength(60);
-	vtkSmartPointer<vtkImageData> cubeSource = vtkSmartPointer<vtkImageData>::New();
-	cubeSource->SetDimensions(50,50,60);
+//	vtkSmartPointer<vtkImageData> cubeSource = vtkSmartPointer<vtkImageData>::New();
+//	cubeSource->SetDimensions(50,50,60);
 
 
-	// Create a mapper and actor
-	vtkSmartPointer<vtkImageMapper> mapper = vtkSmartPointer<vtkImageMapper>::New();
-	mapper->SetInput(cubeSource);
-	vtkSmartPointer<vtkActor2D> actor = vtkSmartPointer<vtkActor2D>::New();
-	actor->SetMapper(mapper);
-	// actor->SetPosition(0.0, 0.0, 120);
-	actor->SetPosition(50, 50);
+//	// Create a mapper and actor
+//	vtkSmartPointer<vtkImageMapper> mapper = vtkSmartPointer<vtkImageMapper>::New();
+//	mapper->SetInput(cubeSource);
+//	vtkSmartPointer<vtkActor2D> actor = vtkSmartPointer<vtkActor2D>::New();
+//	actor->SetMapper(mapper);
+//	// actor->SetPosition(0.0, 0.0, 120);
+//	actor->SetPosition(50, 50);
 
-	// Add actor to viewer
-	imageView->GetRenderer()->AddActor(actor);
+//	// Add actor to viewer
+//	imageView->GetRenderer()->AddActor(actor);
 
 	/* END EXPERIMENT */
 	/* ****************************************************************************** */
@@ -261,18 +259,36 @@ void MainWindow::sliceControlSetup()
 
 void MainWindow::on_runAlgorithm_clicked()
 {
-        vtkSmartPointer<vtkImageData> original = this->imageView->GetInput();
+        vtkSmartPointer<vtkImageData> original = this->imageView->GetInput();        
         int pos_x = this->ui->pos_x_line->text().toInt();
         int pos_y = this->ui->pos_y_line->text().toInt();
+        int pos_z = imageView->GetSlice();
         int range_from = this->ui->from_line->text().toInt();
         int range_to = this->ui->to_line->text().toInt();
+        int* extent = original->GetExtent();
         int* dims = original->GetDimensions();
-        cout << dims[0] << " " << dims[1] << " " << dims[2] << endl;
+        double* origin = original->GetOrigin();
+        cout << origin[0] << " " << origin[1] << " " << origin[2] << endl;
+        double* spacings = original->GetSpacing();
+        //cout << dims[0] << " " << dims[1] << " " << dims[2] << " " << pos_z << endl;
+        //cout << spacings[0] << " " << spacings[1] << " " << spacings[2] << endl;
+        //cout << original->GetScalarTypeAsString() << endl;
+        //cout << original->GetScalarTypeMax() << endl;
+        //cout << original->GetScalarTypeMin() << endl;
+        //cout << original->GetNumberOfScalarComponents() << endl;
 
         vtkSmartPointer<vtkImageData> visited = vtkSmartPointer<vtkImageData>::New();
-        visited->SetDimensions(512,512,1);
-	  visited->SetNumberOfScalarComponents(3);
+        visited->SetDimensions(dims[0],dims[1],1);
+        visited->SetSpacing(spacings);
+        //visited->SetOrigin(origin[0], origin[1], origin[2] - 1);
+        //origin = visited->GetOrigin();
+        //cout << origin[0] << " " << origin[1] << " " << origin[2] << endl;
+        visited->SetExtent(extent);
+        visited->SetNumberOfScalarComponents(4);
         visited->SetScalarTypeToUnsignedChar();
+        visited->AllocateScalars();
+        spacings = visited->GetSpacing();
+        //cout << spacings[0] << " " << spacings[1] << " " << spacings[2] << endl;
 
         //fill in image
         for (int y=0; y<512; y++)
@@ -280,33 +296,44 @@ void MainWindow::on_runAlgorithm_clicked()
                 for (int x=0; x<512; x++)
                 {
                         unsigned char* pixel = static_cast<unsigned char*>(visited->GetScalarPointer(x,y,0));
-				pixel[0] = 255;
+                        pixel[0] = 0;
                         pixel[1] = 0;
                         pixel[2] = 0;
-//				if (x < 200)
-//					 pixel[3] = 0;
-//				else
-//					  pixel[3] = 255;
-
+                        pixel[3] = 0;
+                        //cout << y << " " << x << " " << (int)pixel[0] << " " << (int)pixel[1] << " " << (int)pixel[2] << endl;
                 }
         }
 
         // run algorithm
-        cout << pos_x << " " << pos_y << " " << range_from << " " << range_to << endl;
-	  //flood_fill(original, visited, pos_x, pos_y, range_from, range_to, predicate1);
+        //cout << pos_x << " " << pos_y << " " << range_from << " " << range_to << endl;
+        flood_fill(original, visited, pos_x, pos_y, pos_z, range_from, range_to, predicate1);
 
         //display in front
 
-        // Create a mapper and actor
+//        // Create a mapper and actor
+//        vtkSmartPointer<vtkImageMapper> mapper = vtkSmartPointer<vtkImageMapper>::New();
+//        mapper->SetInput(visited);
+//        vtkSmartPointer<vtkActor2D> actor = vtkSmartPointer<vtkActor2D>::New();
+//        actor->SetMapper(mapper);
+
+
+//        actor->SetPosition(0, 0);
+
+//        // Add actor to viewer
+//        imageView->GetRenderer()->AddActor(actor);
+
+        //vtkSmartPointer<vtkImageActor> actor = vtkSmartPointer<vtkImageActor>::New();
+        //vtkSmartPointer<vtkMapper2D> mapper = vtkSmartPointer<vtkMapper2D>::New();
         vtkSmartPointer<vtkImageMapper> mapper = vtkSmartPointer<vtkImageMapper>::New();
-        mapper->SetInput(visited);
         vtkSmartPointer<vtkActor2D> actor = vtkSmartPointer<vtkActor2D>::New();
+
+        mapper->SetInput(visited);
         actor->SetMapper(mapper);
+        actor->SetPosition(origin[0],origin[1]);
+        actor->SetVisibility();
 
-        // actor->SetPosition(0.0, 0.0, 120);
-	  actor->SetPosition(0, 0);
-
-        // Add actor to viewer
         imageView->GetRenderer()->AddActor(actor);
+
+
 
 }
