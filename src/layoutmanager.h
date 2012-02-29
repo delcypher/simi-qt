@@ -11,6 +11,7 @@ class LayoutManager : public QObject
 	public:
 		LayoutManager(ImagePairManager* imageManager, QVTKWidget* vtkWidget);
 		~LayoutManager();
+		void setConstrast(double minIntensity, double maxIntensity);
 	
 	public slots:
 		void ChangeSlice(int slice);

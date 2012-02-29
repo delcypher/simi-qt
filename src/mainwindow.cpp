@@ -29,6 +29,15 @@ MainWindow::MainWindow() : imageInfo(""), workPath(QDir::home())
 MainWindow::~MainWindow()
 {
 	delete ui;
+
+	if(imageManager!=0)
+        delete imageManager;
+
+	if(seedManager!=0)
+        delete seedManager;
+
+	if(layoutManager!=0)
+        delete layoutManager;
 }
 
 void MainWindow::on_actionOpen_Image_triggered()
@@ -72,6 +81,7 @@ void MainWindow::on_actionOpen_Image_triggered()
 			layoutManager = new LayoutManager(imageManager,ui->qvtkWidget);
 
 			sliceControlSetup();
+			contrastControlSetup();
 
 			//Update the work path to the location of the new image
 			workPath.setPath(imageInfo.absolutePath());
@@ -127,24 +137,28 @@ void MainWindow::contrastControlSetup()
 //	reader->GetOutput()->GetScalarRange(range);
 //	//setup the ranges on the contrast sliders appropriately
 //	qDebug() << "Min intensity range:" <<  range[0] << ", Max intensity:" << range[1] ;
-//	ui->minIntensitySlider->setRange(static_cast<int>(range[0]),static_cast<int>(range[1]));
-//	ui->maxIntensitySlider->setRange(static_cast<int>(range[0]),static_cast<int>(range[1]));
-//	ui->minIntensitySpinBox->setRange(static_cast<int>(range[0]),static_cast<int>(range[1]));
-//	ui->maxIntensitySpinBox->setRange(static_cast<int>(range[0]),static_cast<int>(range[1]));
-
+	if(imageManager!=0)
+	{
+        ui->minIntensitySlider->setRange(static_cast<int>(imageManager->getMinimumIntensity()),static_cast<int>(imageManager->getMaximumIntensity()));
+        ui->maxIntensitySlider->setRange(static_cast<int>(imageManager->getMinimumIntensity()),static_cast<int>(imageManager->getMaximumIntensity()));
+        ui->minIntensitySpinBox->setRange(static_cast<int>(imageManager->getMinimumIntensity()),static_cast<int>(imageManager->getMaximumIntensity()));
+        ui->maxIntensitySpinBox->setRange(static_cast<int>(imageManager->getMinimumIntensity()),static_cast<int>(imageManager->getMaximumIntensity()));
+    }
 //	imageView->SetColorLevel((range[0]+range[1])/2.0); //half way point in data set
 //	imageView->SetColorWindow(range[1]-range[0]); //width in dataset to use
 
-//	ui->minIntensitySlider->setValue(static_cast<int>(range[0]));
-//	ui->maxIntensitySlider->setValue(static_cast<int>(range[1]));
+    //Doing this change should cause the valueChanged() signal to be emitted by the sliders
+    ui->minIntensitySlider->setValue(static_cast<int>(imageManager->getMinimumIntensity()));
+    ui->maxIntensitySlider->setValue(static_cast<int>(imageManager->getMaximumIntensity()));
 
 }
 
 void MainWindow::changeContrast()
 {
-//	imageView->SetColorLevel( (static_cast<double>(ui->maxIntensitySpinBox->value()) + static_cast<double>(ui->minIntensitySpinBox->value()) )/2.0 );
-//	imageView->SetColorWindow(  static_cast<double>(ui->maxIntensitySpinBox->value()) - static_cast<double>(ui->minIntensitySpinBox->value()) );
-//	ui->qvtkWidget->update();
+    if(layoutManager!=0)
+    {
+        layoutManager->setConstrast(static_cast<double>(ui->minIntensitySlider->value()), static_cast<double>(ui->maxIntensitySlider->value()));
+    }
 }
 
 
