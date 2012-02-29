@@ -6,6 +6,7 @@
 #include <QDir>
 #include <QFileInfo>
 #include "ui_mainwindow.h"
+#include "imagepairmanager.h"
 
 
 
@@ -19,6 +20,10 @@ class MainWindow : public QMainWindow
 	public:
 		MainWindow();
 		~MainWindow();
+
+		//helper classes
+		ImagePairManager imageManager;
+
 	
 	private slots:
 		void on_actionOpen_Image_triggered();

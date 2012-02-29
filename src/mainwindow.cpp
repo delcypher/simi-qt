@@ -9,7 +9,7 @@
 #include "vtkCamera.h"
 
 
-MainWindow::MainWindow() : imageInfo(""), workPath(QDir::home())
+MainWindow::MainWindow() :  imageManager(), imageInfo(""), workPath(QDir::home())
 {
 	ui = new Ui::MainWindow;
 	ui->setupUi(this); //set up user interface
@@ -50,6 +50,10 @@ void MainWindow::on_actionOpen_Image_triggered()
 			imageInfo.setFile(newImagePath);
 
 			//Load the image
+			if(!imageManager.loadImage(imageInfo))
+			{
+				qDebug() << "Failed to open" << imageInfo.absoluteFilePath();
+			}
 
 			//Update the work path to the location of the new image
 			workPath.setPath(imageInfo.absolutePath());
