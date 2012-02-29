@@ -1,11 +1,11 @@
-#include "layoutmanager.h"
+#include "viewmanager.h"
 #include <vtkRenderWindow.h>
 #include <vtkRenderer.h>
 #include <vtkCamera.h>
 #include <QDebug>
 
 
-LayoutManager::LayoutManager(ImagePairManager* imageManager, QVTKWidget* vtkWidget) : scaleStep(10)
+ViewManager::ViewManager(ImagePairManager* imageManager, QVTKWidget* vtkWidget) : scaleStep(10)
 {
 	//setup original image
 	imageViewer = vtkImageViewer2::New();
@@ -47,12 +47,12 @@ LayoutManager::LayoutManager(ImagePairManager* imageManager, QVTKWidget* vtkWidg
 
 }
 
-LayoutManager::~LayoutManager()
+ViewManager::~ViewManager()
 {
 
 }
 
-void LayoutManager::setConstrast(double minIntensity, double maxIntensity)
+void ViewManager::setConstrast(double minIntensity, double maxIntensity)
 {
     if(maxIntensity >= minIntensity)
     {
@@ -64,7 +64,7 @@ void LayoutManager::setConstrast(double minIntensity, double maxIntensity)
     }
 }
 
-void LayoutManager::zoomIn()
+void ViewManager::zoomIn()
 {
     double tempScale = currentScale -scaleStep;
 
@@ -82,7 +82,7 @@ void LayoutManager::zoomIn()
 
 }
 
-void LayoutManager::zoomOut()
+void ViewManager::zoomOut()
 {
     double tempScale = currentScale +scaleStep;
 
@@ -99,7 +99,7 @@ void LayoutManager::zoomOut()
     forceZoom();
 }
 
-void LayoutManager::mouseWheelForward(vtkObject *caller, unsigned long vtkEvent, void *clientData, void *callData, vtkCommand *command)
+void ViewManager::mouseWheelForward(vtkObject *caller, unsigned long vtkEvent, void *clientData, void *callData, vtkCommand *command)
 {
     zoomIn();
 
@@ -107,7 +107,7 @@ void LayoutManager::mouseWheelForward(vtkObject *caller, unsigned long vtkEvent,
     command->AbortFlagOn();
 }
 
-void LayoutManager::mouseWheelBackward(vtkObject *caller, unsigned long vtkEvent, void *clientData, void *callData, vtkCommand *command)
+void ViewManager::mouseWheelBackward(vtkObject *caller, unsigned long vtkEvent, void *clientData, void *callData, vtkCommand *command)
 {
     zoomOut();
 
@@ -116,7 +116,7 @@ void LayoutManager::mouseWheelBackward(vtkObject *caller, unsigned long vtkEvent
 }
 
 
-void LayoutManager::ChangeSlice(int slice)
+void ViewManager::ChangeSlice(int slice)
 {
 	imageViewer->SetSlice(slice);
     emit sliceChanged(slice);
@@ -125,7 +125,7 @@ void LayoutManager::ChangeSlice(int slice)
     forceZoom();
 }
 
-void LayoutManager::forceZoom()
+void ViewManager::forceZoom()
 {
     imageViewer->GetRenderer()->GetActiveCamera()->SetParallelScale(currentScale);
     imageViewer->GetRenderWindow()->Render();

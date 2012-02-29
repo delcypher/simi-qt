@@ -81,7 +81,7 @@ void MainWindow::on_actionOpen_Image_triggered()
 			//setup LayoutManager
 			if(layoutManager!=0)
 				delete layoutManager;
-			layoutManager = new LayoutManager(imageManager,ui->qvtkWidget);
+			layoutManager = new ViewManager(imageManager,ui->qvtkWidget);
 
 			sliceControlSetup();
 			contrastControlSetup();

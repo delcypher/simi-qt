@@ -7,12 +7,12 @@
 #include <vtkEventQtSlotConnect.h>
 #include <vtkCommand.h>
 
-class LayoutManager : public QObject
+class ViewManager : public QObject
 {
 	Q_OBJECT
 	public:
-		LayoutManager(ImagePairManager* imageManager, QVTKWidget* vtkWidget);
-		~LayoutManager();
+		ViewManager(ImagePairManager* imageManager, QVTKWidget* vtkWidget);
+		~ViewManager();
 		void setConstrast(double minIntensity, double maxIntensity);
 
 	

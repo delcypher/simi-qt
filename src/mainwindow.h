@@ -9,7 +9,7 @@
 
 #include "imagepairmanager.h"
 #include "seedpointmanager.h"
-#include "layoutmanager.h"
+#include "viewmanager.h"
 
 
 
@@ -28,7 +28,7 @@ class MainWindow : public QMainWindow
 		//helper classes
 		ImagePairManager* imageManager;
 		SeedPointManager* seedManager;
-		LayoutManager* layoutManager;
+		ViewManager* layoutManager;
 
 
 	
