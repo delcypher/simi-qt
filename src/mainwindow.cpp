@@ -258,3 +258,54 @@ void MainWindow::sliceControlSetup()
 	ui->sliceSlider->setRange(imageView->GetSliceMin(), imageView->GetSliceMax() );
 	ui->sliceSpinBox->setRange(imageView->GetSliceMin(), imageView->GetSliceMax() );
 }
+
+void MainWindow::on_runAlgorithm_clicked()
+{
+        vtkSmartPointer<vtkImageData> original = this->imageView->GetInput();
+        int pos_x = this->ui->pos_x_line->text().toInt();
+        int pos_y = this->ui->pos_y_line->text().toInt();
+        int range_from = this->ui->from_line->text().toInt();
+        int range_to = this->ui->to_line->text().toInt();
+        int* dims = original->GetDimensions();
+        cout << dims[0] << " " << dims[1] << " " << dims[2] << endl;
+
+        vtkSmartPointer<vtkImageData> visited = vtkSmartPointer<vtkImageData>::New();
+        visited->SetDimensions(512,512,1);
+        visited->SetNumberOfScalarComponents(3);
+        visited->SetScalarTypeToUnsignedChar();
+
+        //fill in image
+        for (int y=0; y<512; y++)
+        {
+                for (int x=0; x<512; x++)
+                {
+                        unsigned char* pixel = static_cast<unsigned char*>(visited->GetScalarPointer(x,y,0));
+                        pixel[0] = 0;
+                        pixel[1] = 0;
+                        pixel[2] = 0;
+//                        if (x < 200)
+//                               pixel[3] = 255;
+//                        else
+//                                pixel[3] = 255;
+
+                }
+        }
+
+        // run algorithm
+        cout << pos_x << " " << pos_y << " " << range_from << " " << range_to << endl;
+        flood_fill(original, visited, pos_x, pos_y, range_from, range_to, predicate1);
+
+        //display in front
+
+        // Create a mapper and actor
+        vtkSmartPointer<vtkImageMapper> mapper = vtkSmartPointer<vtkImageMapper>::New();
+        mapper->SetInput(visited);
+        vtkSmartPointer<vtkActor2D> actor = vtkSmartPointer<vtkActor2D>::New();
+        actor->SetMapper(mapper);
+        // actor->SetPosition(0.0, 0.0, 120);
+        actor->SetPosition(0, 0);
+
+        // Add actor to viewer
+        imageView->GetRenderer()->AddActor(actor);
+
+}

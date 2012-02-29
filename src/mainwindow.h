@@ -27,6 +27,8 @@
 
 /* END EXTRA HEADERS */
 
+#include "segmentation.h"
+
 
 //Forward Declare UiTester
 class UiTester;
@@ -49,6 +51,8 @@ class MainWindow : public QMainWindow
         void on_minIntensitySlider_valueChanged(int value);
 	void on_maxIntensitySlider_valueChanged(int value);
 	void on_sliceSlider_valueChanged(int value);
+
+        void on_runAlgorithm_clicked();
 
 signals:
 		void sliceChanged(int sliceNumber);
