@@ -9,27 +9,6 @@
 
 
 
-#include "vtkImageViewer2.h"
-#include "vtkSmartPointer.h"
-#include "vtkRenderer.h"
-#include "vtkRenderWindow.h"
-#include "vtkStructuredPoints.h"
-#include "vtkRenderWindowInteractor.h"
-#include "vtkStructuredPointsReader.h"
-#include "customInteractorStyle.h"
-
-/* EXTRA HEADERS FOR EXPERIMENT */
-
-#include "vtkPolyData.h"
-#include "vtkSmartPointer.h"
-#include "vtkImageMapper.h"
-#include "vtkActor2D.h"
-
-/* END EXTRA HEADERS */
-
-#include "segmentation.h"
-
-
 //Forward Declare UiTester
 class UiTester;
 
@@ -48,22 +27,17 @@ class MainWindow : public QMainWindow
 		void on_actionAbout_triggered();
 		bool loadImage();
 
-        void on_minIntensitySlider_valueChanged(int value);
-	void on_maxIntensitySlider_valueChanged(int value);
-	void on_sliceSlider_valueChanged(int value);
+		void on_minIntensitySlider_valueChanged(int value);
+		void on_maxIntensitySlider_valueChanged(int value);
+		void on_sliceSlider_valueChanged(int value);
 
-        void on_runAlgorithm_clicked();
-
-signals:
+	signals:
 		void sliceChanged(int sliceNumber);
 
 	private:
 		QFileInfo imageInfo;
 		QDir workPath; //Directory used file open dialogs
 		Ui::MainWindow* ui; //handle to user interface
-		vtkSmartPointer<vtkStructuredPointsReader> reader;
-		vtkSmartPointer<vtkImageViewer2> imageView;
-		vtkSmartPointer<CustomInteractorStyle> customStyle;
 
 
 		//setup methods
