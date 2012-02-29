@@ -7,6 +7,7 @@
 #include <vtkStructuredPoints.h>
 #include "vtkStructuredPointsReader.h"
 
+
 /* Responsible for loading original image and making it avaliable.
 *  It is also responsible for producing the segmentation/blocking image
 */
@@ -49,6 +50,8 @@ class ImagePairManager : public QObject
 		//Extents
 		int extentZMax;
 		int extentZMin;
+
+
 
 };
 

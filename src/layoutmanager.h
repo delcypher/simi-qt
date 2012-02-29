@@ -4,6 +4,8 @@
 #include <QVTKWidget.h>
 #include "imagepairmanager.h"
 #include "vtkImageViewer2.h"
+#include <vtkEventQtSlotConnect.h>
+#include <vtkCommand.h>
 
 class LayoutManager : public QObject
 {
@@ -19,6 +21,10 @@ class LayoutManager : public QObject
 		void zoomIn();
 		void zoomOut();
 
+	private slots:
+        void mouseWheelForward(vtkObject* caller, unsigned long vtkEvent, void* clientData, void* callData, vtkCommand* command);
+        void mouseWheelBackward(vtkObject* caller, unsigned long vtkEvent, void* clientData, void* callData, vtkCommand* command);
+
 
 	signals:
 		void sliceChanged(int slice);
@@ -27,6 +33,7 @@ class LayoutManager : public QObject
         void forceZoom();
 
 		vtkSmartPointer<vtkImageViewer2> imageViewer;
+		vtkSmartPointer<vtkEventQtSlotConnect> connections;
 
 		double minScale; //for zoom
 		double maxScale; //for zoom

@@ -12,6 +12,8 @@
 #include "layoutmanager.h"
 
 
+
+
 //Forward Declare UiTester
 class UiTester;
 
@@ -44,6 +46,7 @@ class MainWindow : public QMainWindow
 		QFileInfo imageInfo;
 		QDir workPath; //Directory used file open dialogs
 		Ui::MainWindow* ui; //handle to user interface
+
 
 
 		//setup methods

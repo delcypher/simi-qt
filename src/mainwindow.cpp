@@ -9,6 +9,7 @@
 #include "vtkCamera.h"
 
 
+
 MainWindow::MainWindow() : imageInfo(""), workPath(QDir::home())
 {
 	ui = new Ui::MainWindow;
@@ -17,6 +18,8 @@ MainWindow::MainWindow() : imageInfo(""), workPath(QDir::home())
 	seedManager=0;
 	imageManager=0;
 	layoutManager=0;
+
+
 
 	//Setup About Qt Dialog
 	connect(ui->actionAboutQt,SIGNAL(triggered()),qApp,SLOT(aboutQt()));
@@ -86,6 +89,7 @@ void MainWindow::on_actionOpen_Image_triggered()
 			//setup zoom control
 			connect(ui->actionZoom_in,SIGNAL(triggered()), layoutManager,SLOT(zoomIn()));
 			connect(ui->actionZoom_out,SIGNAL(triggered()), layoutManager,SLOT(zoomOut()));
+
 
 			//Update the work path to the location of the new image
 			workPath.setPath(imageInfo.absolutePath());

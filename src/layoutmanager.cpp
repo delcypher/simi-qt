@@ -2,6 +2,8 @@
 #include <vtkRenderWindow.h>
 #include <vtkRenderer.h>
 #include <vtkCamera.h>
+#include <QDebug>
+
 
 LayoutManager::LayoutManager(ImagePairManager* imageManager, QVTKWidget* vtkWidget) : scaleStep(10)
 {
@@ -13,7 +15,7 @@ LayoutManager::LayoutManager(ImagePairManager* imageManager, QVTKWidget* vtkWidg
 
     //setup zoom control
     maxScale= ( imageManager->getYDim() )*( imageManager->getYSpacing() )/2.0;
-    minScale=maxScale/500;
+    minScale=maxScale/800;
     currentScale=maxScale;
 
     imageViewer->GetRenderer()->GetActiveCamera()->SetParallelScale(currentScale);
@@ -22,6 +24,26 @@ LayoutManager::LayoutManager(ImagePairManager* imageManager, QVTKWidget* vtkWidg
 	//setup segblock image
 
 	//setup seedpoint drawing?
+
+    //Enable connections between VTK events and our Qt Slots
+    connections = vtkEventQtSlotConnect::New();
+
+    //Setup mousewheel connection for zoom. We use high priority so we get called before the vtkinteractorstyle
+    connections->Connect(vtkWidget->GetInteractor(),
+                vtkCommand::MouseWheelForwardEvent,
+                this,
+                SLOT(mouseWheelForward(vtkObject*,ulong,void*,void*,vtkCommand*)),
+                NULL,
+                1.0);
+
+
+    connections->Connect(vtkWidget->GetInteractor(),
+                vtkCommand::MouseWheelBackwardEvent,
+                this,
+                SLOT(mouseWheelBackward(vtkObject*,ulong,void*,void*,vtkCommand*)),
+                NULL,
+                1.0
+                );
 
 }
 
@@ -47,7 +69,14 @@ void LayoutManager::zoomIn()
     double tempScale = currentScale -scaleStep;
 
     if(tempScale >= minScale)
+    {
         currentScale=tempScale;
+        qDebug() << "Zoom scale set to " << currentScale;
+    }
+    else
+    {
+        qDebug() << "Zoom In limit reached";
+    }
 
     forceZoom();
 
@@ -58,10 +87,34 @@ void LayoutManager::zoomOut()
     double tempScale = currentScale +scaleStep;
 
     if(tempScale <= maxScale)
+    {
         currentScale=tempScale;
+        qDebug() << "Zoom scale set to " << currentScale;
+    }
+    else
+    {
+        qDebug() << "Zoom Out limit reached.";
+    }
 
     forceZoom();
 }
+
+void LayoutManager::mouseWheelForward(vtkObject *caller, unsigned long vtkEvent, void *clientData, void *callData, vtkCommand *command)
+{
+    zoomIn();
+
+    //Prevent vtkInteractorStyle from intercepting the event
+    command->AbortFlagOn();
+}
+
+void LayoutManager::mouseWheelBackward(vtkObject *caller, unsigned long vtkEvent, void *clientData, void *callData, vtkCommand *command)
+{
+    zoomOut();
+
+    //Prevent vtkInteractorStyle from intercepting the event
+    command->AbortFlagOn();
+}
+
 
 void LayoutManager::ChangeSlice(int slice)
 {
