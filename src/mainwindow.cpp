@@ -215,6 +215,21 @@ void MainWindow::on_actionHandTool_triggered()
 		seedManager,
 		SLOT(setSeedPoint(int,int,int))
 		);
+
+    //disable penTool connection
+    disconnect(viewManager,
+		SIGNAL(dragEvent(int,int,int)),
+		drawManager,
+		SLOT(draw(int,int,int))
+		);
+
+    //disable eraseTool connection
+    disconnect(viewManager,
+		SIGNAL(dragEvent(int,int,int)),
+		drawManager,
+		SLOT(erase(int,int,int))
+		);
+
 }
 
 void MainWindow::on_actionPenTool_triggered()
@@ -228,6 +243,20 @@ void MainWindow::on_actionPenTool_triggered()
 		seedManager,
 		SLOT(setSeedPoint(int,int,int))
 		);
+
+    //disable eraseTool connection
+    disconnect(viewManager,
+		SIGNAL(dragEvent(int,int,int)),
+		drawManager,
+		SLOT(erase(int,int,int))
+		);
+
+    //enable connection
+    connect(viewManager,
+		SIGNAL(dragEvent(int,int,int)),
+		drawManager,
+		SLOT(draw(int,int,int))
+		);
 }
 
 void MainWindow::on_actionCrosshairTool_triggered()
@@ -240,6 +269,20 @@ void MainWindow::on_actionCrosshairTool_triggered()
 		SIGNAL(viewLeftClicked(int,int,int)),
 		seedManager,
 		SLOT(setSeedPoint(int,int,int))
+		);
+
+    //disable penTool connection
+    disconnect(viewManager,
+		SIGNAL(dragEvent(int,int,int)),
+		drawManager,
+		SLOT(draw(int,int,int))
+		);
+
+    //disable eraseTool connection
+    disconnect(viewManager,
+		SIGNAL(dragEvent(int,int,int)),
+		drawManager,
+		SLOT(erase(int,int,int))
 		);
 
 
@@ -262,6 +305,20 @@ void MainWindow::on_actionEraseTool_triggered()
 		SIGNAL(viewLeftClicked(int,int,int)),
 		seedManager,
 		SLOT(setSeedPoint(int,int,int))
+		);
+
+    //disable penTool connection
+    disconnect(viewManager,
+		SIGNAL(dragEvent(int,int,int)),
+		drawManager,
+		SLOT(draw(int,int,int))
+		);
+
+    //enable connection
+    connect(viewManager,
+		SIGNAL(dragEvent(int,int,int)),
+		drawManager,
+		SLOT(erase(int,int,int))
 		);
 
 

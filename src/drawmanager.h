@@ -9,6 +9,10 @@ class DrawManager : public QObject
 		DrawManager(ImagePairManager* imageManager);
 		~DrawManager();
 	
+	public slots:
+		void draw(int xVoxel, int yVoxel, int zVoxel);
+		void erase(int xVoxel, int yVoxel, int zVoxel);
+
 	private:
 		ImagePairManager* imageManager;
 	
