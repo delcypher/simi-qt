@@ -11,7 +11,7 @@ class DrawManager : public QObject
 	Q_OBJECT
 
 	public:
-        DrawManager(ImagePairManager* imageManager, QSpinBox* drawSize, QComboBox* drawType);
+        DrawManager(ImagePairManager* imagePairManager, QSpinBox* drawSize, QComboBox* drawType);
 		~DrawManager();
 	
 	public slots:
@@ -19,7 +19,7 @@ class DrawManager : public QObject
 		void erase(int xVoxel, int yVoxel, int zVoxel);
 
 	private:
-		ImagePairManager* imageManager;
+        ImagePairManager* imagePairManager;
         QSpinBox* drawSize;
         QComboBox* drawType;
 
