@@ -81,15 +81,6 @@ ViewManager::ViewManager(ImagePairManager* imageManager, QVTKWidget* qvtkWidget)
 		NULL,
 		2.0);
 
-    //setup connections for mouseAt
-    connections->Connect(qvtkWidget->GetInteractor(),
-			vtkCommand::MouseMoveEvent,
-			this,
-			SLOT(mouseMove(vtkObject*,ulong,void*,void*,vtkCommand*)),
-			NULL,
-			2.0
-			);
-
     //setup connections for mouseInWidget
     connections->Connect(qvtkWidget->GetInteractor(),
 			vtkCommand::EnterEvent,

@@ -16,7 +16,7 @@ class SeedPointManager : public QObject
 		bool getSeedPoint(int sliceNumber, int& x, int& y);
 
 	signals:
-		void seedPointChanged(int sliceNumber, int& x, int& y);
+		void seedPointChanged(int sliceNumber, int x, int y);
 
 
 	public slots:

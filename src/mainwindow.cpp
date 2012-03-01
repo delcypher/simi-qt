@@ -114,6 +114,9 @@ void MainWindow::on_actionOpen_Image_triggered()
 			connect(viewManager,SIGNAL(mouseEntersWidget()), this, SLOT(updateStatusBar()));
 			connect(viewManager,SIGNAL(mouseLeavesWidget()), this, SLOT(updateStatusBar()));
 
+			//setup seedPointLine view being told about the seed point being change
+			connect(seedManager,SIGNAL(seedPointChanged(int,int,int)), this, SLOT(seedPointChanged(int,int,int)));
+
 			//setup zoom control
 			connect(ui->actionZoom_in,SIGNAL(triggered()), viewManager,SLOT(zoomIn()));
 			connect(ui->actionZoom_out,SIGNAL(triggered()), viewManager,SLOT(zoomOut()));
@@ -422,4 +425,14 @@ void MainWindow::updateStatusBar()
 	}
 	else
 		ui->statusbar->showMessage("");
+}
+
+void MainWindow::seedPointChanged(int sliceNumber, int x, int y)
+{
+	QString seedPoint("(");
+	seedPoint += QString::number(x);
+	seedPoint +=",";
+	seedPoint += QString::number(y);
+	seedPoint +=")";
+	ui->seedPointLineEdit->setText(seedPoint);
 }
