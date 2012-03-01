@@ -18,6 +18,12 @@ class ViewManager : public QObject
 		int getCurrentSlice();
         vtkRenderer* getRenderer();
 
+		int getLastMousePosX() { return mouseX;}
+		int getLastMousePosY() { return mouseY;}
+		int getLastMousePosZ() { return mouseZ;}
+		int getLastMouseIntensity() { return mouseIntensity;}
+
+
 	
 	public slots:
 		void ChangeSlice(int slice);
@@ -30,14 +36,13 @@ class ViewManager : public QObject
 		void mouseWheelForward(vtkObject* caller, unsigned long vtkEvent, void* clientData, void* callData, vtkCommand* command);
 		void mouseWheelBackward(vtkObject* caller, unsigned long vtkEvent, void* clientData, void* callData, vtkCommand* command);
 		void dragHandler(vtkObject* caller, unsigned long vtkEvent, void* clientData, void* callData, vtkCommand* command);
-		void mouseMove(vtkObject* caller, unsigned long vtkEvent, void* clientData, void* callData, vtkCommand* command);
 
 
 	signals:
 		void sliceChanged(int slice);
 		void viewLeftClicked(int xVoxel, int yVoxel, int zVoxel);
 		void dragEvent(int xVoxel, int yVoxel, int zVoxel);
-		void mouseIsAt(int xVoxel, int yVoxel, int zVoxel, short intensity);
+		void mouseHasMoved();
 
 	private:
         void forceZoom();
@@ -54,5 +59,11 @@ class ViewManager : public QObject
 
 		//for dragging
 		bool dragOn;
+
+		//for reporting mouse position and intensity (in terms of voxels in original image)
+		int mouseX;
+		int mouseY;
+		int mouseZ;
+		int mouseIntensity;
 
 };

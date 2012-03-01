@@ -110,7 +110,7 @@ void MainWindow::on_actionOpen_Image_triggered()
 			segmentationControlSetup();
 
 			//setup statusbar update from viewmanager
-			connect(viewManager,SIGNAL(mouseIsAt(int,int,int,short)), this, SLOT(updateStatusBar(int,int,int,short)));
+			connect(viewManager,SIGNAL(mouseHasMoved()), this, SLOT(updateStatusBar()));
 
 			//setup zoom control
 			connect(ui->actionZoom_in,SIGNAL(triggered()), viewManager,SLOT(zoomIn()));
@@ -408,12 +408,12 @@ void MainWindow::on_doSegmentation_clicked()
 		segmenter->doSegmentation(viewManager->getCurrentSlice(), ui->minSegIntensitySlider->value(), ui->maxSegIntensitySlider->value());
 }
 
-void MainWindow::updateStatusBar(int xVoxel, int yVoxel, int zVoxel, short intensity)
+void MainWindow::updateStatusBar()
 {
 	QString message("");
 	QTextStream messageStream(&message);
 
-	messageStream << "X:" << xVoxel << " Y:"<< yVoxel << " Z:" << zVoxel << " Intensity:" << intensity;
+	messageStream << "X:" << viewManager->getLastMousePosX() << " Y:"<< viewManager->getLastMousePosY() << " Z:" << viewManager->getLastMousePosZ() << " Intensity:" << viewManager->getLastMouseIntensity();
 
 	ui->statusbar->showMessage(*(messageStream.string()),0);
 }

@@ -7,7 +7,7 @@
 #include <QVTKInteractor.h>
 
 
-ViewManager::ViewManager(ImagePairManager* imageManager, QVTKWidget* qvtkWidget) : scaleStep(10), dragOn(false)
+ViewManager::ViewManager(ImagePairManager* imageManager, QVTKWidget* qvtkWidget) : scaleStep(10), dragOn(false), mouseX(0), mouseY(0), mouseZ(0), mouseIntensity(0)
 {
     this->imageManager = imageManager;
     this->qvtkWidget = qvtkWidget;
@@ -233,6 +233,18 @@ void ViewManager::dragHandler(vtkObject *caller, unsigned long vtkEvent, void *c
 	// Pick from this location.
 	picker->Pick(pos[0], pos[1], 0, imageViewer->GetRenderer());
 
+	//check we are in the image
+	if(picker->GetCellId() == -1)
+		return; //not in the image!
+
+	mouseX= picker->GetCellIJK()[0];
+	mouseY= picker->GetCellIJK()[1];
+	mouseZ= picker->GetCellIJK()[2];
+	//This is VERY dirty we should work out the cast at run time!
+	mouseIntensity = *(static_cast<short*>(imageManager->original->GetScalarPointer(mouseX, mouseY, mouseZ)));
+
+	//Inform other classes that the mouse has moved.
+	emit mouseHasMoved();
 
 	switch(vtkEvent)
 	{
@@ -272,26 +284,5 @@ void ViewManager::update()
 	imageViewer->GetRenderWindow()->Render();
 }
 
-void ViewManager::mouseMove(vtkObject *caller, unsigned long vtkEvent, void *clientData, void *callData, vtkCommand *command)
-{
-	vtkRenderWindowInteractor* iren = vtkRenderWindowInteractor::SafeDownCast(caller);
 
-	// Get the location of the click (in window coordinates)
-	int* pos = iren->GetEventPosition();
-
-	vtkSmartPointer<vtkCellPicker> picker = vtkSmartPointer<vtkCellPicker>::New();
-
-	// Pick from this location.
-	picker->Pick(pos[0], pos[1], 0, imageViewer->GetRenderer());
-
-	//check we are in the image
-	if(picker->GetCellId() != -1)
-	{
-		emit mouseIsAt(picker->GetCellIJK()[0],
-			picker->GetCellIJK()[1],
-			picker->GetCellIJK()[2],
-			*(static_cast<short*>(imageManager->original->GetScalarPointer(picker->GetCellIJK()[0],picker->GetCellIJK()[1],picker->GetCellIJK()[2])))
-			);
-	}
-}
 
