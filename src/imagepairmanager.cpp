@@ -46,7 +46,7 @@ bool ImagePairManager::loadImage(QFileInfo image)
 	segblock->SetExtent(original->GetExtent());
 	segblock->SetSpacing(original->GetSpacing());
 	segblock->SetNumberOfScalarComponents(1);
-	segblock->SetScalarTypeToChar();
+	segblock->SetScalarTypeToShort();
 	segblock->AllocateScalars();
 
 	//Make sure everything is consistent as we have changed the dimensions.

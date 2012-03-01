@@ -3,6 +3,8 @@
 #include "mainwindow.h"
 #include <iostream>
 #include <cstring>
+#include <QString>
+#include <QTextStream>
 #include <QDebug>
 #include <QTextStream>
 #include "compiletimeconstants.h"
@@ -106,6 +108,9 @@ void MainWindow::on_actionOpen_Image_triggered()
 			contrastControlSetup();
 			toolbarSetup();
 			segmentationControlSetup();
+
+			//setup statusbar update from viewmanager
+			connect(viewManager,SIGNAL(mouseIsAt(int,int,int,short)), this, SLOT(updateStatusBar(int,int,int,short)));
 
 			//setup zoom control
 			connect(ui->actionZoom_in,SIGNAL(triggered()), viewManager,SLOT(zoomIn()));
@@ -401,4 +406,14 @@ void MainWindow::on_doSegmentation_clicked()
 {
 	if(segmenter!=0)
 		segmenter->doSegmentation(viewManager->getCurrentSlice(), ui->minSegIntensitySlider->value(), ui->maxSegIntensitySlider->value());
+}
+
+void MainWindow::updateStatusBar(int xVoxel, int yVoxel, int zVoxel, short intensity)
+{
+	QString message("");
+	QTextStream messageStream(&message);
+
+	messageStream << "X:" << xVoxel << " Y:"<< yVoxel << " Z:" << zVoxel << " Intensity:" << intensity;
+
+	ui->statusbar->showMessage(*(messageStream.string()),0);
 }

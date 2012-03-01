@@ -81,6 +81,15 @@ ViewManager::ViewManager(ImagePairManager* imageManager, QVTKWidget* qvtkWidget)
 		NULL,
 		2.0);
 
+    //setup connections for mouseAt
+    connections->Connect(qvtkWidget->GetInteractor(),
+			vtkCommand::MouseMoveEvent,
+			this,
+			SLOT(mouseMove(vtkObject*,ulong,void*,void*,vtkCommand*)),
+			NULL,
+			2.0
+			);
+
 }
 
 ViewManager::~ViewManager()
@@ -262,3 +271,27 @@ void ViewManager::update()
 {
 	imageViewer->GetRenderWindow()->Render();
 }
+
+void ViewManager::mouseMove(vtkObject *caller, unsigned long vtkEvent, void *clientData, void *callData, vtkCommand *command)
+{
+	vtkRenderWindowInteractor* iren = vtkRenderWindowInteractor::SafeDownCast(caller);
+
+	// Get the location of the click (in window coordinates)
+	int* pos = iren->GetEventPosition();
+
+	vtkSmartPointer<vtkCellPicker> picker = vtkSmartPointer<vtkCellPicker>::New();
+
+	// Pick from this location.
+	picker->Pick(pos[0], pos[1], 0, imageViewer->GetRenderer());
+
+	//check we are in the image
+	if(picker->GetCellId() != -1)
+	{
+		emit mouseIsAt(picker->GetCellIJK()[0],
+			picker->GetCellIJK()[1],
+			picker->GetCellIJK()[2],
+			*(static_cast<short*>(imageManager->original->GetScalarPointer(picker->GetCellIJK()[0],picker->GetCellIJK()[1],picker->GetCellIJK()[2])))
+			);
+	}
+}
+

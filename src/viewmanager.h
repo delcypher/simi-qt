@@ -30,12 +30,14 @@ class ViewManager : public QObject
 		void mouseWheelForward(vtkObject* caller, unsigned long vtkEvent, void* clientData, void* callData, vtkCommand* command);
 		void mouseWheelBackward(vtkObject* caller, unsigned long vtkEvent, void* clientData, void* callData, vtkCommand* command);
 		void dragHandler(vtkObject* caller, unsigned long vtkEvent, void* clientData, void* callData, vtkCommand* command);
+		void mouseMove(vtkObject* caller, unsigned long vtkEvent, void* clientData, void* callData, vtkCommand* command);
 
 
 	signals:
 		void sliceChanged(int slice);
 		void viewLeftClicked(int xVoxel, int yVoxel, int zVoxel);
 		void dragEvent(int xVoxel, int yVoxel, int zVoxel);
+		void mouseIsAt(int xVoxel, int yVoxel, int zVoxel, short intensity);
 
 	private:
         void forceZoom();

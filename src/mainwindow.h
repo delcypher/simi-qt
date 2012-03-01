@@ -47,6 +47,7 @@ class MainWindow : public QMainWindow
 		void on_minIntensitySlider_valueChanged(int value);
 		void on_maxIntensitySlider_valueChanged(int value);
 		void on_sliceSlider_valueChanged(int value);
+		void updateStatusBar(int xVoxel, int yVoxel, int zVoxel, short intensity);
 
         //toolbar slots
         void on_actionHandTool_triggered();
