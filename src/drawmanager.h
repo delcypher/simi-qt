@@ -3,13 +3,15 @@
 
 #include <QObject>
 #include "imagepairmanager.h"
+#include <QSpinBox>
+#include <QComboBox>
 
 class DrawManager : public QObject
 {
 	Q_OBJECT
 
 	public:
-		DrawManager(ImagePairManager* imageManager);
+        DrawManager(ImagePairManager* imageManager, QSpinBox* drawSize, QComboBox* drawType);
 		~DrawManager();
 	
 	public slots:
@@ -18,6 +20,9 @@ class DrawManager : public QObject
 
 	private:
 		ImagePairManager* imageManager;
+        QSpinBox* drawSize;
+        QComboBox* drawType;
+
 	
 };
 

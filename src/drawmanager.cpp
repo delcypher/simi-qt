@@ -1,9 +1,11 @@
 #include "drawmanager.h"
 #include <QDebug>
 
-DrawManager::DrawManager(ImagePairManager* imageManager)
+DrawManager::DrawManager(ImagePairManager* imageManager, QSpinBox* drawSize, QComboBox* drawType)
 {
 	this->imageManager = imageManager;
+    this->drawSize=drawSize;
+    this->drawType=drawType;
 }
 
 

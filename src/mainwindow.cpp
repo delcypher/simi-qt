@@ -95,7 +95,7 @@ void MainWindow::on_actionOpen_Image_triggered()
 			//setup drawManager
 			if(drawManager!=0)
 				delete drawManager;
-			drawManager = new DrawManager(imagePairManager);
+            drawManager = new DrawManager(imagePairManager,ui->drawSizeSpinBox,ui->drawOnComboBox);
 
 			//setup segmenter
 			if(segmenter!=0)
