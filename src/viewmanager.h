@@ -12,7 +12,7 @@ class ViewManager : public QObject
 {
 	Q_OBJECT
 	public:
-		ViewManager(ImagePairManager* imageManager, QVTKWidget* vtkWidget);
+        ViewManager(ImagePairManager* imagePairManager, QVTKWidget* vtkWidget);
 		~ViewManager();
 		void setConstrast(double minIntensity, double maxIntensity);
 		int getCurrentSlice();
@@ -53,7 +53,7 @@ class ViewManager : public QObject
 
 		vtkSmartPointer<vtkImageViewer2> imageViewer;
 		vtkSmartPointer<vtkEventQtSlotConnect> connections;
-		ImagePairManager* imageManager;
+        ImagePairManager* imagePairManager;
 		QVTKWidget* qvtkWidget;
 
 		double minScale; //for zoom

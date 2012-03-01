@@ -7,19 +7,19 @@
 #include <QVTKInteractor.h>
 
 
-ViewManager::ViewManager(ImagePairManager* imageManager, QVTKWidget* qvtkWidget) : scaleStep(10), dragOn(false), mouseX(0), mouseY(0), mouseZ(0), mouseIntensity(0), mouseOverWidget(false)
+ViewManager::ViewManager(ImagePairManager* imagePairManager, QVTKWidget* qvtkWidget) : scaleStep(10), dragOn(false), mouseX(0), mouseY(0), mouseZ(0), mouseIntensity(0), mouseOverWidget(false)
 {
-    this->imageManager = imageManager;
+    this->imagePairManager = imagePairManager;
     this->qvtkWidget = qvtkWidget;
 
 	//setup original image
 	imageViewer = vtkImageViewer2::New();
-	imageViewer->SetInput(imageManager->original);
+    imageViewer->SetInput(imagePairManager->original);
 	qvtkWidget->SetRenderWindow(imageViewer->GetRenderWindow());
 	imageViewer->SetupInteractor(qvtkWidget->GetRenderWindow()->GetInteractor());
 
     //setup zoom control
-    maxScale= ( imageManager->getYDim() )*( imageManager->getYSpacing() )/2.0;
+    maxScale= ( imagePairManager->getYDim() )*( imagePairManager->getYSpacing() )/2.0;
     minScale=maxScale/800;
     currentScale=maxScale;
 
@@ -185,7 +185,7 @@ void ViewManager::mouseWheelBackward(vtkObject *caller, unsigned long vtkEvent, 
 
 void ViewManager::ChangeSlice(int slice)
 {
-	if(slice >= imageManager->getZMin() && slice <= imageManager->getZMax())
+	if(slice >= imagePairManager->getZMin() && slice <= imagePairManager->getZMax())
 	{
         imageViewer->SetSlice(slice);
         emit sliceChanged(slice);
@@ -253,7 +253,7 @@ void ViewManager::dragHandler(vtkObject *caller, unsigned long vtkEvent, void *c
 	mouseY= picker->GetCellIJK()[1];
 	mouseZ= picker->GetCellIJK()[2];
 	//This is VERY dirty we should work out the cast at run time!
-	mouseIntensity = *(static_cast<short*>(imageManager->original->GetScalarPointer(mouseX, mouseY, mouseZ)));
+	mouseIntensity = *(static_cast<short*>(imagePairManager->original->GetScalarPointer(mouseX, mouseY, mouseZ)));
 
 	//Inform other classes that the mouse has moved.
 	emit mouseHasMoved();
