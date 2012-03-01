@@ -15,6 +15,9 @@ class SeedPointManager : public QObject
 		//Gets the seed point for slice z
 		bool getSeedPoint(int sliceNumber, int& x, int& y);
 
+	signals:
+		void seedPointChanged(int sliceNumber, int& x, int& y);
+
 
 	public slots:
 		//allows the seed point to manually set
