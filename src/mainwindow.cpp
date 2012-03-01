@@ -285,7 +285,7 @@ void MainWindow::on_runAlgorithm_clicked()
         //cout << origin[0] << " " << origin[1] << " " << origin[2] << endl;
         visited->SetExtent(extent);
         visited->SetNumberOfScalarComponents(4);
-        visited->SetScalarTypeToUnsignedChar();
+        visited->SetScalarTypeToShort();
         visited->AllocateScalars();
         spacings = visited->GetSpacing();
         //cout << spacings[0] << " " << spacings[1] << " " << spacings[2] << endl;
@@ -295,7 +295,7 @@ void MainWindow::on_runAlgorithm_clicked()
         {
                 for (int x=0; x<512; x++)
                 {
-                        unsigned char* pixel = static_cast<unsigned char*>(visited->GetScalarPointer(x,y,0));
+                        short* pixel = static_cast<short*>(visited->GetScalarPointer(x,y,0));
                         pixel[0] = 0;
                         pixel[1] = 0;
                         pixel[2] = 0;
@@ -330,7 +330,6 @@ void MainWindow::on_runAlgorithm_clicked()
         mapper->SetInput(visited);
         actor->SetMapper(mapper);
         actor->SetPosition(origin[0],origin[1]);
-        actor->SetVisibility();
 
         imageView->GetRenderer()->AddActor(actor);
 
