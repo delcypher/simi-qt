@@ -5,6 +5,7 @@
 #include <QString>
 #include <QDir>
 #include <QFileInfo>
+#include <QActionGroup>
 #include "ui_mainwindow.h"
 
 #include "imagepairmanager.h"
@@ -46,12 +47,14 @@ class MainWindow : public QMainWindow
 		QFileInfo imageInfo;
 		QDir workPath; //Directory used file open dialogs
 		Ui::MainWindow* ui; //handle to user interface
+		QActionGroup* toolbarActions;
 
 
 
 		//setup methods
 		void contrastControlSetup();
 		void sliceControlSetup();
+		void toolbarSetup();
 
 
 		void changeContrast();

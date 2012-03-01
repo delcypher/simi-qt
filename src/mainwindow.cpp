@@ -85,6 +85,7 @@ void MainWindow::on_actionOpen_Image_triggered()
 
 			sliceControlSetup();
 			contrastControlSetup();
+			toolbarSetup();
 
 			//setup zoom control
 			connect(ui->actionZoom_in,SIGNAL(triggered()), layoutManager,SLOT(zoomIn()));
@@ -199,5 +200,19 @@ void MainWindow::sliceControlSetup()
 		ui->sliceSlider->setRange(imageManager->getZMin(),imageManager->getZMax());
 		ui->sliceSpinBox->setRange(imageManager->getZMin(),imageManager->getZMax());
 
-	}
+    }
+}
+
+void MainWindow::toolbarSetup()
+{
+    //enable the toolbar buttons to be used
+    ui->toolBar->setEnabled(true);
+
+    //setup mutually exclusive behaviour
+    toolbarActions = new QActionGroup(this);
+
+    toolbarActions->addAction(ui->actionHandtool);
+    toolbarActions->addAction(ui->actionPen);
+    toolbarActions->addAction(ui->actionCrosshair);
+    toolbarActions->addAction(ui->actionErase);
 }
