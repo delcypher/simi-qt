@@ -259,6 +259,7 @@ void MainWindow::sliceControlSetup()
 
 void MainWindow::on_runAlgorithm_clicked()
 {
+        // obtain information from the original image
         vtkSmartPointer<vtkImageData> original = this->imageView->GetInput();        
         int pos_x = this->ui->pos_x_line->text().toInt();
         int pos_y = this->ui->pos_y_line->text().toInt();
@@ -267,30 +268,20 @@ void MainWindow::on_runAlgorithm_clicked()
         int range_to = this->ui->to_line->text().toInt();
         int* extent = original->GetExtent();
         int* dims = original->GetDimensions();
-        double* origin = original->GetOrigin();
-        cout << origin[0] << " " << origin[1] << " " << origin[2] << endl;
-        double* spacings = original->GetSpacing();
-        //cout << dims[0] << " " << dims[1] << " " << dims[2] << " " << pos_z << endl;
-        //cout << spacings[0] << " " << spacings[1] << " " << spacings[2] << endl;
-        //cout << original->GetScalarTypeAsString() << endl;
-        //cout << original->GetScalarTypeMax() << endl;
-        //cout << original->GetScalarTypeMin() << endl;
-        //cout << original->GetNumberOfScalarComponents() << endl;
+        double* origin = original->GetOrigin();        
+        double* spacings = original->GetSpacing();  
 
+        // create segmented image
         vtkSmartPointer<vtkImageData> visited = vtkSmartPointer<vtkImageData>::New();
         visited->SetDimensions(dims[0],dims[1],1);
-        visited->SetSpacing(spacings);
-        //visited->SetOrigin(origin[0], origin[1], origin[2] - 1);
-        //origin = visited->GetOrigin();
-        //cout << origin[0] << " " << origin[1] << " " << origin[2] << endl;
+        visited->SetSpacing(spacings);    
         visited->SetExtent(extent);
         visited->SetNumberOfScalarComponents(4);
         visited->SetScalarTypeToShort();
         visited->AllocateScalars();
         spacings = visited->GetSpacing();
-        //cout << spacings[0] << " " << spacings[1] << " " << spacings[2] << endl;
 
-        //fill in image
+        // fill in segmented image
         for (int y=0; y<512; y++)
         {
                 for (int x=0; x<512; x++)
@@ -299,40 +290,18 @@ void MainWindow::on_runAlgorithm_clicked()
                         pixel[0] = 0;
                         pixel[1] = 0;
                         pixel[2] = 0;
-                        pixel[3] = 0;
-                        //cout << y << " " << x << " " << (int)pixel[0] << " " << (int)pixel[1] << " " << (int)pixel[2] << endl;
+                        pixel[3] = 0;                        
                 }
         }
 
-        // run algorithm
-        //cout << pos_x << " " << pos_y << " " << range_from << " " << range_to << endl;
+        // run segmentation algorithm
         flood_fill(original, visited, pos_x, pos_y, pos_z, range_from, range_to, predicate1);
 
-        //display in front
-
-//        // Create a mapper and actor
-//        vtkSmartPointer<vtkImageMapper> mapper = vtkSmartPointer<vtkImageMapper>::New();
-//        mapper->SetInput(visited);
-//        vtkSmartPointer<vtkActor2D> actor = vtkSmartPointer<vtkActor2D>::New();
-//        actor->SetMapper(mapper);
-
-
-//        actor->SetPosition(0, 0);
-
-//        // Add actor to viewer
-//        imageView->GetRenderer()->AddActor(actor);
-
-        //vtkSmartPointer<vtkImageActor> actor = vtkSmartPointer<vtkImageActor>::New();
-        //vtkSmartPointer<vtkMapper2D> mapper = vtkSmartPointer<vtkMapper2D>::New();
+        // display segmentation results in front of the original image
         vtkSmartPointer<vtkImageMapper> mapper = vtkSmartPointer<vtkImageMapper>::New();
         vtkSmartPointer<vtkActor2D> actor = vtkSmartPointer<vtkActor2D>::New();
-
         mapper->SetInput(visited);
         actor->SetMapper(mapper);
         actor->SetPosition(origin[0],origin[1]);
-
-        imageView->GetRenderer()->AddActor(actor);
-
-
-
+        imageView->GetRenderer()->AddActor(actor);     
 }
