@@ -96,6 +96,7 @@ void MainWindow::on_actionOpen_Image_triggered()
 			sliceControlSetup();
 			contrastControlSetup();
 			toolbarSetup();
+			segmentationControlSetup();
 
 			//setup zoom control
 			connect(ui->actionZoom_in,SIGNAL(triggered()), viewManager,SLOT(zoomIn()));
@@ -156,16 +157,16 @@ void MainWindow::contrastControlSetup()
 
 	if(imageManager!=0)
 	{
-        ui->minIntensitySlider->setRange(static_cast<int>(imageManager->getMinimumIntensity()),static_cast<int>(imageManager->getMaximumIntensity()));
-        ui->maxIntensitySlider->setRange(static_cast<int>(imageManager->getMinimumIntensity()),static_cast<int>(imageManager->getMaximumIntensity()));
-        ui->minIntensitySpinBox->setRange(static_cast<int>(imageManager->getMinimumIntensity()),static_cast<int>(imageManager->getMaximumIntensity()));
-        ui->maxIntensitySpinBox->setRange(static_cast<int>(imageManager->getMinimumIntensity()),static_cast<int>(imageManager->getMaximumIntensity()));
-    }
+		ui->minIntensitySlider->setRange(static_cast<int>(imageManager->getMinimumIntensity()),static_cast<int>(imageManager->getMaximumIntensity()));
+		ui->maxIntensitySlider->setRange(static_cast<int>(imageManager->getMinimumIntensity()),static_cast<int>(imageManager->getMaximumIntensity()));
+		ui->minIntensitySpinBox->setRange(static_cast<int>(imageManager->getMinimumIntensity()),static_cast<int>(imageManager->getMaximumIntensity()));
+		ui->maxIntensitySpinBox->setRange(static_cast<int>(imageManager->getMinimumIntensity()),static_cast<int>(imageManager->getMaximumIntensity()));
+	}
 
 
-    //Doing this change should cause the valueChanged() signal to be emitted by the sliders
-    ui->minIntensitySlider->setValue(static_cast<int>(imageManager->getMinimumIntensity()));
-    ui->maxIntensitySlider->setValue(static_cast<int>(imageManager->getMaximumIntensity()));
+	//Doing this change should cause the valueChanged() signal to be emitted by the sliders
+	ui->minIntensitySlider->setValue(static_cast<int>(imageManager->getMinimumIntensity()));
+	ui->maxIntensitySlider->setValue(static_cast<int>(imageManager->getMaximumIntensity()));
 
 }
 
@@ -352,4 +353,35 @@ void MainWindow::toolbarSetup()
 
     //set default action
     ui->actionHandTool->setChecked(true);
+}
+
+void MainWindow::segmentationControlSetup()
+{
+	if(imageManager!=0)
+	{
+		ui->minSegIntensitySlider->setRange(static_cast<int>(imageManager->getMinimumIntensity()),static_cast<int>(imageManager->getMaximumIntensity()));
+		ui->minSegIntensitySpinBox->setRange(static_cast<int>(imageManager->getMinimumIntensity()),static_cast<int>(imageManager->getMaximumIntensity()));
+		ui->maxSegIntensitySlider->setRange(static_cast<int>(imageManager->getMinimumIntensity()),static_cast<int>(imageManager->getMaximumIntensity()));
+		ui->maxSegIntensitySpinBox->setRange(static_cast<int>(imageManager->getMinimumIntensity()),static_cast<int>(imageManager->getMaximumIntensity()));
+	}
+
+
+	//Doing this change should cause the valueChanged() signal to be emitted by the sliders
+	ui->minSegIntensitySlider->setValue(static_cast<int>(imageManager->getMinimumIntensity()));
+	ui->maxSegIntensitySlider->setValue(static_cast<int>(imageManager->getMaximumIntensity()));
+}
+
+void MainWindow::on_minSegIntensitySlider_valueChanged(int value)
+{
+    //make sure min is not > max
+    if(value > ui->maxSegIntensitySlider->value())
+	    ui->minSegIntensitySlider->setValue( ui->maxSegIntensitySlider->value());
+
+}
+
+void MainWindow::on_maxSegIntensitySlider_valueChanged(int value)
+{
+	//make sure max is not < min
+	if(value < ui->minSegIntensitySlider->value())
+		ui->maxSegIntensitySlider->setValue( ui->minSegIntensitySlider->value());
 }

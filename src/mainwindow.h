@@ -51,7 +51,11 @@ class MainWindow : public QMainWindow
         void on_actionCrosshairTool_triggered();
         void on_actionEraseTool_triggered();
 
-	private:
+	  void on_minSegIntensitySlider_valueChanged(int value);
+
+	  void on_maxSegIntensitySlider_valueChanged(int value);
+
+private:
 		QFileInfo imageInfo;
 		QDir workPath; //Directory used file open dialogs
 		Ui::MainWindow* ui; //handle to user interface
@@ -63,6 +67,7 @@ class MainWindow : public QMainWindow
 		void contrastControlSetup();
 		void sliceControlSetup();
 		void toolbarSetup();
+		void segmentationControlSetup();
 
 
 		void changeContrast();

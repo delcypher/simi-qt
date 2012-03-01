@@ -14,7 +14,7 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QVTKWidget" name="qvtkWidget" native="true">
+   <widget class="QVTKWidget" name="qvtkWidget">
     <property name="geometry">
      <rect>
       <x>10</x>
@@ -31,7 +31,7 @@
      <x>0</x>
      <y>0</y>
      <width>1052</width>
-     <height>21</height>
+     <height>19</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -469,12 +469,12 @@
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>977</x>
-     <y>160</y>
+     <x>840</x>
+     <y>177</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1032</x>
-     <y>156</y>
+     <x>895</x>
+     <y>179</y>
     </hint>
    </hints>
   </connection>
@@ -485,12 +485,12 @@
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1032</x>
-     <y>164</y>
+     <x>895</x>
+     <y>179</y>
     </hint>
     <hint type="destinationlabel">
-     <x>977</x>
-     <y>159</y>
+     <x>840</x>
+     <y>177</y>
     </hint>
    </hints>
   </connection>
@@ -501,11 +501,11 @@
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>977</x>
+     <x>840</x>
      <y>213</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1032</x>
+     <x>895</x>
      <y>215</y>
     </hint>
    </hints>
@@ -517,11 +517,11 @@
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1032</x>
+     <x>895</x>
      <y>215</y>
     </hint>
     <hint type="destinationlabel">
-     <x>977</x>
+     <x>840</x>
      <y>213</y>
     </hint>
    </hints>
@@ -533,11 +533,11 @@
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>977</x>
+     <x>840</x>
      <y>105</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1032</x>
+     <x>895</x>
      <y>107</y>
     </hint>
    </hints>
@@ -549,12 +549,76 @@
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1032</x>
+     <x>895</x>
      <y>107</y>
     </hint>
     <hint type="destinationlabel">
-     <x>977</x>
+     <x>840</x>
      <y>105</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>minSegIntensitySlider</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>minSegIntensitySpinBox</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>756</x>
+     <y>274</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>875</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>minSegIntensitySpinBox</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>minSegIntensitySlider</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>855</x>
+     <y>270</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>778</x>
+     <y>272</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>maxSegIntensitySlider</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>maxSegIntensitySpinBox</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>766</x>
+     <y>308</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>842</x>
+     <y>317</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>maxSegIntensitySpinBox</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>maxSegIntensitySlider</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>857</x>
+     <y>312</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>761</x>
+     <y>312</y>
     </hint>
    </hints>
   </connection>
