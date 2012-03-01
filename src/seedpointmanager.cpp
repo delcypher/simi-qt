@@ -19,8 +19,8 @@ SeedPointManager::~SeedPointManager()
 }
 
 
-//Gets the seed point for the current slice
-bool SeedPointManager::getSeedPoint(int& x, int& y)
+//Gets the seed point for slice sliceNumber
+bool SeedPointManager::getSeedPoint(int sliceNumber, int& x, int& y)
 {
 	//TODO
 	x=0;

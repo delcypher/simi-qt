@@ -12,8 +12,8 @@ class SeedPointManager : public QObject
 		SeedPointManager(int numberOfSlices);
 		~SeedPointManager();
 	
-		//Gets the seed point for the current slice
-		bool getSeedPoint(int& x, int& y);
+		//Gets the seed point for slice z
+		bool getSeedPoint(int sliceNumber, int& x, int& y);
 
 
 	public slots:
