@@ -29,7 +29,7 @@ class MainWindow : public QMainWindow
 		//helper classes
 		ImagePairManager* imageManager;
 		SeedPointManager* seedManager;
-		ViewManager* layoutManager;
+		ViewManager* viewManager;
 
 
 	

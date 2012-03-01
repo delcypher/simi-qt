@@ -17,7 +17,7 @@ MainWindow::MainWindow() : imageInfo(""), workPath(QDir::home())
 
 	seedManager=0;
 	imageManager=0;
-	layoutManager=0;
+	viewManager=0;
 
 
 
@@ -39,8 +39,8 @@ MainWindow::~MainWindow()
 	if(seedManager!=0)
         delete seedManager;
 
-	if(layoutManager!=0)
-        delete layoutManager;
+	if(viewManager!=0)
+        delete viewManager;
 }
 
 void MainWindow::on_actionOpen_Image_triggered()
@@ -79,17 +79,17 @@ void MainWindow::on_actionOpen_Image_triggered()
 			seedManager = new SeedPointManager(imageManager->getZDim());
 
 			//setup LayoutManager
-			if(layoutManager!=0)
-				delete layoutManager;
-			layoutManager = new ViewManager(imageManager,ui->qvtkWidget);
+			if(viewManager!=0)
+				delete viewManager;
+			viewManager = new ViewManager(imageManager,ui->qvtkWidget);
 
 			sliceControlSetup();
 			contrastControlSetup();
 			toolbarSetup();
 
 			//setup zoom control
-			connect(ui->actionZoom_in,SIGNAL(triggered()), layoutManager,SLOT(zoomIn()));
-			connect(ui->actionZoom_out,SIGNAL(triggered()), layoutManager,SLOT(zoomOut()));
+			connect(ui->actionZoom_in,SIGNAL(triggered()), viewManager,SLOT(zoomIn()));
+			connect(ui->actionZoom_out,SIGNAL(triggered()), viewManager,SLOT(zoomOut()));
 
 
 			//Update the work path to the location of the new image
@@ -113,14 +113,15 @@ void MainWindow::on_actionOpen_Image_triggered()
 
 void MainWindow::on_actionSlice_up_triggered()
 {
-
+    if(viewManager!=0)
+        viewManager->ChangeSlice( viewManager->getCurrentSlice() +1);
 }
 
 
 void MainWindow::on_actionSlice_down_triggered()
 {
-
-
+    if(viewManager!=0)
+        viewManager->ChangeSlice( viewManager->getCurrentSlice() -1);
 }
 
 
@@ -160,9 +161,9 @@ void MainWindow::contrastControlSetup()
 
 void MainWindow::changeContrast()
 {
-    if(layoutManager!=0)
+    if(viewManager!=0)
     {
-        layoutManager->setConstrast(static_cast<double>(ui->minIntensitySlider->value()), static_cast<double>(ui->maxIntensitySlider->value()));
+        viewManager->setConstrast(static_cast<double>(ui->minIntensitySlider->value()), static_cast<double>(ui->maxIntensitySlider->value()));
     }
 }
 
@@ -189,8 +190,8 @@ void MainWindow::on_maxIntensitySlider_valueChanged(int value)
 
 void MainWindow::on_sliceSlider_valueChanged(int value)
 {
-	if(layoutManager!=0)
-		layoutManager->ChangeSlice(value);
+	if(viewManager!=0)
+		viewManager->ChangeSlice(value);
 }
 
 void MainWindow::sliceControlSetup()
@@ -199,6 +200,8 @@ void MainWindow::sliceControlSetup()
 	{
 		ui->sliceSlider->setRange(imageManager->getZMin(),imageManager->getZMax());
 		ui->sliceSpinBox->setRange(imageManager->getZMin(),imageManager->getZMax());
+
+		connect(viewManager,SIGNAL(sliceChanged(int)),ui->sliceSlider,SLOT(setValue(int)));
 
     }
 }
@@ -215,4 +218,7 @@ void MainWindow::toolbarSetup()
     toolbarActions->addAction(ui->actionPen);
     toolbarActions->addAction(ui->actionCrosshair);
     toolbarActions->addAction(ui->actionErase);
+
+    //set default action
+    ui->actionHandtool->setChecked(true);
 }

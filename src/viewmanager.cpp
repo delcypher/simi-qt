@@ -5,13 +5,16 @@
 #include <QDebug>
 
 
-ViewManager::ViewManager(ImagePairManager* imageManager, QVTKWidget* vtkWidget) : scaleStep(10)
+ViewManager::ViewManager(ImagePairManager* imageManager, QVTKWidget* qvtkWidget) : scaleStep(10)
 {
+    this->imageManager = imageManager;
+    this->qvtkWidget = qvtkWidget;
+
 	//setup original image
 	imageViewer = vtkImageViewer2::New();
 	imageViewer->SetInput(imageManager->original);
-	vtkWidget->SetRenderWindow(imageViewer->GetRenderWindow());
-	imageViewer->SetupInteractor(vtkWidget->GetRenderWindow()->GetInteractor());
+	qvtkWidget->SetRenderWindow(imageViewer->GetRenderWindow());
+	imageViewer->SetupInteractor(qvtkWidget->GetRenderWindow()->GetInteractor());
 
     //setup zoom control
     maxScale= ( imageManager->getYDim() )*( imageManager->getYSpacing() )/2.0;
@@ -29,7 +32,7 @@ ViewManager::ViewManager(ImagePairManager* imageManager, QVTKWidget* vtkWidget) 
     connections = vtkEventQtSlotConnect::New();
 
     //Setup mousewheel connection for zoom. We use high priority so we get called before the vtkinteractorstyle
-    connections->Connect(vtkWidget->GetInteractor(),
+    connections->Connect(qvtkWidget->GetInteractor(),
                 vtkCommand::MouseWheelForwardEvent,
                 this,
                 SLOT(mouseWheelForward(vtkObject*,ulong,void*,void*,vtkCommand*)),
@@ -37,7 +40,7 @@ ViewManager::ViewManager(ImagePairManager* imageManager, QVTKWidget* vtkWidget) 
                 1.0);
 
 
-    connections->Connect(vtkWidget->GetInteractor(),
+    connections->Connect(qvtkWidget->GetInteractor(),
                 vtkCommand::MouseWheelBackwardEvent,
                 this,
                 SLOT(mouseWheelBackward(vtkObject*,ulong,void*,void*,vtkCommand*)),
@@ -62,6 +65,11 @@ void ViewManager::setConstrast(double minIntensity, double maxIntensity)
         //update
         imageViewer->GetRenderWindow()->Render();
     }
+}
+
+int ViewManager::getCurrentSlice()
+{
+    return imageViewer->GetSlice();
 }
 
 void ViewManager::zoomIn()
@@ -118,8 +126,11 @@ void ViewManager::mouseWheelBackward(vtkObject *caller, unsigned long vtkEvent, 
 
 void ViewManager::ChangeSlice(int slice)
 {
-	imageViewer->SetSlice(slice);
-    emit sliceChanged(slice);
+	if(slice >= imageManager->getZMin() && slice <= imageManager->getZMax())
+	{
+        imageViewer->SetSlice(slice);
+        emit sliceChanged(slice);
+	}
 
     //workaround bug where changing slice causes zoom to reset to something unexpected
     forceZoom();

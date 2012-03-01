@@ -14,6 +14,7 @@ class ViewManager : public QObject
 		ViewManager(ImagePairManager* imageManager, QVTKWidget* vtkWidget);
 		~ViewManager();
 		void setConstrast(double minIntensity, double maxIntensity);
+		int getCurrentSlice();
 
 	
 	public slots:
@@ -34,6 +35,8 @@ class ViewManager : public QObject
 
 		vtkSmartPointer<vtkImageViewer2> imageViewer;
 		vtkSmartPointer<vtkEventQtSlotConnect> connections;
+		ImagePairManager* imageManager;
+		QVTKWidget* qvtkWidget;
 
 		double minScale; //for zoom
 		double maxScale; //for zoom
