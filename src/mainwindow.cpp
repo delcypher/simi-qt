@@ -200,7 +200,27 @@ void MainWindow::on_maxIntensitySlider_valueChanged(int value)
 void MainWindow::on_sliceSlider_valueChanged(int value)
 {
 	if(viewManager!=0)
-		viewManager->ChangeSlice(value);
+        viewManager->ChangeSlice(value);
+}
+
+void MainWindow::on_actionHandTool_triggered()
+{
+    qDebug() << "Hand tool activated";
+}
+
+void MainWindow::on_actionPenTool_triggered()
+{
+    qDebug() << "Pen tool activated";
+}
+
+void MainWindow::on_actionCrosshairTool_triggered()
+{
+    qDebug() << "Crosshair tool activated";
+}
+
+void MainWindow::on_actionEraseTool_triggered()
+{
+    qDebug() << "Erase tool activated";
 }
 
 void MainWindow::sliceControlSetup()
@@ -223,11 +243,11 @@ void MainWindow::toolbarSetup()
     //setup mutually exclusive behaviour
     toolbarActions = new QActionGroup(this);
 
-    toolbarActions->addAction(ui->actionHandtool);
-    toolbarActions->addAction(ui->actionPen);
-    toolbarActions->addAction(ui->actionCrosshair);
-    toolbarActions->addAction(ui->actionErase);
+    toolbarActions->addAction(ui->actionHandTool);
+    toolbarActions->addAction(ui->actionPenTool);
+    toolbarActions->addAction(ui->actionCrosshairTool);
+    toolbarActions->addAction(ui->actionEraseTool);
 
     //set default action
-    ui->actionHandtool->setChecked(true);
+    ui->actionHandTool->setChecked(true);
 }

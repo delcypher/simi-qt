@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1052</width>
-    <height>676</height>
+    <height>678</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -31,7 +31,7 @@
      <x>0</x>
      <y>0</y>
      <width>1052</width>
-     <height>20</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -97,10 +97,10 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
-   <addaction name="actionHandtool"/>
-   <addaction name="actionPen"/>
-   <addaction name="actionCrosshair"/>
-   <addaction name="actionErase"/>
+   <addaction name="actionHandTool"/>
+   <addaction name="actionPenTool"/>
+   <addaction name="actionCrosshairTool"/>
+   <addaction name="actionEraseTool"/>
   </widget>
   <widget class="QDockWidget" name="parameterDock">
    <property name="minimumSize">
@@ -374,7 +374,7 @@
     <string>About Qt</string>
    </property>
   </action>
-  <action name="actionHandtool">
+  <action name="actionHandTool">
    <property name="checkable">
     <bool>true</bool>
    </property>
@@ -389,7 +389,7 @@
     <string>Handtool</string>
    </property>
   </action>
-  <action name="actionPen">
+  <action name="actionPenTool">
    <property name="checkable">
     <bool>true</bool>
    </property>
@@ -404,7 +404,7 @@
     <string>Pen</string>
    </property>
   </action>
-  <action name="actionCrosshair">
+  <action name="actionCrosshairTool">
    <property name="checkable">
     <bool>true</bool>
    </property>
@@ -419,7 +419,7 @@
     <string>Crosshair</string>
    </property>
   </action>
-  <action name="actionErase">
+  <action name="actionEraseTool">
    <property name="checkable">
     <bool>true</bool>
    </property>

@@ -44,6 +44,12 @@ class MainWindow : public QMainWindow
 		void on_maxIntensitySlider_valueChanged(int value);
 		void on_sliceSlider_valueChanged(int value);
 
+        //toolbar slots
+        void on_actionHandTool_triggered();
+        void on_actionPenTool_triggered();
+        void on_actionCrosshairTool_triggered();
+        void on_actionEraseTool_triggered();
+
 	private:
 		QFileInfo imageInfo;
 		QDir workPath; //Directory used file open dialogs
