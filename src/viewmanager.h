@@ -28,11 +28,13 @@ class ViewManager : public QObject
 		void mouseLeftClick(vtkObject* caller, unsigned long vtkEvent, void* clientData, void* callData, vtkCommand* command);
 		void mouseWheelForward(vtkObject* caller, unsigned long vtkEvent, void* clientData, void* callData, vtkCommand* command);
 		void mouseWheelBackward(vtkObject* caller, unsigned long vtkEvent, void* clientData, void* callData, vtkCommand* command);
+		void dragHandler(vtkObject* caller, unsigned long vtkEvent, void* clientData, void* callData, vtkCommand* command);
 
 
 	signals:
 		void sliceChanged(int slice);
 		void viewLeftClicked(int xVoxel, int yVoxel, int zVoxel);
+		void dragEvent(int xVoxel, int yVoxel, int zVoxel);
 
 	private:
         void forceZoom();
@@ -46,5 +48,8 @@ class ViewManager : public QObject
 		double maxScale; //for zoom
 		double currentScale;
 		double scaleStep;
+
+		//for dragging
+		bool dragOn;
 
 };

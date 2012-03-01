@@ -4,9 +4,10 @@
 #include <vtkCamera.h>
 #include <QDebug>
 #include <vtkCellPicker.h>
+#include <QVTKInteractor.h>
 
 
-ViewManager::ViewManager(ImagePairManager* imageManager, QVTKWidget* qvtkWidget) : scaleStep(10)
+ViewManager::ViewManager(ImagePairManager* imageManager, QVTKWidget* qvtkWidget) : scaleStep(10), dragOn(false)
 {
     this->imageManager = imageManager;
     this->qvtkWidget = qvtkWidget;
@@ -49,13 +50,36 @@ ViewManager::ViewManager(ImagePairManager* imageManager, QVTKWidget* qvtkWidget)
                 1.0
                 );
 
-    //setup connections for left click
+    //setup connection for simple left click
     connections->Connect(qvtkWidget->GetInteractor(),
 			vtkCommand::LeftButtonPressEvent,
 			this,
 			SLOT(mouseLeftClick(vtkObject*,ulong,void*,void*,vtkCommand*)),
 			NULL,
 			1.0);
+
+    //setup connections for mouse dragging
+    connections->Connect(qvtkWidget->GetInteractor(),
+		vtkCommand::LeftButtonPressEvent,
+		this,
+		SLOT(dragHandler(vtkObject*,ulong,void*,void*,vtkCommand*)),
+		NULL,
+		2.0);
+
+
+    connections->Connect(qvtkWidget->GetInteractor(),
+		vtkCommand::MouseMoveEvent,
+		this,
+		SLOT(dragHandler(vtkObject*,ulong,void*,void*,vtkCommand*)),
+		NULL,
+		2.0);
+
+    connections->Connect(qvtkWidget->GetInteractor(),
+		vtkCommand::LeftButtonReleaseEvent,
+		this,
+		SLOT(dragHandler(vtkObject*,ulong,void*,void*,vtkCommand*)),
+		NULL,
+		2.0);
 
 }
 
@@ -179,4 +203,52 @@ void ViewManager::mouseLeftClick(vtkObject *caller, unsigned long vtkEvent, void
 
 	//make sure vtkinteractorstyle doesn't catch event
 	command->AbortFlagOn();
+}
+
+void ViewManager::dragHandler(vtkObject *caller, unsigned long vtkEvent, void *clientData, void *callData, vtkCommand *command)
+{
+	//Get event co-ordinates before processing the event type
+
+	vtkRenderWindowInteractor* iren = vtkRenderWindowInteractor::SafeDownCast(caller);
+
+	// Get the location of the click (in window coordinates)
+	int* pos = iren->GetEventPosition();
+
+	vtkSmartPointer<vtkCellPicker> picker = vtkSmartPointer<vtkCellPicker>::New();
+
+	// Pick from this location.
+	picker->Pick(pos[0], pos[1], 0, imageViewer->GetRenderer());
+
+
+	switch(vtkEvent)
+	{
+		case vtkCommand::LeftButtonPressEvent :
+			dragOn = true;
+			//qDebug() << "Drag start";
+			emit dragEvent(picker->GetCellIJK()[0],picker->GetCellIJK()[1], picker->GetCellIJK()[2]);
+
+		break;
+
+		case vtkCommand::LeftButtonReleaseEvent :
+			dragOn = false;
+			//qDebug() << "Drag stop";
+			emit dragEvent(picker->GetCellIJK()[0],picker->GetCellIJK()[1], picker->GetCellIJK()[2]);
+
+		break;
+
+		case vtkCommand::MouseMoveEvent :
+			if(dragOn)
+			{
+				//qDebug() << "Dragging...";
+				emit dragEvent(picker->GetCellIJK()[0],picker->GetCellIJK()[1], picker->GetCellIJK()[2]);
+			}
+
+
+
+		break;
+
+		default:
+			qWarning() << "ViewManager::dragHandler() unrecognised mouse event received.";
+
+	}
 }
