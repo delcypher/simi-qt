@@ -18,6 +18,7 @@ MainWindow::MainWindow() : imageInfo(""), workPath(QDir::home())
 	seedManager=0;
 	imageManager=0;
 	viewManager=0;
+	drawManager=0;
 
 
 
@@ -41,6 +42,9 @@ MainWindow::~MainWindow()
 
 	if(viewManager!=0)
         delete viewManager;
+
+	if(drawManager!=0)
+        delete drawManager;
 }
 
 void MainWindow::on_actionOpen_Image_triggered()
@@ -82,6 +86,11 @@ void MainWindow::on_actionOpen_Image_triggered()
 			if(viewManager!=0)
 				delete viewManager;
 			viewManager = new ViewManager(imageManager,ui->qvtkWidget);
+
+			//setup drawManager
+			if(drawManager!=0)
+                delete drawManager;
+			drawManager = new DrawManager(imageManager);
 
 			sliceControlSetup();
 			contrastControlSetup();

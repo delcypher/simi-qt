@@ -11,6 +11,7 @@
 #include "imagepairmanager.h"
 #include "seedpointmanager.h"
 #include "viewmanager.h"
+#include "drawmanager.h"
 
 
 
@@ -30,9 +31,9 @@ class MainWindow : public QMainWindow
 		ImagePairManager* imageManager;
 		SeedPointManager* seedManager;
 		ViewManager* viewManager;
+		DrawManager* drawManager;
 
 
-	
 	private slots:
 		void on_actionOpen_Image_triggered();
 		void on_actionSlice_up_triggered();
