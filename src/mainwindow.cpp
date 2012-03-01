@@ -98,7 +98,7 @@ void MainWindow::on_actionOpen_Image_triggered()
 			//setup segmenter
 			if(segmenter!=0)
 				delete segmenter;
-			segmenter = new Segmentation(seedManager,imageManager);
+			segmenter = new Segmenter(seedManager,imageManager);
 
 
 
@@ -397,5 +397,6 @@ void MainWindow::on_maxSegIntensitySlider_valueChanged(int value)
 
 void MainWindow::on_doSegmentation_clicked()
 {
-
+	if(segmenter!=0)
+		segmenter->doSegmentation(viewManager->getCurrentSlice(), ui->minSegIntensitySlider->value(), ui->maxSegIntensitySlider->value());
 }

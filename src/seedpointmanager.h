@@ -24,7 +24,6 @@ class SeedPointManager : public QObject
 
 
 	private:
-		int currentSlice;
 		int numberOfSlices;
 };
 

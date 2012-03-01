@@ -34,7 +34,7 @@ class MainWindow : public QMainWindow
 		SeedPointManager* seedManager;
 		ViewManager* viewManager;
 		DrawManager* drawManager;
-		Segmentation* segmenter;
+		Segmenter* segmenter;
 
 
 

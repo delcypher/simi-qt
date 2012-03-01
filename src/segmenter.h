@@ -2,11 +2,16 @@
 #include "seedpointmanager.h"
 #include "imagepairmanager.h"
 
-class Segmentation : public QObject
+class Segmenter : public QObject
 {
 	Q_OBJECT
 
 	public:
-		Segmentation(SeedPointManager* seedManager, ImagePairManager* imageManager);
-		~Segmentation();
+		Segmenter(SeedPointManager* seedManager, ImagePairManager* imageManager);
+		~Segmenter();
+
+		void doSegmentation(int sliceNumber, int minThreshold, int maxThreshold);
+
+	signals:
+		void segmentationDone(int sliceNumber);
 };
