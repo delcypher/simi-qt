@@ -31,7 +31,7 @@ class MainWindow : public QMainWindow
 
 		//helper classes
         ImagePairManager* imagePairManager;
-		SeedPointManager* seedManager;
+        SeedPointManager* seedPointManager;
 		ViewManager* viewManager;
 		DrawManager* drawManager;
 		Segmenter* segmenter;

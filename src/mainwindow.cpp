@@ -16,7 +16,7 @@ MainWindow::MainWindow() : imageInfo(""), workPath(QDir::home())
 	ui = new Ui::MainWindow;
 	ui->setupUi(this); //set up user interface
 
-	seedManager=0;
+    seedPointManager=0;
 	imagePairManager=0;
 	viewManager=0;
 	drawManager=0;
@@ -39,8 +39,8 @@ MainWindow::~MainWindow()
 	if(imagePairManager!=0)
         delete imagePairManager;
 
-	if(seedManager!=0)
-        delete seedManager;
+    if(seedPointManager!=0)
+        delete seedPointManager;
 
 	if(viewManager!=0)
         delete viewManager;
@@ -83,9 +83,9 @@ void MainWindow::on_actionOpen_Image_triggered()
 			}
 
 			//setup SeedPointManager
-			if(seedManager!=0)
-				delete seedManager;
-			seedManager = new SeedPointManager(imagePairManager->getZDim());
+            if(seedPointManager!=0)
+                delete seedPointManager;
+            seedPointManager = new SeedPointManager(imagePairManager->getZDim());
 
 			//setup LayoutManager
 			if(viewManager!=0)
@@ -100,7 +100,7 @@ void MainWindow::on_actionOpen_Image_triggered()
 			//setup segmenter
 			if(segmenter!=0)
 				delete segmenter;
-			segmenter = new Segmenter(seedManager,imagePairManager);
+            segmenter = new Segmenter(seedPointManager,imagePairManager);
 
 
 
@@ -115,7 +115,7 @@ void MainWindow::on_actionOpen_Image_triggered()
 			connect(viewManager,SIGNAL(mouseLeavesWidget()), this, SLOT(updateStatusBar()));
 
 			//setup seedPointLine view being told about the seed point being change
-			connect(seedManager,SIGNAL(seedPointChanged(int,int,int)), this, SLOT(seedPointChanged()));
+            connect(seedPointManager,SIGNAL(seedPointChanged(int,int,int)), this, SLOT(seedPointChanged()));
 			connect(viewManager,SIGNAL(sliceChanged(int)), this,SLOT(seedPointChanged()));
 
 			//setup zoom control
@@ -235,7 +235,7 @@ void MainWindow::on_actionHandTool_triggered()
     //disable seedTool connection
     disconnect(viewManager,
 		SIGNAL(viewLeftClicked(int,int,int)),
-		seedManager,
+        seedPointManager,
 		SLOT(setSeedPoint(int,int,int))
 		);
 
@@ -263,7 +263,7 @@ void MainWindow::on_actionPenTool_triggered()
     //disable seedTool connection
     disconnect(viewManager,
 		SIGNAL(viewLeftClicked(int,int,int)),
-		seedManager,
+        seedPointManager,
 		SLOT(setSeedPoint(int,int,int))
 		);
 
@@ -290,7 +290,7 @@ void MainWindow::on_actionCrosshairTool_triggered()
     //disable seedTool connection
     disconnect(viewManager,
 		SIGNAL(viewLeftClicked(int,int,int)),
-		seedManager,
+        seedPointManager,
 		SLOT(setSeedPoint(int,int,int))
 		);
 
@@ -313,7 +313,7 @@ void MainWindow::on_actionCrosshairTool_triggered()
     //enable connection
     connect(viewManager,
 		SIGNAL(viewLeftClicked(int,int,int)),
-		seedManager,
+        seedPointManager,
 		SLOT(setSeedPoint(int,int,int))
 		);
 
@@ -326,7 +326,7 @@ void MainWindow::on_actionEraseTool_triggered()
     //disable seedTool connection
     disconnect(viewManager,
 		SIGNAL(viewLeftClicked(int,int,int)),
-		seedManager,
+        seedPointManager,
 		SLOT(setSeedPoint(int,int,int))
 		);
 
@@ -432,7 +432,7 @@ void MainWindow::seedPointChanged()
 {
 	int x=0;
 	int y=0;
-	seedManager->getSeedPoint(viewManager->getCurrentSlice(),x,y);
+    seedPointManager->getSeedPoint(viewManager->getCurrentSlice(),x,y);
 
 	QString seedPoint("(");
 	seedPoint += QString::number(x);
