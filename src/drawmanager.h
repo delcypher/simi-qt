@@ -1,3 +1,6 @@
+#ifndef DRAWMANAGER_H
+#define DRAWMANAGER_H
+
 #include <QObject>
 #include "imagepairmanager.h"
 
@@ -17,3 +20,5 @@ class DrawManager : public QObject
 		ImagePairManager* imageManager;
 	
 };
+
+#endif

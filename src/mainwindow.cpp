@@ -18,6 +18,7 @@ MainWindow::MainWindow() : imageInfo(""), workPath(QDir::home())
 	imageManager=0;
 	viewManager=0;
 	drawManager=0;
+	segmenter=0;
 
 
 
@@ -44,6 +45,9 @@ MainWindow::~MainWindow()
 
 	if(drawManager!=0)
         delete drawManager;
+
+	if(segmenter!=0)
+		delete segmenter;
 }
 
 void MainWindow::on_actionOpen_Image_triggered()
@@ -90,6 +94,11 @@ void MainWindow::on_actionOpen_Image_triggered()
 			if(drawManager!=0)
 				delete drawManager;
 			drawManager = new DrawManager(imageManager);
+
+			//setup segmenter
+			if(segmenter!=0)
+				delete segmenter;
+			segmenter = new Segmentation(seedManager,imageManager);
 
 
 
@@ -384,4 +393,9 @@ void MainWindow::on_maxSegIntensitySlider_valueChanged(int value)
 	//make sure max is not < min
 	if(value < ui->minSegIntensitySlider->value())
 		ui->maxSegIntensitySlider->setValue( ui->minSegIntensitySlider->value());
+}
+
+void MainWindow::on_doSegmentation_clicked()
+{
+
 }

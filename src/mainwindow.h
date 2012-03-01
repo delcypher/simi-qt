@@ -12,6 +12,7 @@
 #include "seedpointmanager.h"
 #include "viewmanager.h"
 #include "drawmanager.h"
+#include "segmenter.h"
 
 
 
@@ -33,6 +34,8 @@ class MainWindow : public QMainWindow
 		SeedPointManager* seedManager;
 		ViewManager* viewManager;
 		DrawManager* drawManager;
+		Segmentation* segmenter;
+
 
 
 	private slots:
@@ -54,6 +57,8 @@ class MainWindow : public QMainWindow
 	  void on_minSegIntensitySlider_valueChanged(int value);
 
 	  void on_maxSegIntensitySlider_valueChanged(int value);
+
+	  void on_doSegmentation_clicked();
 
 private:
 		QFileInfo imageInfo;

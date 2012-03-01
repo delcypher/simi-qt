@@ -1,3 +1,6 @@
+#ifndef SEEDPOINTMANAGER_H
+#define SEEDPOINTMANAGER_H
+
 #include <QObject>
 #include <vtkEvent.h>
 #include <vtkObject.h>
@@ -24,3 +27,5 @@ class SeedPointManager : public QObject
 		int currentSlice;
 		int numberOfSlices;
 };
+
+#endif
