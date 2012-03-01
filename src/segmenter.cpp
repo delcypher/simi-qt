@@ -2,7 +2,7 @@
 #include <QDebug>
 
 
-Segmenter::Segmenter(SeedPointManager* seedManager, ImagePairManager* imageManager)
+Segmenter::Segmenter(SeedPointManager* seedPointManager, ImagePairManager* imagePairManager)
 {
 
 }

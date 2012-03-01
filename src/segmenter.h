@@ -7,7 +7,7 @@ class Segmenter : public QObject
 	Q_OBJECT
 
 	public:
-		Segmenter(SeedPointManager* seedManager, ImagePairManager* imageManager);
+        Segmenter(SeedPointManager* seedPointManager, ImagePairManager* imagePairManager);
 		~Segmenter();
 
 		void doSegmentation(int sliceNumber, int minThreshold, int maxThreshold);
