@@ -226,7 +226,11 @@ void ViewManager::mouseLeftClick(vtkObject *caller, unsigned long vtkEvent, void
 
 	if(picker->GetCellId() != -1)
 	{
-		qDebug() << "ViewManager::mouseLeftClick() : IJK:" << picker->GetCellIJK()[0] << "," << picker->GetCellIJK()[1] << "," << picker->GetCellIJK()[2];
+		qDebug() << "ViewManager::mouseLeftClick() : IJK:" << picker->GetCellIJK()[0] << "," << picker->GetCellIJK()[1] << "," << picker->GetCellIJK()[2] << " intensity:" <<
+		getLastMouseIntensity();
+		;
+
+
 		emit viewLeftClicked(picker->GetCellIJK()[0], picker->GetCellIJK()[1], picker->GetCellIJK()[2]);
 	}
 	else
