@@ -48,7 +48,7 @@ class MainWindow : public QMainWindow
 		void on_maxIntensitySlider_valueChanged(int value);
 		void on_sliceSlider_valueChanged(int value);
 		void updateStatusBar();
-		void seedPointChanged(int sliceNumber, int x, int y);
+		void seedPointChanged();
 
         //toolbar slots
         void on_actionHandTool_triggered();
