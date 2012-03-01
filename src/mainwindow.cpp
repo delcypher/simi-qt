@@ -17,7 +17,7 @@ MainWindow::MainWindow() : imageInfo(""), workPath(QDir::home())
 	ui->setupUi(this); //set up user interface
 
 	seedManager=0;
-	imageManager=0;
+	imagePairManager=0;
 	viewManager=0;
 	drawManager=0;
 	segmenter=0;
@@ -36,8 +36,8 @@ MainWindow::~MainWindow()
 {
 	delete ui;
 
-	if(imageManager!=0)
-        delete imageManager;
+	if(imagePairManager!=0)
+        delete imagePairManager;
 
 	if(seedManager!=0)
         delete seedManager;
@@ -71,12 +71,12 @@ void MainWindow::on_actionOpen_Image_triggered()
 			imageInfo.setFile(newImagePath);
 
 			//Setup the ImagePairManager
-			if(imageManager!=0)
-				delete imageManager;
+			if(imagePairManager!=0)
+				delete imagePairManager;
 
-			imageManager = new ImagePairManager();
+			imagePairManager = new ImagePairManager();
 
-			if(!(imageManager->loadImage(imageInfo)))
+			if(!(imagePairManager->loadImage(imageInfo)))
 			{
 				qDebug() << "Failed to open" << imageInfo.absoluteFilePath();
 				return;
@@ -85,22 +85,22 @@ void MainWindow::on_actionOpen_Image_triggered()
 			//setup SeedPointManager
 			if(seedManager!=0)
 				delete seedManager;
-			seedManager = new SeedPointManager(imageManager->getZDim());
+			seedManager = new SeedPointManager(imagePairManager->getZDim());
 
 			//setup LayoutManager
 			if(viewManager!=0)
 				delete viewManager;
-			viewManager = new ViewManager(imageManager,ui->qvtkWidget);
+			viewManager = new ViewManager(imagePairManager,ui->qvtkWidget);
 
 			//setup drawManager
 			if(drawManager!=0)
 				delete drawManager;
-			drawManager = new DrawManager(imageManager);
+			drawManager = new DrawManager(imagePairManager);
 
 			//setup segmenter
 			if(segmenter!=0)
 				delete segmenter;
-			segmenter = new Segmenter(seedManager,imageManager);
+			segmenter = new Segmenter(seedManager,imagePairManager);
 
 
 
@@ -177,18 +177,18 @@ void MainWindow::on_actionAbout_triggered()
 void MainWindow::contrastControlSetup()
 {
 
-	if(imageManager!=0)
+	if(imagePairManager!=0)
 	{
-		ui->minIntensitySlider->setRange(static_cast<int>(imageManager->getMinimumIntensity()),static_cast<int>(imageManager->getMaximumIntensity()));
-		ui->maxIntensitySlider->setRange(static_cast<int>(imageManager->getMinimumIntensity()),static_cast<int>(imageManager->getMaximumIntensity()));
-		ui->minIntensitySpinBox->setRange(static_cast<int>(imageManager->getMinimumIntensity()),static_cast<int>(imageManager->getMaximumIntensity()));
-		ui->maxIntensitySpinBox->setRange(static_cast<int>(imageManager->getMinimumIntensity()),static_cast<int>(imageManager->getMaximumIntensity()));
+		ui->minIntensitySlider->setRange(static_cast<int>(imagePairManager->getMinimumIntensity()),static_cast<int>(imagePairManager->getMaximumIntensity()));
+		ui->maxIntensitySlider->setRange(static_cast<int>(imagePairManager->getMinimumIntensity()),static_cast<int>(imagePairManager->getMaximumIntensity()));
+		ui->minIntensitySpinBox->setRange(static_cast<int>(imagePairManager->getMinimumIntensity()),static_cast<int>(imagePairManager->getMaximumIntensity()));
+		ui->maxIntensitySpinBox->setRange(static_cast<int>(imagePairManager->getMinimumIntensity()),static_cast<int>(imagePairManager->getMaximumIntensity()));
 	}
 
 
 	//Doing this change should cause the valueChanged() signal to be emitted by the sliders
-	ui->minIntensitySlider->setValue(static_cast<int>(imageManager->getMinimumIntensity()));
-	ui->maxIntensitySlider->setValue(static_cast<int>(imageManager->getMaximumIntensity()));
+	ui->minIntensitySlider->setValue(static_cast<int>(imagePairManager->getMinimumIntensity()));
+	ui->maxIntensitySlider->setValue(static_cast<int>(imagePairManager->getMaximumIntensity()));
 
 }
 
@@ -350,10 +350,10 @@ void MainWindow::on_actionEraseTool_triggered()
 
 void MainWindow::sliceControlSetup()
 {
-	if(imageManager!=0)
+	if(imagePairManager!=0)
 	{
-		ui->sliceSlider->setRange(imageManager->getZMin(),imageManager->getZMax());
-		ui->sliceSpinBox->setRange(imageManager->getZMin(),imageManager->getZMax());
+		ui->sliceSlider->setRange(imagePairManager->getZMin(),imagePairManager->getZMax());
+		ui->sliceSpinBox->setRange(imagePairManager->getZMin(),imagePairManager->getZMax());
 
 		connect(viewManager,SIGNAL(sliceChanged(int)),ui->sliceSlider,SLOT(setValue(int)));
 
@@ -379,18 +379,18 @@ void MainWindow::toolbarSetup()
 
 void MainWindow::segmentationControlSetup()
 {
-	if(imageManager!=0)
+	if(imagePairManager!=0)
 	{
-		ui->minSegIntensitySlider->setRange(static_cast<int>(imageManager->getMinimumIntensity()),static_cast<int>(imageManager->getMaximumIntensity()));
-		ui->minSegIntensitySpinBox->setRange(static_cast<int>(imageManager->getMinimumIntensity()),static_cast<int>(imageManager->getMaximumIntensity()));
-		ui->maxSegIntensitySlider->setRange(static_cast<int>(imageManager->getMinimumIntensity()),static_cast<int>(imageManager->getMaximumIntensity()));
-		ui->maxSegIntensitySpinBox->setRange(static_cast<int>(imageManager->getMinimumIntensity()),static_cast<int>(imageManager->getMaximumIntensity()));
+		ui->minSegIntensitySlider->setRange(static_cast<int>(imagePairManager->getMinimumIntensity()),static_cast<int>(imagePairManager->getMaximumIntensity()));
+		ui->minSegIntensitySpinBox->setRange(static_cast<int>(imagePairManager->getMinimumIntensity()),static_cast<int>(imagePairManager->getMaximumIntensity()));
+		ui->maxSegIntensitySlider->setRange(static_cast<int>(imagePairManager->getMinimumIntensity()),static_cast<int>(imagePairManager->getMaximumIntensity()));
+		ui->maxSegIntensitySpinBox->setRange(static_cast<int>(imagePairManager->getMinimumIntensity()),static_cast<int>(imagePairManager->getMaximumIntensity()));
 	}
 
 
 	//Doing this change should cause the valueChanged() signal to be emitted by the sliders
-	ui->minSegIntensitySlider->setValue(static_cast<int>(imageManager->getMinimumIntensity()));
-	ui->maxSegIntensitySlider->setValue(static_cast<int>(imageManager->getMaximumIntensity()));
+	ui->minSegIntensitySlider->setValue(static_cast<int>(imagePairManager->getMinimumIntensity()));
+	ui->maxSegIntensitySlider->setValue(static_cast<int>(imagePairManager->getMaximumIntensity()));
 }
 
 void MainWindow::on_minSegIntensitySlider_valueChanged(int value)
