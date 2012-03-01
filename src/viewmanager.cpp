@@ -7,7 +7,7 @@
 #include <QVTKInteractor.h>
 
 
-ViewManager::ViewManager(ImagePairManager* imageManager, QVTKWidget* qvtkWidget) : scaleStep(10), dragOn(false), mouseX(0), mouseY(0), mouseZ(0), mouseIntensity(0)
+ViewManager::ViewManager(ImagePairManager* imageManager, QVTKWidget* qvtkWidget) : scaleStep(10), dragOn(false), mouseX(0), mouseY(0), mouseZ(0), mouseIntensity(0), mouseOverWidget(false)
 {
     this->imageManager = imageManager;
     this->qvtkWidget = qvtkWidget;
@@ -88,6 +88,23 @@ ViewManager::ViewManager(ImagePairManager* imageManager, QVTKWidget* qvtkWidget)
 			SLOT(mouseMove(vtkObject*,ulong,void*,void*,vtkCommand*)),
 			NULL,
 			2.0
+			);
+
+    //setup connections for mouseInWidget
+    connections->Connect(qvtkWidget->GetInteractor(),
+			vtkCommand::EnterEvent,
+			this,
+			SLOT(enterLeaveHandler(vtkObject*,ulong)),
+			NULL,
+			1.0
+			);
+
+    connections->Connect(qvtkWidget->GetInteractor(),
+			vtkCommand::LeaveEvent,
+			this,
+			SLOT(enterLeaveHandler(vtkObject*,ulong)),
+			NULL,
+			1.0
 			);
 
 }
@@ -282,6 +299,27 @@ void ViewManager::dragHandler(vtkObject *caller, unsigned long vtkEvent, void *c
 void ViewManager::update()
 {
 	imageViewer->GetRenderWindow()->Render();
+}
+
+void ViewManager::enterLeaveHandler(vtkObject *caller, unsigned long vtkEvent)
+{
+
+	switch(vtkEvent)
+	{
+		case vtkCommand::EnterEvent :
+			//qDebug() << "enterLeaveHandler() : Enter";
+			mouseOverWidget=true;
+			emit mouseIsOverWidget();
+			break;
+		case vtkCommand::LeaveEvent :
+			//qDebug() << "enterLeaveHandler() : Leave";
+			mouseOverWidget=false;
+			emit mouseLeavesWidget();
+			break;
+		default:
+			qWarning() << "Unexpected event received in ViewManager::enterLeaveHandler()";
+
+	}
 }
 
 

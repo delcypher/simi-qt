@@ -111,6 +111,8 @@ void MainWindow::on_actionOpen_Image_triggered()
 
 			//setup statusbar update from viewmanager
 			connect(viewManager,SIGNAL(mouseHasMoved()), this, SLOT(updateStatusBar()));
+			connect(viewManager,SIGNAL(mouseEntersWidget()), this, SLOT(updateStatusBar()));
+			connect(viewManager,SIGNAL(mouseLeavesWidget()), this, SLOT(updateStatusBar()));
 
 			//setup zoom control
 			connect(ui->actionZoom_in,SIGNAL(triggered()), viewManager,SLOT(zoomIn()));
@@ -410,10 +412,14 @@ void MainWindow::on_doSegmentation_clicked()
 
 void MainWindow::updateStatusBar()
 {
-	QString message("");
-	QTextStream messageStream(&message);
+	if(viewManager!=0 && viewManager->mouseIsOverWidget())
+	{
+		QString message("");
+		QTextStream messageStream(&message);
+		messageStream << "X:" << viewManager->getLastMousePosX() << " Y:"<< viewManager->getLastMousePosY() << " Z:" << viewManager->getLastMousePosZ() << " Intensity:" << viewManager->getLastMouseIntensity();
 
-	messageStream << "X:" << viewManager->getLastMousePosX() << " Y:"<< viewManager->getLastMousePosY() << " Z:" << viewManager->getLastMousePosZ() << " Intensity:" << viewManager->getLastMouseIntensity();
-
-	ui->statusbar->showMessage(*(messageStream.string()),0);
+		ui->statusbar->showMessage(*(messageStream.string()),0);
+	}
+	else
+		ui->statusbar->showMessage("");
 }

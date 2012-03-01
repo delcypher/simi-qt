@@ -22,6 +22,7 @@ class ViewManager : public QObject
 		int getLastMousePosY() { return mouseY;}
 		int getLastMousePosZ() { return mouseZ;}
 		int getLastMouseIntensity() { return mouseIntensity;}
+		bool mouseIsOverWidget() { return mouseOverWidget;}
 
 
 	
@@ -36,6 +37,7 @@ class ViewManager : public QObject
 		void mouseWheelForward(vtkObject* caller, unsigned long vtkEvent, void* clientData, void* callData, vtkCommand* command);
 		void mouseWheelBackward(vtkObject* caller, unsigned long vtkEvent, void* clientData, void* callData, vtkCommand* command);
 		void dragHandler(vtkObject* caller, unsigned long vtkEvent, void* clientData, void* callData, vtkCommand* command);
+		void enterLeaveHandler(vtkObject* caller, unsigned long vtkEvent);
 
 
 	signals:
@@ -43,6 +45,8 @@ class ViewManager : public QObject
 		void viewLeftClicked(int xVoxel, int yVoxel, int zVoxel);
 		void dragEvent(int xVoxel, int yVoxel, int zVoxel);
 		void mouseHasMoved();
+		void mouseEntersWidget();
+		void mouseLeavesWidget();
 
 	private:
         void forceZoom();
@@ -65,5 +69,6 @@ class ViewManager : public QObject
 		int mouseY;
 		int mouseZ;
 		int mouseIntensity;
+		bool mouseOverWidget;
 
 };
