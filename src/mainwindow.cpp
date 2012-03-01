@@ -222,12 +222,13 @@ void MainWindow::on_actionCrosshairTool_triggered()
     //disable other connections
     //TODO
 
+
     //enable connection
     connections->Connect(ui->qvtkWidget->GetInteractor(),
                          vtkCommand::LeftButtonPressEvent,
                          seedManager,
                          SLOT(pointPicked(vtkObject*,ulong,void*,void*,vtkCommand*)),
-                         NULL,
+                         viewManager->getRenderer(),
                          1.0);
 }
 

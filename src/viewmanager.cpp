@@ -72,6 +72,15 @@ int ViewManager::getCurrentSlice()
     return imageViewer->GetSlice();
 }
 
+vtkRenderer *ViewManager::getRenderer()
+{
+    if(imageViewer!=0)
+        return imageViewer->GetRenderer();
+    else
+        return NULL;
+
+}
+
 void ViewManager::zoomIn()
 {
     double tempScale = currentScale -scaleStep;

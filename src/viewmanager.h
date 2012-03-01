@@ -6,6 +6,7 @@
 #include "vtkImageViewer2.h"
 #include <vtkEventQtSlotConnect.h>
 #include <vtkCommand.h>
+#include <vtkRenderer.h>
 
 class ViewManager : public QObject
 {
@@ -15,6 +16,7 @@ class ViewManager : public QObject
 		~ViewManager();
 		void setConstrast(double minIntensity, double maxIntensity);
 		int getCurrentSlice();
+        vtkRenderer* getRenderer();
 
 	
 	public slots:
