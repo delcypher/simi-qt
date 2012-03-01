@@ -7,7 +7,6 @@
 #include <QTextStream>
 #include "compiletimeconstants.h"
 #include "vtkCamera.h"
-#include <vtkCommand.h>
 
 
 MainWindow::MainWindow() : imageInfo(""), workPath(QDir::home())
@@ -89,10 +88,10 @@ void MainWindow::on_actionOpen_Image_triggered()
 
 			//setup drawManager
 			if(drawManager!=0)
-                delete drawManager;
+				delete drawManager;
 			drawManager = new DrawManager(imageManager);
 
-            connections = vtkEventQtSlotConnect::New();
+
 
 			sliceControlSetup();
 			contrastControlSetup();
@@ -208,11 +207,27 @@ void MainWindow::on_sliceSlider_valueChanged(int value)
 void MainWindow::on_actionHandTool_triggered()
 {
     qDebug() << "Hand tool activated";
+
+    //disable other connections
+    //disable seedTool connection
+    disconnect(viewManager,
+		SIGNAL(viewLeftClicked(int,int,int)),
+		seedManager,
+		SLOT(setSeedPoint(int,int,int))
+		);
 }
 
 void MainWindow::on_actionPenTool_triggered()
 {
     qDebug() << "Pen tool activated";
+
+    //disable other connections
+    //disable seedTool connection
+    disconnect(viewManager,
+		SIGNAL(viewLeftClicked(int,int,int)),
+		seedManager,
+		SLOT(setSeedPoint(int,int,int))
+		);
 }
 
 void MainWindow::on_actionCrosshairTool_triggered()
@@ -220,21 +235,37 @@ void MainWindow::on_actionCrosshairTool_triggered()
     qDebug() << "Crosshair tool activated";
 
     //disable other connections
-    //TODO
+    //disable seedTool connection
+    disconnect(viewManager,
+		SIGNAL(viewLeftClicked(int,int,int)),
+		seedManager,
+		SLOT(setSeedPoint(int,int,int))
+		);
+
 
 
     //enable connection
-    connections->Connect(ui->qvtkWidget->GetInteractor(),
-                         vtkCommand::LeftButtonPressEvent,
-                         seedManager,
-                         SLOT(pointPicked(vtkObject*,ulong,void*,void*,vtkCommand*)),
-                         viewManager->getRenderer(),
-                         1.0);
+    connect(viewManager,
+		SIGNAL(viewLeftClicked(int,int,int)),
+		seedManager,
+		SLOT(setSeedPoint(int,int,int))
+		);
+
 }
 
 void MainWindow::on_actionEraseTool_triggered()
 {
     qDebug() << "Erase tool activated";
+
+    //disable seedTool connection
+    disconnect(viewManager,
+		SIGNAL(viewLeftClicked(int,int,int)),
+		seedManager,
+		SLOT(setSeedPoint(int,int,int))
+		);
+
+
+
 }
 
 void MainWindow::sliceControlSetup()

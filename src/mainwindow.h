@@ -13,7 +13,6 @@
 #include "viewmanager.h"
 #include "drawmanager.h"
 
-#include <vtkEventQtSlotConnect.h>
 
 
 
@@ -57,7 +56,6 @@ class MainWindow : public QMainWindow
 		QDir workPath; //Directory used file open dialogs
 		Ui::MainWindow* ui; //handle to user interface
 		QActionGroup* toolbarActions;
-        vtkSmartPointer<vtkEventQtSlotConnect> connections;
 
 
 

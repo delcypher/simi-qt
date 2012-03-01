@@ -25,12 +25,14 @@ class ViewManager : public QObject
 		void zoomOut();
 
 	private slots:
-        void mouseWheelForward(vtkObject* caller, unsigned long vtkEvent, void* clientData, void* callData, vtkCommand* command);
-        void mouseWheelBackward(vtkObject* caller, unsigned long vtkEvent, void* clientData, void* callData, vtkCommand* command);
+		void mouseLeftClick(vtkObject* caller, unsigned long vtkEvent, void* clientData, void* callData, vtkCommand* command);
+		void mouseWheelForward(vtkObject* caller, unsigned long vtkEvent, void* clientData, void* callData, vtkCommand* command);
+		void mouseWheelBackward(vtkObject* caller, unsigned long vtkEvent, void* clientData, void* callData, vtkCommand* command);
 
 
 	signals:
 		void sliceChanged(int slice);
+		void viewLeftClicked(int xVoxel, int yVoxel, int zVoxel);
 
 	private:
         void forceZoom();

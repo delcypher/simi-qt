@@ -3,6 +3,7 @@
 #include <vtkRenderer.h>
 #include <vtkCamera.h>
 #include <QDebug>
+#include <vtkCellPicker.h>
 
 
 ViewManager::ViewManager(ImagePairManager* imageManager, QVTKWidget* qvtkWidget) : scaleStep(10)
@@ -24,9 +25,9 @@ ViewManager::ViewManager(ImagePairManager* imageManager, QVTKWidget* qvtkWidget)
     imageViewer->GetRenderer()->GetActiveCamera()->SetParallelScale(currentScale);
 
 
-	//setup segblock image
+    //setup segblock image
 
-	//setup seedpoint drawing?
+    //setup seedpoint drawing?
 
     //Enable connections between VTK events and our Qt Slots
     connections = vtkEventQtSlotConnect::New();
@@ -47,6 +48,14 @@ ViewManager::ViewManager(ImagePairManager* imageManager, QVTKWidget* qvtkWidget)
                 NULL,
                 1.0
                 );
+
+    //setup connections for left click
+    connections->Connect(qvtkWidget->GetInteractor(),
+			vtkCommand::LeftButtonPressEvent,
+			this,
+			SLOT(mouseLeftClick(vtkObject*,ulong,void*,void*,vtkCommand*)),
+			NULL,
+			1.0);
 
 }
 
@@ -149,4 +158,25 @@ void ViewManager::forceZoom()
 {
     imageViewer->GetRenderer()->GetActiveCamera()->SetParallelScale(currentScale);
     imageViewer->GetRenderWindow()->Render();
+}
+
+void ViewManager::mouseLeftClick(vtkObject *caller, unsigned long vtkEvent, void *clientData, void *callData, vtkCommand *command)
+{
+	vtkRenderWindowInteractor* iren = vtkRenderWindowInteractor::SafeDownCast(caller);
+
+	// Get the location of the click (in window coordinates)
+	int* pos = iren->GetEventPosition();
+
+	qDebug() << "ViewManager::mouseLeftClick() : Window position is:" << pos[0] << pos[1];
+
+	vtkSmartPointer<vtkCellPicker> picker = vtkSmartPointer<vtkCellPicker>::New();
+
+	// Pick from this location.
+	picker->Pick(pos[0], pos[1], 0, imageViewer->GetRenderer());
+
+	qDebug() << "ViewManager::mouseLeftClick() : IJK:" << picker->GetCellIJK()[0] << "," << picker->GetCellIJK()[1] << "," << picker->GetCellIJK()[2];
+	emit viewLeftClicked(picker->GetCellIJK()[0], picker->GetCellIJK()[1], picker->GetCellIJK()[2]);
+
+	//make sure vtkinteractorstyle doesn't catch event
+	command->AbortFlagOn();
 }
