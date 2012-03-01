@@ -16,7 +16,7 @@ class SeedPointManager : public QObject
 		bool setSeedPoint(int slice, int x, int y);
 
 	public slots:
-		void pointPicked(vtkObject* caller, unsigned long vtkEvent, void* clientData);
+        void pointPicked(vtkObject* caller, unsigned long vtkEvent, void* clientData, void* callData, vtkCommand* command);
 		void setCurrentSlice(int slice);
 
 

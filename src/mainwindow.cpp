@@ -7,7 +7,7 @@
 #include <QTextStream>
 #include "compiletimeconstants.h"
 #include "vtkCamera.h"
-
+#include <vtkCommand.h>
 
 
 MainWindow::MainWindow() : imageInfo(""), workPath(QDir::home())
@@ -91,6 +91,8 @@ void MainWindow::on_actionOpen_Image_triggered()
 			if(drawManager!=0)
                 delete drawManager;
 			drawManager = new DrawManager(imageManager);
+
+            connections = vtkEventQtSlotConnect::New();
 
 			sliceControlSetup();
 			contrastControlSetup();
@@ -216,6 +218,17 @@ void MainWindow::on_actionPenTool_triggered()
 void MainWindow::on_actionCrosshairTool_triggered()
 {
     qDebug() << "Crosshair tool activated";
+
+    //disable other connections
+    //TODO
+
+    //enable connection
+    connections->Connect(ui->qvtkWidget->GetInteractor(),
+                         vtkCommand::LeftButtonPressEvent,
+                         seedManager,
+                         SLOT(pointPicked(vtkObject*,ulong,void*,void*,vtkCommand*)),
+                         NULL,
+                         1.0);
 }
 
 void MainWindow::on_actionEraseTool_triggered()
