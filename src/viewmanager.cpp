@@ -252,3 +252,8 @@ void ViewManager::dragHandler(vtkObject *caller, unsigned long vtkEvent, void *c
 
 	}
 }
+
+void ViewManager::update()
+{
+	imageViewer->GetRenderWindow()->Render();
+}

@@ -23,6 +23,7 @@ class ViewManager : public QObject
 		void ChangeSlice(int slice);
 		void zoomIn();
 		void zoomOut();
+		void update();
 
 	private slots:
 		void mouseLeftClick(vtkObject* caller, unsigned long vtkEvent, void* clientData, void* callData, vtkCommand* command);

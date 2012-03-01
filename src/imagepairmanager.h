@@ -39,6 +39,13 @@ class ImagePairManager : public QObject
 		double getMinimumIntensity();
 		double getMaximumIntensity();
 
+		enum BlockType
+		{
+			BACKGROUND,
+			BLOCKING,
+			SEGMENTATION
+		};
+
 	private:
 		vtkSmartPointer<vtkStructuredPointsReader> reader;
 

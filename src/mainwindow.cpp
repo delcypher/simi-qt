@@ -111,6 +111,8 @@ void MainWindow::on_actionOpen_Image_triggered()
 			connect(ui->actionZoom_in,SIGNAL(triggered()), viewManager,SLOT(zoomIn()));
 			connect(ui->actionZoom_out,SIGNAL(triggered()), viewManager,SLOT(zoomOut()));
 
+			//setup so on segmentation completion we redraw
+			connect(segmenter,SIGNAL(segmentationDone(int)), viewManager, SLOT(update()));
 
 			//Update the work path to the location of the new image
 			workPath.setPath(imageInfo.absolutePath());
