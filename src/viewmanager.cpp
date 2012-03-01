@@ -198,8 +198,13 @@ void ViewManager::mouseLeftClick(vtkObject *caller, unsigned long vtkEvent, void
 	// Pick from this location.
 	picker->Pick(pos[0], pos[1], 0, imageViewer->GetRenderer());
 
-	qDebug() << "ViewManager::mouseLeftClick() : IJK:" << picker->GetCellIJK()[0] << "," << picker->GetCellIJK()[1] << "," << picker->GetCellIJK()[2];
-	emit viewLeftClicked(picker->GetCellIJK()[0], picker->GetCellIJK()[1], picker->GetCellIJK()[2]);
+	if(picker->GetCellId() != -1)
+	{
+		qDebug() << "ViewManager::mouseLeftClick() : IJK:" << picker->GetCellIJK()[0] << "," << picker->GetCellIJK()[1] << "," << picker->GetCellIJK()[2];
+		emit viewLeftClicked(picker->GetCellIJK()[0], picker->GetCellIJK()[1], picker->GetCellIJK()[2]);
+	}
+	else
+		qDebug() << "ViewManager::mouseLeftClick() : Out of range!";
 
 	//make sure vtkinteractorstyle doesn't catch event
 	command->AbortFlagOn();
