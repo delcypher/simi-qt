@@ -57,6 +57,7 @@ class ViewManager : public QObject
 		vtkSmartPointer<vtkEventQtSlotConnect> connections;
         ImagePairManager* imagePairManager;
 		QVTKWidget* qvtkWidget;
+		vtkSmartPointer<vtkImageActor> segblockActor;
 
 		double minScale; //for zoom
 		double maxScale; //for zoom

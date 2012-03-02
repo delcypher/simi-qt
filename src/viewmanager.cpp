@@ -33,7 +33,7 @@ ViewManager::ViewManager(ImagePairManager* imagePairManager, QVTKWidget* qvtkWid
     vtkSmartPointer<vtkLookupTable> lut= vtkLookupTable::New();
     lut->SetNumberOfTableValues(3);
     lut->SetRange(0.0,2.0);
-    lut->SetTableValue(ImagePairManager::BACKGROUND,1.0,0.0,0.0,1.0); //set background
+    lut->SetTableValue(ImagePairManager::BACKGROUND,1.0,0.0,0.0,0.5); //set background
     lut->SetTableValue(ImagePairManager::BLOCKING,0.0,1.0,0.0,1.0);
     lut->SetTableValue(ImagePairManager::SEGMENTATION,1.0,0.0,0.0,1.0);
     lut->Build();
@@ -43,9 +43,15 @@ ViewManager::ViewManager(ImagePairManager* imagePairManager, QVTKWidget* qvtkWid
     segblockMapper->PassAlphaToOutputOn(); //do I need this?
     segblockMapper->SetInput(imagePairManager->segblock);
 
-    vtkSmartPointer<vtkImageActor> segblockActor = vtkImageActor::New();
+    segblockActor = vtkImageActor::New();
     segblockActor->SetInput(segblockMapper->GetOutput());
     imageViewer->GetRenderer()->AddActor(segblockActor);
+
+    //try to duplicate display bounds
+    int displayExtent[6];
+    imageViewer->GetImageActor()->GetDisplayExtent(displayExtent);
+    segblockActor->SetDisplayExtent(displayExtent);
+    qvtkWidget->update();
 
 
 
@@ -251,15 +257,40 @@ void ViewManager::debugDump()
     qDebug() << "imageViewer's Image Actor Y range [" << yrange[0] << "," << yrange[1] << "]";
     qDebug() << "imageViewer's Image Actor Z range [" << zrange[0] << "," << zrange[1] << "]";
 
-    double bounds[6];
-    imageViewer->GetImageActor()->GetBounds(bounds);
-    qDebug() << "imageViewer's Image Actor X bounds " << bounds[0] << "," << bounds[1];
-    qDebug() << "imageViewer's Image Actor Y bounds " << bounds[2] << "," << bounds[3];
-    qDebug() << "imageViewer's Image Actor Z bounds " << bounds[4] << "," << bounds[5];
+    int displayExtent[6];
+    imageViewer->GetImageActor()->GetDisplayExtent(displayExtent);
+    qDebug() << "imageViewer's Image Actor X display extent" << displayExtent[0] << "," << displayExtent[1];
+    qDebug() << "imageViewer's Image Actor Y display extent " << displayExtent[2] << "," << displayExtent[3];
+    qDebug() << "imageViewer's Image Actor Z display extent " << displayExtent[4] << "," << displayExtent[5];
 
     double* centre; //centre of bounding box in world co-ordinates
     centre = imageViewer->GetImageActor()->GetCenter();
     qDebug() << "imageViewer's Image Actor's centre of bounding box:" << centre[0] << "," << centre[1] << "," << centre[2];
+
+    /* Seg block information */
+    //position in world co-ordinates
+    segblockActor->GetPosition(position);
+    qDebug() << "segblocks's ImageActor position:" << position[0] << "," << position[1] << "," << position[2];
+
+    segblockActor->GetOrigin(origin);
+    qDebug() << "segblockActor's' Image Actor origin:" << origin[0] << "," << origin[1] << "," << origin[2];
+
+    segblockActor->GetScale(scale);
+    qDebug() << "segblockActor's' Image Actor scale:" << scale[0] << "," << scale[1] << "," << scale[2];
+
+    xrange=segblockActor->GetXRange();
+    yrange=segblockActor->GetYRange();
+    zrange=segblockActor->GetZRange();
+    qDebug() << "segblock's Image Actor X range [" << xrange[0] << "," << xrange[1] << "]";
+    qDebug() << "segblock's Image Actor Y range [" << yrange[0] << "," << yrange[1] << "]";
+    qDebug() << "segblock's Image Actor Z range [" << zrange[0] << "," << zrange[1] << "]";
+
+
+    segblockActor->GetDisplayExtent(displayExtent);
+    qDebug() << "segblock's Image Actor X display extent" << displayExtent[0] << "," << displayExtent[1];
+    qDebug() << "segblock's Image Actor Y display extent " << displayExtent[2] << "," << displayExtent[3];
+    qDebug() << "segblock's Image Actor Z display extent " << displayExtent[4] << "," << displayExtent[5];
+
 
     /* Camera information
     *
@@ -279,6 +310,7 @@ void ViewManager::debugDump()
     double projectionVector[3];
     camera->GetDirectionOfProjection(projectionVector);
     qDebug() << "Camera projection direction [from camera to focal point]:" << projectionVector[0] << "," << projectionVector[1] << "," << projectionVector[2];
+
 
 
 }
