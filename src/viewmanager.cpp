@@ -231,6 +231,12 @@ void ViewManager::debugDump()
     qDebug() << "imageViewer's Image Actor Y range [" << yrange[0] << "," << yrange[1] << "]";
     qDebug() << "imageViewer's Image Actor Z range [" << zrange[0] << "," << zrange[1] << "]";
 
+    double bounds[6];
+    imageViewer->GetImageActor()->GetBounds(bounds);
+    qDebug() << "imageViewer's Image Actor X bounds " << bounds[0] << "," << bounds[1];
+    qDebug() << "imageViewer's Image Actor Y bounds " << bounds[2] << "," << bounds[3];
+    qDebug() << "imageViewer's Image Actor Z bounds " << bounds[4] << "," << bounds[5];
+
     double* centre; //centre of bounding box in world co-ordinates
     centre = imageViewer->GetImageActor()->GetCenter();
     qDebug() << "imageViewer's Image Actor's centre of bounding box:" << centre[0] << "," << centre[1] << "," << centre[2];
@@ -241,10 +247,18 @@ void ViewManager::debugDump()
     vtkCamera* camera = imageViewer->GetRenderer()->GetActiveCamera();
     camera->GetPosition(position);
     qDebug() << "Camera position:" << position[0] << "," << position[1] << "," << position[2];
+
     double viewUp[3];
     camera->GetViewUp(viewUp);
     qDebug() << "Camera view up:" << viewUp[0] << "," << viewUp[1] << "," << viewUp[2];
 
+    double focalPoint[3];
+    camera->GetFocalPoint(focalPoint);
+    qDebug() << "Camera focal point:" <<  focalPoint[0] << "," << focalPoint[1] << "," << focalPoint[2];
+
+    double projectionVector[3];
+    camera->GetDirectionOfProjection(projectionVector);
+    qDebug() << "Camera projection direction [from camera to focal point]:" << projectionVector[0] << "," << projectionVector[1] << "," << projectionVector[2];
 
 
 }

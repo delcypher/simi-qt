@@ -44,7 +44,12 @@ bool ImagePairManager::loadImage(QFileInfo image)
 	extentZMin = extent[4];
 	extentZMax = extent[5];
 
+	//determine spacing
+	double spacing[3];
+	original->GetSpacing(spacing);
 	qDebug() << "Image opened with widths x:" << xDim << ", y:" << yDim << ", z:" << zDim ;
+	qDebug() << "Spacing: " << spacing[0] << "," << spacing[1] << "," << spacing[2];
+
 
 	//now setup block/segmentation image
 	segblock = vtkImageData::New();
