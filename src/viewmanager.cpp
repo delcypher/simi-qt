@@ -6,6 +6,8 @@
 #include <vtkCellPicker.h>
 #include <QVTKInteractor.h>
 #include <vtkImageActor.h>
+#include <vtkLookupTable.h>
+#include <vtkImageMapToColors.h>
 
 
 ViewManager::ViewManager(ImagePairManager* imagePairManager, QVTKWidget* qvtkWidget) : scaleStep(10), dragOn(false), mouseX(0), mouseY(0), mouseZ(0), mouseIntensity(0), mouseOverWidget(false)
@@ -28,6 +30,24 @@ ViewManager::ViewManager(ImagePairManager* imagePairManager, QVTKWidget* qvtkWid
 
 
     //setup segblock image
+    vtkSmartPointer<vtkLookupTable> lut= vtkLookupTable::New();
+    lut->SetNumberOfTableValues(3);
+    lut->SetRange(0.0,2.0);
+    lut->SetTableValue(ImagePairManager::BACKGROUND,1.0,0.0,0.0,1.0); //set background
+    lut->SetTableValue(ImagePairManager::BLOCKING,0.0,1.0,0.0,1.0);
+    lut->SetTableValue(ImagePairManager::SEGMENTATION,1.0,0.0,0.0,1.0);
+    lut->Build();
+
+    vtkSmartPointer<vtkImageMapToColors> segblockMapper = vtkImageMapToColors::New();
+    segblockMapper->SetLookupTable(lut);
+    segblockMapper->PassAlphaToOutputOn(); //do I need this?
+    segblockMapper->SetInput(imagePairManager->segblock);
+
+    vtkSmartPointer<vtkImageActor> segblockActor = vtkImageActor::New();
+    segblockActor->SetInput(segblockMapper->GetOutput());
+    imageViewer->GetRenderer()->AddActor(segblockActor);
+
+
 
     //setup seedpoint drawing?
 

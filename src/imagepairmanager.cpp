@@ -52,7 +52,7 @@ bool ImagePairManager::loadImage(QFileInfo image)
 
 
 	//now setup block/segmentation image
-	segblock = vtkImageData::New();
+	segblock = vtkStructuredPoints::New();
 	segblock->SetExtent(original->GetExtent());
 	segblock->SetSpacing(original->GetSpacing());
 	segblock->SetNumberOfScalarComponents(1);

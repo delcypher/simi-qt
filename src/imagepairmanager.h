@@ -25,7 +25,7 @@ class ImagePairManager : public QObject
 
 		//Images
 		vtkSmartPointer<vtkStructuredPoints> original;
-		vtkSmartPointer<vtkImageData> segblock;
+		vtkSmartPointer<vtkStructuredPoints> segblock;
 
 		int getXDim() {return xDim;}
 		int getYDim() {return yDim;}
