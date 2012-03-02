@@ -5,32 +5,17 @@
 #include <QString>
 #include <QDir>
 #include <QFileInfo>
+#include <QActionGroup>
 #include "ui_mainwindow.h"
 
+#include "imagepairmanager.h"
+#include "seedpointmanager.h"
+#include "viewmanager.h"
+#include "drawmanager.h"
+#include "segmenter.h"
 
 
-#include "vtkImageViewer2.h"
-#include "vtkSmartPointer.h"
-#include "vtkRenderer.h"
-#include "vtkRenderWindow.h"
-#include "vtkStructuredPoints.h"
-#include "vtkRenderWindowInteractor.h"
-#include "vtkStructuredPointsReader.h"
-#include "customInteractorStyle.h"
 
-/* EXTRA HEADERS FOR EXPERIMENT */
-
-#include "vtkPolyData.h"
-#include "vtkSmartPointer.h"
-#include "vtkImageMapper.h"
-#include "vtkActor2D.h"
-#include "vtkImageActor.h"
-#include "vtkMapper2D.h"
-#include "vtkPolyDataMapper2D.h"
-
-/* END EXTRA HEADERS */
-
-#include "segmentation.h"
 
 
 //Forward Declare UiTester
@@ -43,35 +28,53 @@ class MainWindow : public QMainWindow
 	public:
 		MainWindow();
 		~MainWindow();
-	
+
+		//helper classes
+        ImagePairManager* imagePairManager;
+        SeedPointManager* seedPointManager;
+		ViewManager* viewManager;
+		DrawManager* drawManager;
+		Segmenter* segmenter;
+
+
+
 	private slots:
 		void on_actionOpen_Image_triggered();
 		void on_actionSlice_up_triggered();
 		void on_actionSlice_down_triggered();
 		void on_actionAbout_triggered();
-		bool loadImage();
 
-        void on_minIntensitySlider_valueChanged(int value);
-	void on_maxIntensitySlider_valueChanged(int value);
-	void on_sliceSlider_valueChanged(int value);
+		void on_minIntensitySlider_valueChanged(int value);
+		void on_maxIntensitySlider_valueChanged(int value);
+		void on_sliceSlider_valueChanged(int value);
+		void updateStatusBar();
+		void seedPointChanged();
 
-        void on_runAlgorithm_clicked();
+        //toolbar slots
+        void on_actionHandTool_triggered();
+        void on_actionPenTool_triggered();
+        void on_actionCrosshairTool_triggered();
+        void on_actionEraseTool_triggered();
 
-signals:
-		void sliceChanged(int sliceNumber);
+	  void on_minSegIntensitySlider_valueChanged(int value);
 
-	private:
+	  void on_maxSegIntensitySlider_valueChanged(int value);
+
+	  void on_doSegmentation_clicked();
+
+private:
 		QFileInfo imageInfo;
 		QDir workPath; //Directory used file open dialogs
 		Ui::MainWindow* ui; //handle to user interface
-		vtkSmartPointer<vtkStructuredPointsReader> reader;
-		vtkSmartPointer<vtkImageViewer2> imageView;
-		vtkSmartPointer<CustomInteractorStyle> customStyle;
+		QActionGroup* toolbarActions;
+
 
 
 		//setup methods
 		void contrastControlSetup();
 		void sliceControlSetup();
+		void toolbarSetup();
+		void segmentationControlSetup();
 
 
 		void changeContrast();
