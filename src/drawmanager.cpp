@@ -22,6 +22,7 @@ void DrawManager::draw(int xVoxel, int yVoxel, int zVoxel)
 	*voxel = ImagePairManager::BLOCKING;
 
 	//Inform other classes that we're done (so they can update)
+	imagePairManager->segblock->Modified(); //Mark the segblock as modified so VTK know's to trigger an update along the pipline
 	emit drawingDone();
 }
 
@@ -30,5 +31,6 @@ void DrawManager::erase(int xVoxel, int yVoxel, int zVoxel)
 	qDebug() << "DrawManager::erase(" << xVoxel << "," << yVoxel << "," << zVoxel << ")";
 
 	//Inform other classes that we're done (so they can update)
+	imagePairManager->segblock->Modified(); //Mark the segblock as modified so VTK know's to trigger an update along the pipline
 	emit drawingDone();
 }

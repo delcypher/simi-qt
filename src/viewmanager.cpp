@@ -420,8 +420,9 @@ void ViewManager::dragHandler(vtkObject *caller, unsigned long vtkEvent, void *c
 void ViewManager::update()
 {
     qDebug() << "ViewManager::update() requested";
-    qvtkWidget->update();
 	imageViewer->GetRenderWindow()->Render();
+	qvtkWidget->update();
+
 }
 
 void ViewManager::enterLeaveHandler(vtkObject *caller, unsigned long vtkEvent)
