@@ -125,6 +125,9 @@ void MainWindow::on_actionOpen_Image_triggered()
 			//setup so on segmentation completion we redraw
 			connect(segmenter,SIGNAL(segmentationDone(int)), viewManager, SLOT(update()));
 
+			//setup on drawing complete we redraw
+			connect(drawManager,SIGNAL(drawingDone()),viewManager,SLOT(update()));
+
 			//Update the work path to the location of the new image
 			workPath.setPath(imageInfo.absolutePath());
 

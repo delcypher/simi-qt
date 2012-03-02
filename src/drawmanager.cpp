@@ -17,9 +17,15 @@ DrawManager::~DrawManager()
 void DrawManager::draw(int xVoxel, int yVoxel, int zVoxel)
 {
 	qDebug() << "DrawManager::draw(" << xVoxel << "," << yVoxel << "," << zVoxel << ")";
+
+	//Inform other classes that we're done (so they can update)
+	emit drawingDone();
 }
 
 void DrawManager::erase(int xVoxel, int yVoxel, int zVoxel)
 {
 	qDebug() << "DrawManager::erase(" << xVoxel << "," << yVoxel << "," << zVoxel << ")";
+
+	//Inform other classes that we're done (so they can update)
+	emit drawingDone();
 }
