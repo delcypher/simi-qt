@@ -1,9 +1,14 @@
 #include "imagepairmanager.h"
 #include <QDebug>
 
+
 ImagePairManager::ImagePairManager()
 {
 	reader = vtkStructuredPointsReader::New();
+
+	//set other pointers to NULL
+	original = NULL;
+	segblock =  NULL;
 }
 
 
@@ -51,6 +56,8 @@ bool ImagePairManager::loadImage(QFileInfo image)
 
 	//Make sure everything is consistent as we have changed the dimensions.
 	segblock->Update();
+	//Initialise segblock
+	//setSimBlockVoxelsTo(BACKGROUND);
 
 	qDebug() << "segblock now occupies :" << segblock->GetActualMemorySize() << "KB";
 
@@ -90,7 +97,49 @@ double ImagePairManager::getMaximumIntensity()
 {
 	double range[2];
 	original->GetScalarRange(range);
-	return range[1];
+    return range[1];
+}
+
+bool ImagePairManager::setSimBlockVoxelsTo(ImagePairManager::BlockType type)
+{
+    if(segblock==NULL)
+    {
+        qDebug() << "segblock does NOT exist!";
+        return false;
+    }
+
+    //get ranges to loop over
+    /*
+    * [0] : x_min
+    * [1] : x_max
+    * [2] : y_min
+    * [3] : y_max
+    * [4] : z_min
+    * [5] : z_max
+    */
+    int extent[6];
+    segblock->GetExtent(extent);
+
+    short* voxel=NULL;
+
+     //loop over each voxel and set
+    for(int z= extent[4]; z <= extent[5]; z++)
+    {
+
+        for(int y=extent[2]; y <= extent[3]; y++)
+        {
+
+            for(int x= extent[0]; x <= extent[1] ; x++)
+            {
+                //get pointer to voxel
+                voxel = static_cast<short*>(segblock->GetScalarPointer(x,y,z));
+
+                *voxel = type;
+            }
+        }
+
+    }
+    return true;
 }
 
 

@@ -46,6 +46,8 @@ class ImagePairManager : public QObject
 			SEGMENTATION
 		};
 
+		bool setSimBlockVoxelsTo(ImagePairManager::BlockType type);
+
 	private:
 		vtkSmartPointer<vtkStructuredPointsReader> reader;
 
