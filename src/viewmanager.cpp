@@ -33,7 +33,7 @@ ViewManager::ViewManager(ImagePairManager* imagePairManager, QVTKWidget* qvtkWid
     vtkSmartPointer<vtkLookupTable> lut= vtkLookupTable::New();
     lut->SetNumberOfTableValues(3);
     lut->SetRange(0.0,2.0);
-    lut->SetTableValue(ImagePairManager::BACKGROUND,1.0,0.0,0.0,0.5); //set background
+    lut->SetTableValue(ImagePairManager::BACKGROUND,0.0,1.0,0.0,0.3); //set background
     lut->SetTableValue(ImagePairManager::BLOCKING,0.0,1.0,0.0,1.0);
     lut->SetTableValue(ImagePairManager::SEGMENTATION,1.0,0.0,0.0,1.0);
     lut->Build();
@@ -45,7 +45,7 @@ ViewManager::ViewManager(ImagePairManager* imagePairManager, QVTKWidget* qvtkWid
 
     segblockActor = vtkImageActor::New();
     segblockActor->SetInput(segblockMapper->GetOutput());
-    imageViewer->GetRenderer()->AddActor(segblockActor);
+    imageViewer->GetRenderer()->AddViewProp(segblockActor);
 
     //try to duplicate display bounds
     int displayExtent[6];
@@ -215,6 +215,15 @@ void ViewManager::ChangeSlice(int slice)
 	if(slice >= imagePairManager->getZMin() && slice <= imagePairManager->getZMax())
 	{
         imageViewer->SetSlice(slice);
+
+        //try to duplicate display extent so correct segblock slice is shown.
+        int displayExtent[6];
+        imageViewer->GetImageActor()->GetDisplayExtent(displayExtent);
+        segblockActor->SetDisplayExtent(displayExtent);
+
+        //segblockActor->SetPropertyKeys(imageViewer->GetImageActor()->GetPropertyKeys());//try duplicate props
+
+
         emit sliceChanged(slice);
 	}
 
@@ -290,6 +299,9 @@ void ViewManager::debugDump()
     qDebug() << "segblock's Image Actor X display extent" << displayExtent[0] << "," << displayExtent[1];
     qDebug() << "segblock's Image Actor Y display extent " << displayExtent[2] << "," << displayExtent[3];
     qDebug() << "segblock's Image Actor Z display extent " << displayExtent[4] << "," << displayExtent[5];
+
+    centre = segblockActor->GetCenter();
+    qDebug() << "segblock's Image Actor's centre of bounding box:" << centre[0] << "," << centre[1] << "," << centre[2];
 
 
     /* Camera information
