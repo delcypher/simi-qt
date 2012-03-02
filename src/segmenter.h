@@ -14,4 +14,7 @@ class Segmenter : public QObject
 
 	signals:
 		void segmentationDone(int sliceNumber);
+
+	private:
+        ImagePairManager* imagePairManager;
 };
