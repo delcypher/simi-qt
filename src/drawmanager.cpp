@@ -18,6 +18,9 @@ void DrawManager::draw(int xVoxel, int yVoxel, int zVoxel)
 {
 	qDebug() << "DrawManager::draw(" << xVoxel << "," << yVoxel << "," << zVoxel << ")";
 
+	short* voxel = static_cast<short*>(imagePairManager->segblock->GetScalarPointer(xVoxel,yVoxel,zVoxel));
+	*voxel = ImagePairManager::BLOCKING;
+
 	//Inform other classes that we're done (so they can update)
 	emit drawingDone();
 }

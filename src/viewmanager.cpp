@@ -34,7 +34,7 @@ ViewManager::ViewManager(ImagePairManager* imagePairManager, QVTKWidget* qvtkWid
     lut->SetNumberOfTableValues(3);
     lut->SetRange(0.0,2.0);
     lut->SetTableValue(ImagePairManager::BACKGROUND,0.0,1.0,0.0,0.3); //set background
-    lut->SetTableValue(ImagePairManager::BLOCKING,0.0,1.0,0.0,1.0);
+    lut->SetTableValue(ImagePairManager::BLOCKING,0.0,0.0,1.0,1.0);
     lut->SetTableValue(ImagePairManager::SEGMENTATION,1.0,0.0,0.0,1.0);
     lut->Build();
 
@@ -420,6 +420,7 @@ void ViewManager::dragHandler(vtkObject *caller, unsigned long vtkEvent, void *c
 void ViewManager::update()
 {
     qDebug() << "ViewManager::update() requested";
+    qvtkWidget->update();
 	imageViewer->GetRenderWindow()->Render();
 }
 
