@@ -133,6 +133,9 @@ void MainWindow::on_actionOpen_Image_triggered()
 
 			setWindowModified(false); //because we've loaded new image nothing can be modified
 
+			//allow debug information to be shown from menu
+			connect(ui->actionDump_debug,SIGNAL(triggered()),viewManager,SLOT(debugDump()));
+
 			//set window title
 			QString newWindowTitle(PROGRAM_NAME);
 			newWindowTitle.append(" - ").append(imageInfo.fileName());

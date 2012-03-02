@@ -5,6 +5,7 @@
 #include <QDebug>
 #include <vtkCellPicker.h>
 #include <QVTKInteractor.h>
+#include <vtkImageActor.h>
 
 
 ViewManager::ViewManager(ImagePairManager* imagePairManager, QVTKWidget* qvtkWidget) : scaleStep(10), dragOn(false), mouseX(0), mouseY(0), mouseZ(0), mouseIntensity(0), mouseOverWidget(false)
@@ -199,6 +200,53 @@ void ViewManager::forceZoom()
 {
     imageViewer->GetRenderer()->GetActiveCamera()->SetParallelScale(currentScale);
     imageViewer->GetRenderWindow()->Render();
+}
+
+void ViewManager::debugDump()
+{
+    /*  ImageViewer2 probe
+    *
+    *
+    */
+
+    double position[3]; //position in world co-ordinates
+    imageViewer->GetImageActor()->GetPosition(position);
+    qDebug() << "imageViewer's ImageActor position:" << position[0] << "," << position[1] << "," << position[2];
+
+    double origin[3];
+    imageViewer->GetImageActor()->GetOrigin(origin);
+    qDebug() << "imageViewer's' Image Actor origin:" << origin[0] << "," << origin[1] << "," << origin[2];
+
+    double scale[3];
+    imageViewer->GetImageActor()->GetScale(scale);
+    qDebug() << "imageViewer's' Image Actor scale:" << scale[0] << "," << scale[1] << "," << scale[2];
+
+    double* xrange;
+    double* yrange;
+    double* zrange;
+    xrange=imageViewer->GetImageActor()->GetXRange();
+    yrange=imageViewer->GetImageActor()->GetYRange();
+    zrange=imageViewer->GetImageActor()->GetZRange();
+    qDebug() << "imageViewer's Image Actor X range [" << xrange[0] << "," << xrange[1] << "]";
+    qDebug() << "imageViewer's Image Actor Y range [" << yrange[0] << "," << yrange[1] << "]";
+    qDebug() << "imageViewer's Image Actor Z range [" << zrange[0] << "," << zrange[1] << "]";
+
+    double* centre; //centre of bounding box in world co-ordinates
+    centre = imageViewer->GetImageActor()->GetCenter();
+    qDebug() << "imageViewer's Image Actor's centre of bounding box:" << centre[0] << "," << centre[1] << "," << centre[2];
+
+    /* Camera information
+    *
+    */
+    vtkCamera* camera = imageViewer->GetRenderer()->GetActiveCamera();
+    camera->GetPosition(position);
+    qDebug() << "Camera position:" << position[0] << "," << position[1] << "," << position[2];
+    double viewUp[3];
+    camera->GetViewUp(viewUp);
+    qDebug() << "Camera view up:" << viewUp[0] << "," << viewUp[1] << "," << viewUp[2];
+
+
+
 }
 
 void ViewManager::mouseLeftClick(vtkObject *caller, unsigned long vtkEvent, void *clientData, void *callData, vtkCommand *command)

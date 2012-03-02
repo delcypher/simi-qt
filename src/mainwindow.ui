@@ -31,7 +31,7 @@
      <x>0</x>
      <y>0</y>
      <width>1052</width>
-     <height>21</height>
+     <height>20</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -69,6 +69,7 @@
     <addaction name="actionAbout"/>
     <addaction name="actionAboutQt"/>
     <addaction name="actionDocumentation"/>
+    <addaction name="actionDump_debug"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuImage"/>
@@ -295,7 +296,7 @@
        <rect>
         <x>10</x>
         <y>20</y>
-        <width>173</width>
+        <width>191</width>
         <height>56</height>
        </rect>
       </property>
@@ -512,6 +513,11 @@
    </property>
    <property name="text">
     <string>erase</string>
+   </property>
+  </action>
+  <action name="actionDump_debug">
+   <property name="text">
+    <string>Dump debug</string>
    </property>
   </action>
  </widget>

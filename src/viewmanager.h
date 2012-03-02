@@ -31,6 +31,7 @@ class ViewManager : public QObject
 		void zoomIn();
 		void zoomOut();
 		void update();
+		void debugDump();
 
 	private slots:
 		void mouseLeftClick(vtkObject* caller, unsigned long vtkEvent, void* clientData, void* callData, vtkCommand* command);
@@ -50,6 +51,7 @@ class ViewManager : public QObject
 
 	private:
         void forceZoom();
+
 
 		vtkSmartPointer<vtkImageViewer2> imageViewer;
 		vtkSmartPointer<vtkEventQtSlotConnect> connections;
