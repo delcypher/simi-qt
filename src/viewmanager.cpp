@@ -10,7 +10,7 @@
 
 
 ViewManager::ViewManager(ImagePairManager* imagePairManager, QVTKWidget* qvtkWidget, QDoubleSpinBox* blockingAlphaSpinBox, QDoubleSpinBox* segmentationAlphaSpinBox) :
-scaleStep(10),
+scaleStep(1.5),
 dragOn(false),
 mouseX(0),
 mouseY(0),
@@ -33,7 +33,7 @@ segmentationAlpha(0.5)
 
     //setup zoom control
     maxScale= ( imagePairManager->getYDim() )*( imagePairManager->getYSpacing() )/2.0;
-    minScale=maxScale/800;
+    minScale=1;
     currentScale=maxScale;
 
     imageViewer->GetRenderer()->GetActiveCamera()->SetParallelScale(currentScale);
@@ -177,7 +177,7 @@ vtkRenderer *ViewManager::getRenderer()
 
 void ViewManager::zoomIn()
 {
-    double tempScale = currentScale -scaleStep;
+    double tempScale = currentScale/scaleStep;
 
     if(tempScale >= minScale)
     {
@@ -195,7 +195,7 @@ void ViewManager::zoomIn()
 
 void ViewManager::zoomOut()
 {
-    double tempScale = currentScale +scaleStep;
+    double tempScale = currentScale*scaleStep;
 
     if(tempScale <= maxScale)
     {
