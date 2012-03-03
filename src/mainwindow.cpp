@@ -90,7 +90,7 @@ void MainWindow::on_actionOpen_Image_triggered()
 			//setup LayoutManager
 			if(viewManager!=0)
 				delete viewManager;
-			viewManager = new ViewManager(imagePairManager,ui->qvtkWidget);
+			viewManager = new ViewManager(imagePairManager,ui->qvtkWidget,ui->blockingAlphadoubleSpinBox, ui->segmentationAlphadoubleSpinBox);
 
 			//setup drawManager
 			if(drawManager!=0)
@@ -136,8 +136,6 @@ void MainWindow::on_actionOpen_Image_triggered()
 			//allow debug information to be shown from menu
 			connect(ui->actionDump_debug,SIGNAL(triggered()),viewManager,SLOT(debugDump()));
 
-            //allow alpha to be set
-            connect(ui->blockingAlphadoubleSpinBox,SIGNAL(valueChanged(double)),viewManager,SLOT(setBlockingAlpha(double)));
 
 			//set window title
 			QString newWindowTitle(PROGRAM_NAME);

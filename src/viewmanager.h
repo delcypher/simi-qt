@@ -8,12 +8,13 @@
 #include <vtkCommand.h>
 #include <vtkRenderer.h>
 #include <vtkLookupTable.h>
+#include <QDoubleSpinBox>
 
 class ViewManager : public QObject
 {
 	Q_OBJECT
 	public:
-        ViewManager(ImagePairManager* imagePairManager, QVTKWidget* vtkWidget);
+        ViewManager(ImagePairManager* imagePairManager, QVTKWidget* vtkWidget, QDoubleSpinBox* blockingAlphaSpinBox, QDoubleSpinBox* segmentationAlphaSpinBox);
 		~ViewManager();
 		void setConstrast(double minIntensity, double maxIntensity);
 		int getCurrentSlice();
@@ -82,5 +83,7 @@ class ViewManager : public QObject
 		//for look up table
 		double blockingAlpha;
 		double segmentationAlpha;
+		QDoubleSpinBox* blockingAlphaSpinBox;
+		QDoubleSpinBox* segmentationAlphaSpinBox;
 
 };
