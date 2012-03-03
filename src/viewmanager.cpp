@@ -30,12 +30,7 @@ ViewManager::ViewManager(ImagePairManager* imagePairManager, QVTKWidget* qvtkWid
 
     //setup segblock image
     lut= vtkLookupTable::New();
-    lut->SetNumberOfTableValues(3);
-    lut->SetRange(0.0,2.0);
-    lut->SetTableValue(ImagePairManager::BACKGROUND,0.0,1.0,0.0,0.3); //set background
-    lut->SetTableValue(ImagePairManager::BLOCKING,0.0,0.0,1.0,1.0);
-    lut->SetTableValue(ImagePairManager::SEGMENTATION,1.0,0.0,0.0,1.0);
-    lut->Build();
+    buildLookUpTable();
 
     vtkSmartPointer<vtkImageMapToColors> segblockMapper = vtkImageMapToColors::New();
     segblockMapper->SetLookupTable(lut);
