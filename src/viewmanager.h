@@ -33,6 +33,7 @@ class ViewManager : public QObject
 		void zoomOut();
 		void update();
 		void debugDump();
+		void buildLookUpTable();
 
 	private slots:
 		void mouseLeftClick(vtkObject* caller, unsigned long vtkEvent, void* clientData, void* callData, vtkCommand* command);
@@ -75,5 +76,9 @@ class ViewManager : public QObject
 		int mouseZ;
 		int mouseIntensity;
 		bool mouseOverWidget;
+
+		//for look up table
+		double blockingAlpha;
+		double segmentationAlpha;
 
 };
