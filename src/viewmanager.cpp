@@ -50,6 +50,7 @@ segmentationAlpha(0.5)
 
     segblockActor = vtkImageActor::New();
     segblockActor->SetInput(segblockMapper->GetOutput());
+    segblockActor->InterpolateOff(); //No interpolation so our voxels don't get blurred when we zoom in.
     imageViewer->GetRenderer()->AddViewProp(segblockActor);
 
     //try to duplicate display bounds
