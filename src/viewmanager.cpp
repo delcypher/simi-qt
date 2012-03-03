@@ -6,7 +6,6 @@
 #include <vtkCellPicker.h>
 #include <QVTKInteractor.h>
 #include <vtkImageActor.h>
-#include <vtkLookupTable.h>
 #include <vtkImageMapToColors.h>
 
 
@@ -30,7 +29,7 @@ ViewManager::ViewManager(ImagePairManager* imagePairManager, QVTKWidget* qvtkWid
 
 
     //setup segblock image
-    vtkSmartPointer<vtkLookupTable> lut= vtkLookupTable::New();
+    lut= vtkLookupTable::New();
     lut->SetNumberOfTableValues(3);
     lut->SetRange(0.0,2.0);
     lut->SetTableValue(ImagePairManager::BACKGROUND,0.0,1.0,0.0,0.3); //set background

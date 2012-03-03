@@ -7,6 +7,7 @@
 #include <vtkEventQtSlotConnect.h>
 #include <vtkCommand.h>
 #include <vtkRenderer.h>
+#include <vtkLookupTable.h>
 
 class ViewManager : public QObject
 {
@@ -58,6 +59,7 @@ class ViewManager : public QObject
         ImagePairManager* imagePairManager;
 		QVTKWidget* qvtkWidget;
 		vtkSmartPointer<vtkImageActor> segblockActor;
+		vtkSmartPointer<vtkLookupTable> lut;
 
 		double minScale; //for zoom
 		double maxScale; //for zoom
