@@ -483,6 +483,7 @@ void ViewManager::enterLeaveHandler(vtkObject *caller, unsigned long vtkEvent)
 		case vtkCommand::LeaveEvent :
 			//qDebug() << "enterLeaveHandler() : Leave";
 			mouseOverWidget=false;
+			dragOn=false; //disable dragging so that when cursor goes back over widget we don't continue to drag
 			emit mouseLeavesWidget();
 			break;
 		default:
