@@ -65,16 +65,15 @@ void DrawManager::drawAlgorithm(int &xVoxel, int &yVoxel, int &zVoxel, int &mode
 			//Check boundary condition
 			if (xVoxel + x < boundary[0] || xVoxel + x > boundary[1] || yVoxel + y < boundary[2] || yVoxel + y > boundary[3])
 			{
-				qDebug() << "DrawManager::drawAlgorithm::REPORT->OUT_OF_BOUND_AT(" << xVoxel + x << "," << yVoxel + y << ","
-						 << zVoxel << ")";
+				qDebug() << "DrawManager::drawAlgorithm->OUT_OF_BOUND_AT(" << xVoxel + x << "," << yVoxel + y << "," << zVoxel << ")";
 			}
 			else
 			{
-				short* voxel = static_cast<short*>(imagePairManager->segblock->GetScalarPointer(xVoxel + x, yVoxel + y, zVoxel));
+				//short* voxel = static_cast<short*>(imagePairManager->segblock->GetScalarPointer(xVoxel + x, yVoxel + y, zVoxel));
+				unsigned char* voxel = static_cast<unsigned char*>(imagePairManager->segblock->GetScalarPointer(xVoxel + x, yVoxel + y, zVoxel));
 				*voxel = blockType;
 
-				qDebug() << "DrawManager::drawAlgorithm::REPORT->DRAWN_AT(" << xVoxel + x << "," << yVoxel + y << ","
-						 << zVoxel << ")";
+				qDebug() << "DrawManager::drawAlgorithm->DRAWN_AT(" << xVoxel + x << "," << yVoxel + y << "," << zVoxel << ")";
 			}
 		}
 	}
