@@ -243,66 +243,46 @@ void ViewManager::debugDump()
     *
     *
     */
-
     double position[3]; //position in world co-ordinates
-    imageViewer->GetImageActor()->GetPosition(position);
-    qDebug() << "imageViewer's ImageActor position:" << position[0] << "," << position[1] << "," << position[2];
-
     double origin[3];
-    imageViewer->GetImageActor()->GetOrigin(origin);
-    qDebug() << "imageViewer's' Image Actor origin:" << origin[0] << "," << origin[1] << "," << origin[2];
-
     double scale[3];
-    imageViewer->GetImageActor()->GetScale(scale);
-    qDebug() << "imageViewer's' Image Actor scale:" << scale[0] << "," << scale[1] << "," << scale[2];
-
     double* xrange;
     double* yrange;
     double* zrange;
-    xrange=imageViewer->GetImageActor()->GetXRange();
-    yrange=imageViewer->GetImageActor()->GetYRange();
-    zrange=imageViewer->GetImageActor()->GetZRange();
-    qDebug() << "imageViewer's Image Actor X range [" << xrange[0] << "," << xrange[1] << "]";
-    qDebug() << "imageViewer's Image Actor Y range [" << yrange[0] << "," << yrange[1] << "]";
-    qDebug() << "imageViewer's Image Actor Z range [" << zrange[0] << "," << zrange[1] << "]";
-
     int displayExtent[6];
-    imageViewer->GetImageActor()->GetDisplayExtent(displayExtent);
-    qDebug() << "imageViewer's Image Actor X display extent" << displayExtent[0] << "," << displayExtent[1];
-    qDebug() << "imageViewer's Image Actor Y display extent " << displayExtent[2] << "," << displayExtent[3];
-    qDebug() << "imageViewer's Image Actor Z display extent " << displayExtent[4] << "," << displayExtent[5];
-
     double* centre; //centre of bounding box in world co-ordinates
-    centre = imageViewer->GetImageActor()->GetCenter();
-    qDebug() << "imageViewer's Image Actor's centre of bounding box:" << centre[0] << "," << centre[1] << "," << centre[2];
-
-    /* Seg block information */
-    //position in world co-ordinates
-    segblockActor->GetPosition(position);
-    qDebug() << "segblocks's ImageActor position:" << position[0] << "," << position[1] << "," << position[2];
-
-    segblockActor->GetOrigin(origin);
-    qDebug() << "segblockActor's' Image Actor origin:" << origin[0] << "," << origin[1] << "," << origin[2];
-
-    segblockActor->GetScale(scale);
-    qDebug() << "segblockActor's' Image Actor scale:" << scale[0] << "," << scale[1] << "," << scale[2];
-
-    xrange=segblockActor->GetXRange();
-    yrange=segblockActor->GetYRange();
-    zrange=segblockActor->GetZRange();
-    qDebug() << "segblock's Image Actor X range [" << xrange[0] << "," << xrange[1] << "]";
-    qDebug() << "segblock's Image Actor Y range [" << yrange[0] << "," << yrange[1] << "]";
-    qDebug() << "segblock's Image Actor Z range [" << zrange[0] << "," << zrange[1] << "]";
 
 
-    segblockActor->GetDisplayExtent(displayExtent);
-    qDebug() << "segblock's Image Actor X display extent" << displayExtent[0] << "," << displayExtent[1];
-    qDebug() << "segblock's Image Actor Y display extent " << displayExtent[2] << "," << displayExtent[3];
-    qDebug() << "segblock's Image Actor Z display extent " << displayExtent[4] << "," << displayExtent[5];
+    vtkImageActor* actor=NULL;
+    for(int i=0 ; i <2; i++)
+    {
+        actor=(i==0)?(imageViewer->GetImageActor()):(segblockActor.GetPointer());
 
-    centre = segblockActor->GetCenter();
-    qDebug() << "segblock's Image Actor's centre of bounding box:" << centre[0] << "," << centre[1] << "," << centre[2];
+        actor->GetPosition(position);
+        qDebug() <<  (i==0?"Original":"segblock") << "'s ImageActor position:" << position[0] << "," << position[1] << "," << position[2];
 
+        actor->GetOrigin(origin);
+        qDebug() <<  (i==0?"Original":"segblock") << "'s ImageActor origin:" << origin[0] << "," << origin[1] << "," << origin[2];
+
+        actor->GetScale(scale);
+        qDebug() <<  (i==0?"Original":"segblock") << "'s ImageActor scale:" << scale[0] << "," << scale[1] << "," << scale[2];
+
+        xrange=actor->GetXRange();
+        yrange=actor->GetYRange();
+        zrange=actor->GetZRange();
+        qDebug() << (i==0?"Original":"segblock") << "'s Image Actor X range [" << xrange[0] << "," << xrange[1] << "]";
+        qDebug() << (i==0?"Original":"segblock") << "'s Image Actor Y range [" << yrange[0] << "," << yrange[1] << "]";
+        qDebug() << (i==0?"Original":"segblock") <<"'s Image Actor Z range [" << zrange[0] << "," << zrange[1] << "]";
+
+        actor->GetDisplayExtent(displayExtent);
+        qDebug() << (i==0?"Original":"segblock") << "'s Image Actor X display extent" << displayExtent[0] << "," << displayExtent[1];
+        qDebug() << (i==0?"Original":"segblock") << "'s Image Actor Y display extent " << displayExtent[2] << "," << displayExtent[3];
+        qDebug() << (i==0?"Original":"segblock") << "'s Image Actor Z display extent " << displayExtent[4] << "," << displayExtent[5];
+
+        centre = actor->GetCenter();
+        qDebug() << (i==0?"Original":"segblock") << "'s Image Actor's centre of bounding box:" << centre[0] << "," << centre[1] << "," << centre[2];
+
+    }
 
     /* Camera information
     *
