@@ -319,6 +319,32 @@ void ViewManager::buildLookUpTable()
     }
 }
 
+bool ViewManager::setBlockingAlpha(double alpha)
+{
+    if(alpha < 0 || alpha >1)
+    {
+        qWarning() << "ViewManager::setBlockingAlpha() : Cannot set alpha not in range [0,1]";
+        return false;
+    }
+
+    blockingAlpha=alpha;
+    buildLookUpTable();
+    return true;
+}
+
+bool ViewManager::setSegmentationAlpha(double alpha)
+{
+    if(alpha < 0 || alpha >1)
+    {
+        qWarning() << "ViewManager::setSegmentationAlpha() : Cannot set alpha not in range [0,1]";
+        return false;
+    }
+
+    segmentationAlpha=alpha;
+    buildLookUpTable();
+    return true;
+}
+
 
 void ViewManager::mouseLeftClick(vtkObject *caller, unsigned long vtkEvent, void *clientData, void *callData, vtkCommand *command)
 {
