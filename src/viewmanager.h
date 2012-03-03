@@ -7,12 +7,14 @@
 #include <vtkEventQtSlotConnect.h>
 #include <vtkCommand.h>
 #include <vtkRenderer.h>
+#include <vtkLookupTable.h>
+#include <QDoubleSpinBox>
 
 class ViewManager : public QObject
 {
 	Q_OBJECT
 	public:
-        ViewManager(ImagePairManager* imagePairManager, QVTKWidget* vtkWidget);
+        ViewManager(ImagePairManager* imagePairManager, QVTKWidget* vtkWidget, QDoubleSpinBox* blockingAlphaSpinBox, QDoubleSpinBox* segmentationAlphaSpinBox);
 		~ViewManager();
 		void setConstrast(double minIntensity, double maxIntensity);
 		int getCurrentSlice();
@@ -32,6 +34,9 @@ class ViewManager : public QObject
 		void zoomOut();
 		void update();
 		void debugDump();
+		void buildLookUpTable();
+		bool setBlockingAlpha(double alpha);
+		bool setSegmentationAlpha(double alpha);
 
 	private slots:
 		void mouseLeftClick(vtkObject* caller, unsigned long vtkEvent, void* clientData, void* callData, vtkCommand* command);
@@ -58,6 +63,7 @@ class ViewManager : public QObject
         ImagePairManager* imagePairManager;
 		QVTKWidget* qvtkWidget;
 		vtkSmartPointer<vtkImageActor> segblockActor;
+		vtkSmartPointer<vtkLookupTable> lut;
 
 		double minScale; //for zoom
 		double maxScale; //for zoom
@@ -73,5 +79,11 @@ class ViewManager : public QObject
 		int mouseZ;
 		int mouseIntensity;
 		bool mouseOverWidget;
+
+		//for look up table
+		double blockingAlpha;
+		double segmentationAlpha;
+		QDoubleSpinBox* blockingAlphaSpinBox;
+		QDoubleSpinBox* segmentationAlphaSpinBox;
 
 };

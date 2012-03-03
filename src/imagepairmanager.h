@@ -60,6 +60,8 @@ class ImagePairManager : public QObject
 		int extentZMax;
 		int extentZMin;
 
+		void debugDump();
+
 
 
 };

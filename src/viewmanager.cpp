@@ -6,14 +6,24 @@
 #include <vtkCellPicker.h>
 #include <QVTKInteractor.h>
 #include <vtkImageActor.h>
-#include <vtkLookupTable.h>
 #include <vtkImageMapToColors.h>
 
 
-ViewManager::ViewManager(ImagePairManager* imagePairManager, QVTKWidget* qvtkWidget) : scaleStep(10), dragOn(false), mouseX(0), mouseY(0), mouseZ(0), mouseIntensity(0), mouseOverWidget(false)
+ViewManager::ViewManager(ImagePairManager* imagePairManager, QVTKWidget* qvtkWidget, QDoubleSpinBox* blockingAlphaSpinBox, QDoubleSpinBox* segmentationAlphaSpinBox) :
+scaleStep(1.5),
+dragOn(false),
+mouseX(0),
+mouseY(0),
+mouseZ(0),
+mouseIntensity(0),
+mouseOverWidget(false),
+blockingAlpha(0.5),
+segmentationAlpha(0.5)
 {
     this->imagePairManager = imagePairManager;
     this->qvtkWidget = qvtkWidget;
+    this->blockingAlphaSpinBox=blockingAlphaSpinBox;
+    this->segmentationAlphaSpinBox=segmentationAlphaSpinBox;
 
 	//setup original image
 	imageViewer = vtkImageViewer2::New();
@@ -23,20 +33,15 @@ ViewManager::ViewManager(ImagePairManager* imagePairManager, QVTKWidget* qvtkWid
 
     //setup zoom control
     maxScale= ( imagePairManager->getYDim() )*( imagePairManager->getYSpacing() )/2.0;
-    minScale=maxScale/800;
+    minScale=1;
     currentScale=maxScale;
 
     imageViewer->GetRenderer()->GetActiveCamera()->SetParallelScale(currentScale);
 
 
     //setup segblock image
-    vtkSmartPointer<vtkLookupTable> lut= vtkLookupTable::New();
-    lut->SetNumberOfTableValues(3);
-    lut->SetRange(0.0,2.0);
-    lut->SetTableValue(ImagePairManager::BACKGROUND,0.0,1.0,0.0,0.3); //set background
-    lut->SetTableValue(ImagePairManager::BLOCKING,0.0,0.0,1.0,1.0);
-    lut->SetTableValue(ImagePairManager::SEGMENTATION,1.0,0.0,0.0,1.0);
-    lut->Build();
+    lut= vtkLookupTable::New();
+    buildLookUpTable();
 
     vtkSmartPointer<vtkImageMapToColors> segblockMapper = vtkImageMapToColors::New();
     segblockMapper->SetLookupTable(lut);
@@ -125,6 +130,18 @@ ViewManager::ViewManager(ImagePairManager* imagePairManager, QVTKWidget* qvtkWid
 			1.0
 			);
 
+    //initialise blockingAlphaSpinBox widget
+    blockingAlphaSpinBox->setRange(0.0,1.0);
+    blockingAlphaSpinBox->setSingleStep(0.05);
+    blockingAlphaSpinBox->setValue(blockingAlpha);
+    connect(blockingAlphaSpinBox,SIGNAL(valueChanged(double)),this, SLOT(setBlockingAlpha(double)));
+
+    //initialise segmentationAlphaSpinBox widget
+    segmentationAlphaSpinBox->setRange(0.0,1.0);
+    segmentationAlphaSpinBox->setSingleStep(0.05);
+    segmentationAlphaSpinBox->setValue(segmentationAlpha);
+    connect(segmentationAlphaSpinBox, SIGNAL(valueChanged(double)), this, SLOT(setSegmentationAlpha(double)));
+
 }
 
 ViewManager::~ViewManager()
@@ -160,7 +177,7 @@ vtkRenderer *ViewManager::getRenderer()
 
 void ViewManager::zoomIn()
 {
-    double tempScale = currentScale -scaleStep;
+    double tempScale = currentScale/scaleStep;
 
     if(tempScale >= minScale)
     {
@@ -178,7 +195,7 @@ void ViewManager::zoomIn()
 
 void ViewManager::zoomOut()
 {
-    double tempScale = currentScale +scaleStep;
+    double tempScale = currentScale*scaleStep;
 
     if(tempScale <= maxScale)
     {
@@ -243,66 +260,46 @@ void ViewManager::debugDump()
     *
     *
     */
-
     double position[3]; //position in world co-ordinates
-    imageViewer->GetImageActor()->GetPosition(position);
-    qDebug() << "imageViewer's ImageActor position:" << position[0] << "," << position[1] << "," << position[2];
-
     double origin[3];
-    imageViewer->GetImageActor()->GetOrigin(origin);
-    qDebug() << "imageViewer's' Image Actor origin:" << origin[0] << "," << origin[1] << "," << origin[2];
-
     double scale[3];
-    imageViewer->GetImageActor()->GetScale(scale);
-    qDebug() << "imageViewer's' Image Actor scale:" << scale[0] << "," << scale[1] << "," << scale[2];
-
     double* xrange;
     double* yrange;
     double* zrange;
-    xrange=imageViewer->GetImageActor()->GetXRange();
-    yrange=imageViewer->GetImageActor()->GetYRange();
-    zrange=imageViewer->GetImageActor()->GetZRange();
-    qDebug() << "imageViewer's Image Actor X range [" << xrange[0] << "," << xrange[1] << "]";
-    qDebug() << "imageViewer's Image Actor Y range [" << yrange[0] << "," << yrange[1] << "]";
-    qDebug() << "imageViewer's Image Actor Z range [" << zrange[0] << "," << zrange[1] << "]";
-
     int displayExtent[6];
-    imageViewer->GetImageActor()->GetDisplayExtent(displayExtent);
-    qDebug() << "imageViewer's Image Actor X display extent" << displayExtent[0] << "," << displayExtent[1];
-    qDebug() << "imageViewer's Image Actor Y display extent " << displayExtent[2] << "," << displayExtent[3];
-    qDebug() << "imageViewer's Image Actor Z display extent " << displayExtent[4] << "," << displayExtent[5];
-
     double* centre; //centre of bounding box in world co-ordinates
-    centre = imageViewer->GetImageActor()->GetCenter();
-    qDebug() << "imageViewer's Image Actor's centre of bounding box:" << centre[0] << "," << centre[1] << "," << centre[2];
-
-    /* Seg block information */
-    //position in world co-ordinates
-    segblockActor->GetPosition(position);
-    qDebug() << "segblocks's ImageActor position:" << position[0] << "," << position[1] << "," << position[2];
-
-    segblockActor->GetOrigin(origin);
-    qDebug() << "segblockActor's' Image Actor origin:" << origin[0] << "," << origin[1] << "," << origin[2];
-
-    segblockActor->GetScale(scale);
-    qDebug() << "segblockActor's' Image Actor scale:" << scale[0] << "," << scale[1] << "," << scale[2];
-
-    xrange=segblockActor->GetXRange();
-    yrange=segblockActor->GetYRange();
-    zrange=segblockActor->GetZRange();
-    qDebug() << "segblock's Image Actor X range [" << xrange[0] << "," << xrange[1] << "]";
-    qDebug() << "segblock's Image Actor Y range [" << yrange[0] << "," << yrange[1] << "]";
-    qDebug() << "segblock's Image Actor Z range [" << zrange[0] << "," << zrange[1] << "]";
 
 
-    segblockActor->GetDisplayExtent(displayExtent);
-    qDebug() << "segblock's Image Actor X display extent" << displayExtent[0] << "," << displayExtent[1];
-    qDebug() << "segblock's Image Actor Y display extent " << displayExtent[2] << "," << displayExtent[3];
-    qDebug() << "segblock's Image Actor Z display extent " << displayExtent[4] << "," << displayExtent[5];
+    vtkImageActor* actor=NULL;
+    for(int i=0 ; i <2; i++)
+    {
+        actor=(i==0)?(imageViewer->GetImageActor()):(segblockActor.GetPointer());
 
-    centre = segblockActor->GetCenter();
-    qDebug() << "segblock's Image Actor's centre of bounding box:" << centre[0] << "," << centre[1] << "," << centre[2];
+        actor->GetPosition(position);
+        qDebug() <<  (i==0?"Original":"segblock") << "'s ImageActor position:" << position[0] << "," << position[1] << "," << position[2];
 
+        actor->GetOrigin(origin);
+        qDebug() <<  (i==0?"Original":"segblock") << "'s ImageActor origin:" << origin[0] << "," << origin[1] << "," << origin[2];
+
+        actor->GetScale(scale);
+        qDebug() <<  (i==0?"Original":"segblock") << "'s ImageActor scale:" << scale[0] << "," << scale[1] << "," << scale[2];
+
+        xrange=actor->GetXRange();
+        yrange=actor->GetYRange();
+        zrange=actor->GetZRange();
+        qDebug() << (i==0?"Original":"segblock") << "'s Image Actor X range [" << xrange[0] << "," << xrange[1] << "]";
+        qDebug() << (i==0?"Original":"segblock") << "'s Image Actor Y range [" << yrange[0] << "," << yrange[1] << "]";
+        qDebug() << (i==0?"Original":"segblock") <<"'s Image Actor Z range [" << zrange[0] << "," << zrange[1] << "]";
+
+        actor->GetDisplayExtent(displayExtent);
+        qDebug() << (i==0?"Original":"segblock") << "'s Image Actor X display extent" << displayExtent[0] << "," << displayExtent[1];
+        qDebug() << (i==0?"Original":"segblock") << "'s Image Actor Y display extent " << displayExtent[2] << "," << displayExtent[3];
+        qDebug() << (i==0?"Original":"segblock") << "'s Image Actor Z display extent " << displayExtent[4] << "," << displayExtent[5];
+
+        centre = actor->GetCenter();
+        qDebug() << (i==0?"Original":"segblock") << "'s Image Actor's centre of bounding box:" << centre[0] << "," << centre[1] << "," << centre[2];
+
+    }
 
     /* Camera information
     *
@@ -326,6 +323,53 @@ void ViewManager::debugDump()
 
 
 }
+
+void ViewManager::buildLookUpTable()
+{
+    if(lut!=0)
+    {
+        qDebug() << "Rebuilding look up table";
+        lut->SetNumberOfTableValues(3);
+        lut->SetRange(0.0,2.0);
+        lut->SetTableValue(ImagePairManager::BACKGROUND,0.0,0.0,0.0,0.0); //set background
+        lut->SetTableValue(ImagePairManager::BLOCKING,0.0,0.0,1.0,blockingAlpha);
+        lut->SetTableValue(ImagePairManager::SEGMENTATION,1.0,0.0,0.0,segmentationAlpha);
+        lut->Build();
+    }
+}
+
+bool ViewManager::setBlockingAlpha(double alpha)
+{
+    if(alpha < 0 || alpha >1)
+    {
+        qWarning() << "ViewManager::setBlockingAlpha() : Cannot set alpha not in range [0,1]";
+        return false;
+    }
+
+    blockingAlpha=alpha;
+    qDebug() << "ViewManager::setBlockingAlpha(" << alpha << ")";
+    buildLookUpTable();
+    lut->Modified();
+    update();
+    return true;
+}
+
+bool ViewManager::setSegmentationAlpha(double alpha)
+{
+    if(alpha < 0 || alpha >1)
+    {
+        qWarning() << "ViewManager::setSegmentationAlpha() : Cannot set alpha not in range [0,1]";
+        return false;
+    }
+
+    segmentationAlpha=alpha;
+    qDebug() << "ViewManager::setSegmentationAlpha(Alpha(" << alpha << ")";
+    buildLookUpTable();
+    lut->Modified();
+    update();
+    return true;
+}
+
 
 void ViewManager::mouseLeftClick(vtkObject *caller, unsigned long vtkEvent, void *clientData, void *callData, vtkCommand *command)
 {

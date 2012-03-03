@@ -56,7 +56,8 @@ bool ImagePairManager::loadImage(QFileInfo image)
 	segblock->SetExtent(original->GetExtent());
 	segblock->SetSpacing(original->GetSpacing());
 	segblock->SetNumberOfScalarComponents(1);
-	segblock->SetScalarTypeToShort();
+	segblock->SetOrigin(original->GetOrigin());
+	segblock->SetScalarTypeToChar();
 	segblock->AllocateScalars();
 
 	//Make sure everything is consistent as we have changed the dimensions.
@@ -67,7 +68,7 @@ bool ImagePairManager::loadImage(QFileInfo image)
 	qDebug() << "segblock now occupies :" << segblock->GetActualMemorySize() << "KB";
 
 	//should probably initialise now...
-
+    debugDump();
 
 	return true;
 }
@@ -145,6 +146,22 @@ bool ImagePairManager::setSimBlockVoxelsTo(ImagePairManager::BlockType type)
 
     }
     return true;
+}
+
+void ImagePairManager::debugDump()
+{
+    double origin[3];
+
+    vtkStructuredPoints* img;
+
+    for(int i=0; i<2; i++)
+    {
+        img = (i==0)?original:segblock;
+        img->GetOrigin(origin);
+        qDebug() << "origin of " << ((i==0)?"original":"segblock") << " " << origin[0] << "," << origin[1] << origin[2];
+
+
+    }
 }
 
 
