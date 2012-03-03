@@ -19,7 +19,7 @@ SeedPointManager::~SeedPointManager()
 }
 
 
-//Gets the seed point for slice sliceNumber
+//Gets the seed point for slice "sliceNumber". Reports (-1,-1) if no seed Point is currently set
 bool SeedPointManager::getSeedPoint(int sliceNumber, int& x, int& y)
 {
 	//TODO

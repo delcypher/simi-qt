@@ -12,7 +12,7 @@ class SeedPointManager : public QObject
 		SeedPointManager(int numberOfSlices);
 		~SeedPointManager();
 	
-		//Gets the seed point for slice z
+		//Gets the seed point for slice "sliceNumber". Reports (-1,-1) if no seed Point is currently set
 		bool getSeedPoint(int sliceNumber, int& x, int& y);
 
 	signals:
