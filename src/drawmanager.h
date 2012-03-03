@@ -26,6 +26,14 @@ class DrawManager : public QObject
         QSpinBox* drawSize;
         QComboBox* drawType;
 
+		void drawAlgorithm(int &xVoxel, int &yVoxel, int &zVoxel, int &mode); // helper function for draw and erase function
+
+		enum DrawMode
+		{
+			DRAW,
+			ERASE,
+		};
+
 	
 };
 
