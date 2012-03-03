@@ -136,6 +136,9 @@ void MainWindow::on_actionOpen_Image_triggered()
 			//allow debug information to be shown from menu
 			connect(ui->actionDump_debug,SIGNAL(triggered()),viewManager,SLOT(debugDump()));
 
+            //allow alpha to be set
+            connect(ui->blockingAlphadoubleSpinBox,SIGNAL(valueChanged(double)),viewManager,SLOT(setBlockingAlpha(double)));
+
 			//set window title
 			QString newWindowTitle(PROGRAM_NAME);
 			newWindowTitle.append(" - ").append(imageInfo.fileName());

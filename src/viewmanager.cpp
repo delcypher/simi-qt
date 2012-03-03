@@ -310,6 +310,7 @@ void ViewManager::buildLookUpTable()
 {
     if(lut!=0)
     {
+        qDebug() << "Rebuilding look up table";
         lut->SetNumberOfTableValues(3);
         lut->SetRange(0.0,2.0);
         lut->SetTableValue(ImagePairManager::BACKGROUND,0.0,1.0,0.0,0.3); //set background
@@ -328,7 +329,10 @@ bool ViewManager::setBlockingAlpha(double alpha)
     }
 
     blockingAlpha=alpha;
+    qDebug() << "ViewManager::setBlockingAlpha(" << alpha << ")";
     buildLookUpTable();
+    lut->Modified();
+    update();
     return true;
 }
 
@@ -341,7 +345,10 @@ bool ViewManager::setSegmentationAlpha(double alpha)
     }
 
     segmentationAlpha=alpha;
+    qDebug() << "ViewManager::setSegmentationAlpha(Alpha(" << alpha << ")";
     buildLookUpTable();
+    lut->Modified();
+    update();
     return true;
 }
 
