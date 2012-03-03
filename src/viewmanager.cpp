@@ -331,7 +331,7 @@ void ViewManager::buildLookUpTable()
         qDebug() << "Rebuilding look up table";
         lut->SetNumberOfTableValues(3);
         lut->SetRange(0.0,2.0);
-        lut->SetTableValue(ImagePairManager::BACKGROUND,0.0,1.0,0.0,0.3); //set background
+        lut->SetTableValue(ImagePairManager::BACKGROUND,0.0,0.0,0.0,0.0); //set background
         lut->SetTableValue(ImagePairManager::BLOCKING,0.0,0.0,1.0,blockingAlpha);
         lut->SetTableValue(ImagePairManager::SEGMENTATION,1.0,0.0,0.0,segmentationAlpha);
         lut->Build();
