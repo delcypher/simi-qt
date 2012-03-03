@@ -9,7 +9,16 @@
 #include <vtkImageMapToColors.h>
 
 
-ViewManager::ViewManager(ImagePairManager* imagePairManager, QVTKWidget* qvtkWidget) : scaleStep(10), dragOn(false), mouseX(0), mouseY(0), mouseZ(0), mouseIntensity(0), mouseOverWidget(false)
+ViewManager::ViewManager(ImagePairManager* imagePairManager, QVTKWidget* qvtkWidget) :
+scaleStep(10),
+dragOn(false),
+mouseX(0),
+mouseY(0),
+mouseZ(0),
+mouseIntensity(0),
+mouseOverWidget(false),
+blockingAlpha(0.5),
+segmentationAlpha(0.5)
 {
     this->imagePairManager = imagePairManager;
     this->qvtkWidget = qvtkWidget;
