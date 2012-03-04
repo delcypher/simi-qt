@@ -59,9 +59,3 @@ bool SeedPointManager::setSeedPoint(int x, int y, int sliceNumber)
 	return true;
 }
 
-
-void SeedPointManager::setCurrentSlice(int sliceNumber)
-{
-	//TODO
-}
-

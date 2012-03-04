@@ -26,8 +26,6 @@ class SeedPointManager : public QObject
 		//allows the seed point to manually set
 		bool setSeedPoint(int x, int y, int sliceNumber);
 
-		void setCurrentSlice(int sliceNumber);
-
 
 	private:
 		int numberOfSlices;
