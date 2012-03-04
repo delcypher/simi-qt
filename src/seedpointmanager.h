@@ -4,6 +4,9 @@
 #include <QObject>
 #include <vtkEvent.h>
 #include <vtkObject.h>
+#include <vector>
+
+using std::vector;
 
 class SeedPointManager : public QObject
 {
@@ -21,13 +24,14 @@ class SeedPointManager : public QObject
 
 	public slots:
 		//allows the seed point to manually set
-		bool setSeedPoint(int x, int y, int slice);
+		bool setSeedPoint(int x, int y, int sliceNumber);
 
-		void setCurrentSlice(int slice);
+		void setCurrentSlice(int sliceNumber);
 
 
 	private:
 		int numberOfSlices;
+		vector< vector<int> > seedPerSlice;
 };
 
 #endif
