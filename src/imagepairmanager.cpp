@@ -65,6 +65,8 @@ bool ImagePairManager::loadImage(QFileInfo image)
 	//Initialise segblock
 	//setSimBlockVoxelsTo(BACKGROUND);
 
+	segblockInitTime = segblock->GetMTime(); //Record modification time which we'll use later to check if segblock has been modified.
+
 	qDebug() << "segblock now occupies :" << segblock->GetActualMemorySize() << "KB";
 
 	//should probably initialise now...
@@ -204,6 +206,14 @@ bool ImagePairManager::loadSegblock(QFileInfo path)
 {
     //TODO
     return true;
+}
+
+bool ImagePairManager::segblockModified()
+{
+    if(segblock==0)
+        return false;
+
+    return (segblock->GetMTime() > segblockInitTime);
 }
 
 void ImagePairManager::debugDump()

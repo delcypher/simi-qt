@@ -52,6 +52,8 @@ class ImagePairManager : public QObject
 		bool saveSegblock(QFileInfo path);
 		bool loadSegblock(QFileInfo path);
 
+		bool segblockModified();
+
 	private:
 		vtkSmartPointer<vtkStructuredPointsReader> reader;
 
@@ -65,6 +67,8 @@ class ImagePairManager : public QObject
 		int extentZMin;
 
 		void debugDump();
+
+		unsigned long segblockInitTime;
 
 
 
