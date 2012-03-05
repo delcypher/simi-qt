@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1052</width>
-    <height>678</height>
+    <width>1163</width>
+    <height>845</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -24,13 +24,23 @@
      </rect>
     </property>
    </widget>
+   <widget class="QVTKWidget" name="qvtk3Ddisplayer">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>410</y>
+      <width>421</width>
+      <height>391</height>
+     </rect>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1052</width>
+     <width>1163</width>
      <height>19</height>
     </rect>
    </property>
