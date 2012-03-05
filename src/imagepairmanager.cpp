@@ -169,7 +169,7 @@ bool ImagePairManager::setSimBlockVoxelsTo(ImagePairManager::BlockType type)
     int extent[6];
     segblock->GetExtent(extent);
 
-    short* voxel=NULL;
+    char* voxel=NULL;
 
      //loop over each voxel and set
     for(int z= extent[4]; z <= extent[5]; z++)
@@ -181,7 +181,7 @@ bool ImagePairManager::setSimBlockVoxelsTo(ImagePairManager::BlockType type)
             for(int x= extent[0]; x <= extent[1] ; x++)
             {
                 //get pointer to voxel
-                voxel = static_cast<short*>(segblock->GetScalarPointer(x,y,z));
+                voxel = static_cast<char*>(segblock->GetScalarPointer(x,y,z));
 
                 *voxel = type;
             }
