@@ -452,5 +452,23 @@ void MainWindow::seedPointChanged()
 void MainWindow::on_doSegmentation3D_clicked()
 {
 	if(segmenter!=0)
-		segmenter->doSegmentation3D(viewManager->getCurrentSlice(), ui->minSegIntensitySlider->value(), ui->maxSegIntensitySlider->value());
+        segmenter->doSegmentation3D(viewManager->getCurrentSlice(), ui->minSegIntensitySlider->value(), ui->maxSegIntensitySlider->value());
+}
+
+void MainWindow::on_actionClear_Drawing_triggered()
+{
+    if(imagePairManager!=0 && viewManager!=0)
+    {
+        imagePairManager->setAll(viewManager->getCurrentSlice(), ImagePairManager::BLOCKING, ImagePairManager::BACKGROUND);
+        viewManager->update();
+    }
+}
+
+void MainWindow::on_actionClear_Segmentation_triggered()
+{
+    if(imagePairManager!=0 && viewManager!=0)
+    {
+        imagePairManager->setAll(viewManager->getCurrentSlice(), ImagePairManager::SEGMENTATION, ImagePairManager::BACKGROUND);
+        viewManager->update();
+    }
 }
