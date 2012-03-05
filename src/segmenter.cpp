@@ -12,7 +12,7 @@ Segmenter::~Segmenter()
 
 }
 
-void Segmenter::doSegmentation(int sliceNumber, int minThreshold, int maxThreshold)
+void Segmenter::doSegmentation2D(int sliceNumber, int minThreshold, int maxThreshold)
 {
 	qDebug() << "Segmenter::doSegmentation(" << sliceNumber << "," << minThreshold << "," << maxThreshold << ")";
 
@@ -21,4 +21,9 @@ void Segmenter::doSegmentation(int sliceNumber, int minThreshold, int maxThresho
 	//signal that we're complete
 	imagePairManager->segblock->Modified(); //Mark the segblock as modified so VTK know's to trigger an update along the pipline
 	emit segmentationDone(sliceNumber);
+}
+
+void Segmenter::doSegmentation3D(int sliceNumber, int minThreshold, int maxThreshold)
+{
+
 }

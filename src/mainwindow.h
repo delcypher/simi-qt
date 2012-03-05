@@ -60,7 +60,9 @@ class MainWindow : public QMainWindow
 
 	  void on_maxSegIntensitySlider_valueChanged(int value);
 
-	  void on_doSegmentation_clicked();
+	  void on_doSegmentation2D_clicked();
+
+	  void on_doSegmentation3D_clicked();
 
 private:
 		QFileInfo imageInfo;

@@ -14,7 +14,7 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QVTKWidget" name="qvtkWidget" native="true">
+   <widget class="QVTKWidget" name="qvtkWidget">
     <property name="geometry">
      <rect>
       <x>10</x>
@@ -24,15 +24,6 @@
      </rect>
     </property>
    </widget>
-   <zorder>qvtkWidget</zorder>
-   <zorder>layoutWidget</zorder>
-   <zorder>displayAlphaLabel</zorder>
-   <zorder>segmentationAlphadoubleSpinBox</zorder>
-   <zorder>groupBox</zorder>
-   <zorder>layoutWidget1</zorder>
-   <zorder>displayAlphaLabel_2</zorder>
-   <zorder>blockingAlphadoubleSpinBox</zorder>
-   <zorder>label_2</zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -40,7 +31,7 @@
      <x>0</x>
      <y>0</y>
      <width>1052</width>
-     <height>20</height>
+     <height>19</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -220,13 +211,13 @@
      <property name="title">
       <string>Drawing</string>
      </property>
-     <widget class="QWidget" name="">
+     <widget class="QWidget" name="layoutWidget">
       <property name="geometry">
        <rect>
         <x>10</x>
         <y>20</y>
         <width>191</width>
-        <height>77</height>
+        <height>86</height>
        </rect>
       </property>
       <layout class="QGridLayout" name="gridLayout_6">
@@ -303,13 +294,13 @@
      <property name="title">
       <string>Segmentation</string>
      </property>
-     <widget class="QWidget" name="">
+     <widget class="QWidget" name="layoutWidget">
       <property name="geometry">
        <rect>
         <x>10</x>
         <y>20</y>
         <width>321</width>
-        <height>105</height>
+        <height>122</height>
        </rect>
       </property>
       <layout class="QGridLayout" name="gridLayout_5">
@@ -379,9 +370,16 @@
         </widget>
        </item>
        <item row="3" column="3">
-        <widget class="QPushButton" name="doSegmentation">
+        <widget class="QPushButton" name="doSegmentation2D">
          <property name="text">
-          <string>Segment</string>
+          <string>Segment2D</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="3">
+        <widget class="QPushButton" name="doSegmentation3D">
+         <property name="text">
+          <string>Segment3D</string>
          </property>
         </widget>
        </item>

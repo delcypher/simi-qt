@@ -10,7 +10,9 @@ class Segmenter : public QObject
         Segmenter(SeedPointManager* seedPointManager, ImagePairManager* imagePairManager);
 		~Segmenter();
 
-		void doSegmentation(int sliceNumber, int minThreshold, int maxThreshold);
+		void doSegmentation2D(int sliceNumber, int minThreshold, int maxThreshold);
+
+		void doSegmentation3D(int sliceNumber, int minThreshold, int maxThreshold);
 
 	signals:
 		void segmentationDone(int sliceNumber);

@@ -415,10 +415,10 @@ void MainWindow::on_maxSegIntensitySlider_valueChanged(int value)
 		ui->maxSegIntensitySlider->setValue( ui->minSegIntensitySlider->value());
 }
 
-void MainWindow::on_doSegmentation_clicked()
+void MainWindow::on_doSegmentation2D_clicked()
 {
 	if(segmenter!=0)
-		segmenter->doSegmentation(viewManager->getCurrentSlice(), ui->minSegIntensitySlider->value(), ui->maxSegIntensitySlider->value());
+		segmenter->doSegmentation2D(viewManager->getCurrentSlice(), ui->minSegIntensitySlider->value(), ui->maxSegIntensitySlider->value());
 }
 
 void MainWindow::updateStatusBar()
@@ -447,4 +447,10 @@ void MainWindow::seedPointChanged()
 	seedPoint += QString::number(y);
 	seedPoint +=")";
 	ui->seedPointLineEdit->setText(seedPoint);
+}
+
+void MainWindow::on_doSegmentation3D_clicked()
+{
+	if(segmenter!=0)
+		segmenter->doSegmentation3D(viewManager->getCurrentSlice(), ui->minSegIntensitySlider->value(), ui->maxSegIntensitySlider->value());
 }
