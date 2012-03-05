@@ -14,7 +14,7 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QVTKWidget" name="qvtkWidget">
+   <widget class="QVTKWidget" name="qvtkWidget" native="true">
     <property name="geometry">
      <rect>
       <x>10</x>
@@ -24,7 +24,7 @@
      </rect>
     </property>
    </widget>
-   <widget class="QVTKWidget" name="qvtk3Ddisplayer">
+   <widget class="QVTKWidget" name="qvtk3Ddisplayer" native="true">
     <property name="geometry">
      <rect>
       <x>10</x>
@@ -41,7 +41,7 @@
      <x>0</x>
      <y>0</y>
      <width>1163</width>
-     <height>19</height>
+     <height>20</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -81,7 +81,15 @@
     <addaction name="actionDocumentation"/>
     <addaction name="actionDump_debug"/>
    </widget>
+   <widget class="QMenu" name="menuSlice">
+    <property name="title">
+     <string>Slice</string>
+    </property>
+    <addaction name="actionClear_Drawing"/>
+    <addaction name="actionClear_Segmentation"/>
+   </widget>
    <addaction name="menuFile"/>
+   <addaction name="menuSlice"/>
    <addaction name="menuImage"/>
    <addaction name="menuHelp"/>
   </widget>
@@ -569,6 +577,16 @@
   <action name="actionDump_debug">
    <property name="text">
     <string>Dump debug</string>
+   </property>
+  </action>
+  <action name="actionClear_Drawing">
+   <property name="text">
+    <string>Clear Drawing</string>
+   </property>
+  </action>
+  <action name="actionClear_Segmentation">
+   <property name="text">
+    <string>Clear Segmentation</string>
    </property>
   </action>
  </widget>
