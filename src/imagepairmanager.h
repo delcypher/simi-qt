@@ -19,9 +19,7 @@ class ImagePairManager : public QObject
 		~ImagePairManager();
 		bool loadImage(QFileInfo image);
 		
-		//Reset data for slice
-		void resetSegmentation(int slice);
-		void resetBlocking(int slice);
+
 
 		//Images
 		vtkSmartPointer<vtkStructuredPoints> original;
@@ -45,6 +43,9 @@ class ImagePairManager : public QObject
 			BLOCKING,
 			SEGMENTATION
 		};
+
+		//Set all Voxels in slice "slice" that are value "from" to the value "to
+		bool setAll(int slice, ImagePairManager::BlockType from, ImagePairManager::BlockType to);
 
 		bool setSimBlockVoxelsTo(ImagePairManager::BlockType type);
 
