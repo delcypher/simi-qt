@@ -146,6 +146,7 @@ bool ImagePairManager::setAll(int slice, ImagePairManager::BlockType from, Image
         }
     }
 
+    segblock->Modified(); //Mark as modifed so if a re-render is done VTK knows that this part of the pipeline needs to be reprocessed
     return true; //success
 }
 
@@ -188,6 +189,8 @@ bool ImagePairManager::setSimBlockVoxelsTo(ImagePairManager::BlockType type)
         }
 
     }
+
+    segblock->Modified(); //Mark as modifed so if a re-render is done VTK knows that this part of the pipeline needs to be reprocessed
     return true;
 }
 
