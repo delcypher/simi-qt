@@ -139,8 +139,12 @@ void MainWindow::on_actionOpen_Image_triggered()
 
 			//set window title
 			QString newWindowTitle(PROGRAM_NAME);
-			newWindowTitle.append(" - ").append(imageInfo.fileName());
+			newWindowTitle.append(" - ").append(imageInfo.fileName()).append(" [*]");
 			setWindowTitle(newWindowTitle);
+
+			/* Connect slots so we can be notified if segblock has been modified */
+			connect(drawManager,SIGNAL(drawingDone()), this, SLOT(windowHasBeenModified()));
+			connect(segmenter,SIGNAL(segmentationDone(int)), this , SLOT(windowHasBeenModified()));
 		}
 
 	}
@@ -471,4 +475,14 @@ void MainWindow::on_actionClear_Segmentation_triggered()
         imagePairManager->setAll(viewManager->getCurrentSlice(), ImagePairManager::SEGMENTATION, ImagePairManager::BACKGROUND);
         viewManager->update();
     }
+}
+
+void MainWindow::windowHasBeenModified()
+{
+    setWindowModified(true);
+    qDebug() << "MainWindow::windowHasBeenModified()";
+
+    //Disconnect slots as we don't need to be informed anymore because we know segblock has been modified
+    disconnect(drawManager,SIGNAL(drawingDone()), this, SLOT(windowHasBeenModified()));
+    disconnect(segmenter,SIGNAL(segmentationDone(int)), this , SLOT(windowHasBeenModified()));
 }

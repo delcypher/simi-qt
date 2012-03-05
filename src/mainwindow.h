@@ -65,6 +65,11 @@ class MainWindow : public QMainWindow
         void on_actionClear_Drawing_triggered();
         void on_actionClear_Segmentation_triggered();
 
+        /* Slot is called by other classes when they do something
+        *  to modify imagePairManager.segblock
+        */
+        void windowHasBeenModified();
+
 
 private:
 		QFileInfo imageInfo;
