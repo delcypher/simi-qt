@@ -49,6 +49,9 @@ class ImagePairManager : public QObject
 
 		bool setSimBlockVoxelsTo(ImagePairManager::BlockType type);
 
+		bool saveSegblock(QFileInfo path);
+		bool loadSegblock(QFileInfo path);
+
 	private:
 		vtkSmartPointer<vtkStructuredPointsReader> reader;
 

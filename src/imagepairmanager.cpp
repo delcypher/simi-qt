@@ -194,6 +194,18 @@ bool ImagePairManager::setSimBlockVoxelsTo(ImagePairManager::BlockType type)
     return true;
 }
 
+bool ImagePairManager::saveSegblock(QFileInfo path)
+{
+    //TODO
+    return true;
+}
+
+bool ImagePairManager::loadSegblock(QFileInfo path)
+{
+    //TODO
+    return true;
+}
+
 void ImagePairManager::debugDump()
 {
     double origin[3];
