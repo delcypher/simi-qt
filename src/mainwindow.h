@@ -14,7 +14,7 @@
 #include "viewmanager.h"
 #include "drawmanager.h"
 #include "segmenter.h"
-
+#include "rendermanager.h"
 
 
 
@@ -31,12 +31,12 @@ class MainWindow : public QMainWindow
 		~MainWindow();
 
 		//helper classes
-        ImagePairManager* imagePairManager;
-        SeedPointManager* seedPointManager;
+		ImagePairManager* imagePairManager;
+		SeedPointManager* seedPointManager;
 		ViewManager* viewManager;
 		DrawManager* drawManager;
 		Segmenter* segmenter;
-
+		RenderManager* renderManager;
 
 
 	private slots:
@@ -73,6 +73,10 @@ class MainWindow : public QMainWindow
 	  void closeEvent(QCloseEvent* close);
 
 	private:
+
+	  void on_do3Drendering_clicked();
+
+private:
 		QFileInfo imageInfo;
 		QDir workPath; //Directory used file open dialogs
 		Ui::MainWindow* ui; //handle to user interface

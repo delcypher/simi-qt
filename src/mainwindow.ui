@@ -402,6 +402,19 @@
       </layout>
      </widget>
     </widget>
+    <widget class="QPushButton" name="do3Drendering">
+     <property name="geometry">
+      <rect>
+       <x>30</x>
+       <y>460</y>
+       <width>85</width>
+       <height>27</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>draw 3D</string>
+     </property>
+    </widget>
    </widget>
   </widget>
   <action name="actionOpen_Image">
