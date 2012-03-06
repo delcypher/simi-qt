@@ -200,6 +200,8 @@ bool ImagePairManager::saveSegblock(QString path)
 {
     //TODO
     qDebug() << "ImagePairManager::saveSegblock(" << path << ")" ;
+
+    segblockInitTime = segblock->GetMTime(); //update the init time
     return true;
 }
 
@@ -207,6 +209,8 @@ bool ImagePairManager::loadSegblock(QString path)
 {
     //TODO
     qDebug() << "ImagePairManager::loadSegblock(" << path << ")" ;
+
+    segblockInitTime = segblock->GetMTime(); //update the init time
     return true;
 }
 
