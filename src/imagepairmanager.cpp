@@ -196,17 +196,17 @@ bool ImagePairManager::setSimBlockVoxelsTo(ImagePairManager::BlockType type)
     return true;
 }
 
-bool ImagePairManager::saveSegblock(QFileInfo path)
+bool ImagePairManager::saveSegblock(QString path)
 {
     //TODO
-    qDebug() << "ImagePairManager::saveSegblock(" << path.absoluteFilePath() << ")" ;
+    qDebug() << "ImagePairManager::saveSegblock(" << path << ")" ;
     return true;
 }
 
-bool ImagePairManager::loadSegblock(QFileInfo path)
+bool ImagePairManager::loadSegblock(QString path)
 {
     //TODO
-    qDebug() << "ImagePairManager::loadSegblock(" << path.absoluteFilePath() << ")" ;
+    qDebug() << "ImagePairManager::loadSegblock(" << path << ")" ;
     return true;
 }
 
