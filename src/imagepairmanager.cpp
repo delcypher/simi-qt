@@ -199,12 +199,14 @@ bool ImagePairManager::setSimBlockVoxelsTo(ImagePairManager::BlockType type)
 bool ImagePairManager::saveSegblock(QFileInfo path)
 {
     //TODO
+    qDebug() << "ImagePairManager::saveSegblock(" << path.absoluteFilePath() << ")" ;
     return true;
 }
 
 bool ImagePairManager::loadSegblock(QFileInfo path)
 {
     //TODO
+    qDebug() << "ImagePairManager::loadSegblock(" << path.absoluteFilePath() << ")" ;
     return true;
 }
 
