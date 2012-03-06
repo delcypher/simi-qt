@@ -7,6 +7,7 @@
 #include <QFileInfo>
 #include <QActionGroup>
 #include <QCloseEvent>
+#include <assert.h>
 #include "ui_mainwindow.h"
 
 #include "imagepairmanager.h"

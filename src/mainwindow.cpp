@@ -427,7 +427,12 @@ void MainWindow::on_maxSegIntensitySlider_valueChanged(int value)
 void MainWindow::on_doSegmentation2D_clicked()
 {
 	if(segmenter!=0)
-		segmenter->doSegmentation2D(viewManager->getCurrentSlice(), ui->minSegIntensitySlider->value(), ui->maxSegIntensitySlider->value());
+        {
+                int pos_z = viewManager->getCurrentSlice();
+                int pos_x, pos_y;
+                assert(seedPointManager->getSeedPoint(pos_z,pos_x,pos_y));
+                segmenter->doSegmentation2D(pos_x, pos_y, pos_z, ui->minSegIntensitySlider->value(), ui->maxSegIntensitySlider->value());
+        }
 }
 
 void MainWindow::updateStatusBar()
@@ -460,8 +465,13 @@ void MainWindow::seedPointChanged()
 
 void MainWindow::on_doSegmentation3D_clicked()
 {
-	if(segmenter!=0)
-        segmenter->doSegmentation3D(viewManager->getCurrentSlice(), ui->minSegIntensitySlider->value(), ui->maxSegIntensitySlider->value());
+        if(segmenter!=0)
+        {
+                int pos_z = viewManager->getCurrentSlice();
+                int pos_x, pos_y;
+                assert(seedPointManager->getSeedPoint(pos_z,pos_x,pos_y));
+                segmenter->doSegmentation3D(pos_x, pos_y, pos_z, ui->minSegIntensitySlider->value(), ui->maxSegIntensitySlider->value());
+        }
 }
 
 void MainWindow::on_actionClear_Drawing_triggered()
@@ -536,7 +546,7 @@ void MainWindow::closeEvent(QCloseEvent *close)
 
 bool MainWindow::okToContinue()
 {
-	if(imagePairManager==NULL)
+        if(imagePairManager==NULL)
 		return true; //segblock was never loaded so it's fine
 
 	if(!(imagePairManager->segblockModified()))
