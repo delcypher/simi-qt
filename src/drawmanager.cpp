@@ -6,6 +6,7 @@ DrawManager::DrawManager(ImagePairManager* imagePairManager, QSpinBox* drawSize,
     this->imagePairManager = imagePairManager;
     this->drawSize=drawSize;
     this->drawType=drawType;
+	drawSize->setValue(5);
 }
 
 
