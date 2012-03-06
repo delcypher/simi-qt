@@ -11,7 +11,7 @@
 #include "vtkCamera.h"
 
 
-MainWindow::MainWindow() : imageInfo(""), workPath(QDir::home()), allowOpen(false)
+MainWindow::MainWindow() : imageInfo(""), workPath(QDir::home())
 {
 	ui = new Ui::MainWindow;
 	ui->setupUi(this); //set up user interface
@@ -62,7 +62,7 @@ void MainWindow::on_actionOpen_Image_triggered()
 	std::cerr << "Opening image" << std::endl;
 
 	//check okay to open image
-	if(imagePairManager==NULL || (!imagePairManager->segblockModified()) || allowOpen)
+	if(imagePairManager==NULL || okToContinue())
 	{
 		newImagePath = QFileDialog::getOpenFileName(this,
 							tr("Open Image"),
@@ -93,7 +93,7 @@ void MainWindow::on_actionOpen_Image_triggered()
 			//setup LayoutManager
 			if(viewManager!=0)
 				delete viewManager;
-			viewManager = new ViewManager(imagePairManager,ui->qvtkWidget,ui->blockingAlphadoubleSpinBox, ui->segmentationAlphadoubleSpinBox);
+			viewManager = new ViewManager(imagePairManager, seedPointManager, ui->qvtkWidget,ui->blockingAlphadoubleSpinBox, ui->segmentationAlphadoubleSpinBox);
 
 			//setup drawManager
 			if(drawManager!=0)
@@ -152,20 +152,11 @@ void MainWindow::on_actionOpen_Image_triggered()
 			newWindowTitle.append(" - ").append(imageInfo.fileName());
 			setWindowTitle(newWindowTitle);
 
-			allowOpen=false;
+
 		}
 
 	}
-	else
-	{
-		// offer to save stuff TODO
-		qDebug() << "Need to offer to save segblock!!";
 
-		//now try to open again.
-		allowOpen=true;
-		on_actionOpen_Image_triggered();
-
-	}
 }
 
 
@@ -493,37 +484,88 @@ void MainWindow::on_actionClear_Segmentation_triggered()
 
 void MainWindow::on_actionLoad_Segmentation_triggered()
 {
-    QFileInfo loadPath;
 
     if(imagePairManager==0)
         return;
 
     //Check if we need to save our current segblock first
-    if(imagePairManager->segblockModified())
-    {
-        //TO DO
-        qDebug() << "Offer to save before load!";
+    if(!okToContinue())
+	    return;
 
-    }
+    //show load dialog
+    QString loadFile = QFileDialog::getOpenFileName(this,
+				    tr("Load Segmentation/block image"),
+				    workPath.absolutePath(),
+				    tr("VTK Structured points (*.vtk)"));
 
-    imagePairManager->loadSegblock(loadPath);
+
+    imagePairManager->loadSegblock(loadFile);
 
 
 }
 
-void MainWindow::on_actionSave_Segmentation_triggered()
+bool MainWindow::on_actionSave_Segmentation_triggered()
 {
-    QFileInfo savePath;
 
     if(imagePairManager!=0)
     {
-        //TO DO
+	//Show save dialog
+	QString saveFile = QFileDialog::getSaveFileName(this,
+						tr("Save Segmentation/block image"),
+						workPath.absolutePath(),
+						tr("VTK Structured points (*.vtk)")
+						);
 
-        imagePairManager->saveSegblock(savePath);
+
+	if(saveFile.isEmpty())
+		return false; //the user cancelled on us!
+
+	return imagePairManager->saveSegblock(saveFile);
     }
 
+    return false;
+}
+
+void MainWindow::closeEvent(QCloseEvent *close)
+{
+	if(okToContinue())
+		close->accept();
+	else
+		close->ignore();
+}
+
+bool MainWindow::okToContinue()
+{
+	if(imagePairManager==NULL)
+		return true; //segblock was never loaded so it's fine
+
+	if(!(imagePairManager->segblockModified()))
+		return true; //okay to continue as segblock hasn't been modified
+
+	//segblock must of been modified. Ask user if they'd like to save
+	int result = QMessageBox::warning(this,this->windowTitle(), "Segmentation/blocking data has been changed.\nDo you want to save?", QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel);
+
+	switch(result)
+	{
+		case QMessageBox::Yes :
+			//show save dialog
+			return on_actionSave_Segmentation_triggered();
+
+		break;
+
+		case QMessageBox::No :
+			return true; //user doesn't want to save so okay to proceed
+		break;
+
+		case QMessageBox::Cancel :
+			return false;
+		default:
+			qWarning() << "MainWindow::okToContinue() : The QMessageBox gave us an unexpected answer!";
+			return false;
+	}
 
 }
+
 
 void MainWindow::on_do3Drendering_clicked()
 {

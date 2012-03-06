@@ -9,7 +9,7 @@
 #include <vtkImageMapToColors.h>
 
 
-ViewManager::ViewManager(ImagePairManager* imagePairManager, QVTKWidget* qvtkWidget, QDoubleSpinBox* blockingAlphaSpinBox, QDoubleSpinBox* segmentationAlphaSpinBox) :
+ViewManager::ViewManager(ImagePairManager* imagePairManager, SeedPointManager* seedPointManager, QVTKWidget* qvtkWidget,  QDoubleSpinBox* blockingAlphaSpinBox, QDoubleSpinBox* segmentationAlphaSpinBox) :
 scaleStep(1.5),
 dragOn(false),
 mouseX(0),
@@ -24,6 +24,7 @@ segmentationAlpha(0.5)
     this->qvtkWidget = qvtkWidget;
     this->blockingAlphaSpinBox=blockingAlphaSpinBox;
     this->segmentationAlphaSpinBox=segmentationAlphaSpinBox;
+    this->seedPointManager=seedPointManager;
 
 	//setup original image
 	imageViewer = vtkImageViewer2::New();

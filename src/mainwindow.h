@@ -6,6 +6,7 @@
 #include <QDir>
 #include <QFileInfo>
 #include <QActionGroup>
+#include <QCloseEvent>
 #include "ui_mainwindow.h"
 
 #include "imagepairmanager.h"
@@ -66,9 +67,12 @@ class MainWindow : public QMainWindow
         void on_actionClear_Segmentation_triggered();
 
         void on_actionLoad_Segmentation_triggered();
-        void on_actionSave_Segmentation_triggered();
+	bool on_actionSave_Segmentation_triggered();
 
+	protected:
+	  void closeEvent(QCloseEvent* close);
 
+	private:
 
 	  void on_do3Drendering_clicked();
 
@@ -77,7 +81,6 @@ private:
 		QDir workPath; //Directory used file open dialogs
 		Ui::MainWindow* ui; //handle to user interface
 		QActionGroup* toolbarActions;
-		bool allowOpen;
 
 
 
@@ -89,6 +92,9 @@ private:
 
 
 		void changeContrast();
+
+		//prompt the user to save save segblock if necessary
+		bool okToContinue();
 
 		//Friend class for UI testing.
 		friend class UiTester;

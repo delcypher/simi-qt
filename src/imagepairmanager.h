@@ -49,8 +49,8 @@ class ImagePairManager : public QObject
 
 		bool setSimBlockVoxelsTo(ImagePairManager::BlockType type);
 
-		bool saveSegblock(QFileInfo path);
-		bool loadSegblock(QFileInfo path);
+		bool saveSegblock(QString path);
+		bool loadSegblock(QString path);
 
 		bool segblockModified();
 
