@@ -4,6 +4,19 @@
 #include <QObject>
 #include <QVTKWidget.h>
 #include "imagepairmanager.h"
+#include "vtkMarchingCubes.h"
+#include "rendermanager.h"
+
+
+#include "vtkSmartPointer.h"
+#include "vtkActor.h"
+#include "vtkPolyDataMapper.h"
+#include "vtkRenderWindow.h"
+#include "vtkRenderer.h"
+#include "vtkRenderWindowInteractor.h"
+#include "vtkImageMaskBits.h"
+
+
 
 
 class RenderManager : public QObject
@@ -19,6 +32,12 @@ class RenderManager : public QObject
 	private:
         ImagePairManager* imagePairManager;
         QVTKWidget* qvtk3Ddisplayer;
+	vtkSmartPointer<vtkMarchingCubes> surface ;
+	vtkSmartPointer<vtkRenderer> renderer ;
+	vtkSmartPointer<vtkRenderWindow> renderWindow ;
+	vtkSmartPointer<vtkPolyDataMapper> mapper ;
+	vtkSmartPointer<vtkActor> actor ;
+	vtkSmartPointer<vtkImageMaskBits> mask ;
 
 };
 
