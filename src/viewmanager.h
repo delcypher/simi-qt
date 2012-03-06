@@ -60,7 +60,7 @@ class ViewManager : public QObject
 
 		vtkSmartPointer<vtkImageViewer2> imageViewer;
 		vtkSmartPointer<vtkEventQtSlotConnect> connections;
-        ImagePairManager* imagePairManager;
+		ImagePairManager* imagePairManager;
 		QVTKWidget* qvtkWidget;
 		vtkSmartPointer<vtkImageActor> segblockActor;
 		vtkSmartPointer<vtkLookupTable> lut;

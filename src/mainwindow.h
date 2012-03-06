@@ -13,7 +13,7 @@
 #include "viewmanager.h"
 #include "drawmanager.h"
 #include "segmenter.h"
-
+#include "rendermanager.h"
 
 
 
@@ -30,12 +30,12 @@ class MainWindow : public QMainWindow
 		~MainWindow();
 
 		//helper classes
-        ImagePairManager* imagePairManager;
-        SeedPointManager* seedPointManager;
+		ImagePairManager* imagePairManager;
+		SeedPointManager* seedPointManager;
 		ViewManager* viewManager;
 		DrawManager* drawManager;
 		Segmenter* segmenter;
-
+		RenderManager* renderManager;
 
 
 	private slots:
@@ -63,6 +63,8 @@ class MainWindow : public QMainWindow
 	  void on_doSegmentation2D_clicked();
 
 	  void on_doSegmentation3D_clicked();
+
+	  void on_do3Drendering_clicked();
 
 private:
 		QFileInfo imageInfo;

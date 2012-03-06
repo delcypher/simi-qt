@@ -16,12 +16,12 @@ MainWindow::MainWindow() : imageInfo(""), workPath(QDir::home())
 	ui = new Ui::MainWindow;
 	ui->setupUi(this); //set up user interface
 
-    seedPointManager=0;
+	seedPointManager=0;
 	imagePairManager=0;
 	viewManager=0;
 	drawManager=0;
 	segmenter=0;
-
+	renderManager=0;
 
 
 	//Setup About Qt Dialog
@@ -49,7 +49,10 @@ MainWindow::~MainWindow()
         delete drawManager;
 
 	if(segmenter!=0)
-		delete segmenter;
+	delete segmenter;
+
+	if(renderManager!=0)
+	delete renderManager;
 }
 
 void MainWindow::on_actionOpen_Image_triggered()
@@ -95,14 +98,17 @@ void MainWindow::on_actionOpen_Image_triggered()
 			//setup drawManager
 			if(drawManager!=0)
 				delete drawManager;
-            drawManager = new DrawManager(imagePairManager,ui->drawSizeSpinBox,ui->drawOnComboBox);
+			drawManager = new DrawManager(imagePairManager,ui->drawSizeSpinBox,ui->drawOnComboBox);
 
 			//setup segmenter
 			if(segmenter!=0)
 				delete segmenter;
-            segmenter = new Segmenter(seedPointManager,imagePairManager);
+			segmenter = new Segmenter(seedPointManager,imagePairManager);
 
-
+			//setup renderManager
+			if(renderManager!=0)
+			  delete renderManager;
+			renderManager = new RenderManager(imagePairManager,ui->qvtk3Ddisplayer);
 
 			sliceControlSetup();
 			contrastControlSetup();
@@ -115,7 +121,7 @@ void MainWindow::on_actionOpen_Image_triggered()
 			connect(viewManager,SIGNAL(mouseLeavesWidget()), this, SLOT(updateStatusBar()));
 
 			//setup seedPointLine view being told about the seed point being change
-            connect(seedPointManager,SIGNAL(seedPointChanged(int,int,int)), this, SLOT(seedPointChanged()));
+			connect(seedPointManager,SIGNAL(seedPointChanged(int,int,int)), this, SLOT(seedPointChanged()));
 			connect(viewManager,SIGNAL(sliceChanged(int)), this,SLOT(seedPointChanged()));
 
 			//setup zoom control
@@ -453,4 +459,13 @@ void MainWindow::on_doSegmentation3D_clicked()
 {
 	if(segmenter!=0)
 		segmenter->doSegmentation3D(viewManager->getCurrentSlice(), ui->minSegIntensitySlider->value(), ui->maxSegIntensitySlider->value());
+}
+
+void MainWindow::on_do3Drendering_clicked()
+{
+	qDebug() << "3D draw button is clicked" ;
+	//setup renderManager
+
+	renderManager->render3D();
+
 }

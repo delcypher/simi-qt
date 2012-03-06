@@ -27,7 +27,7 @@ segmentationAlpha(0.5)
 
 	//setup original image
 	imageViewer = vtkImageViewer2::New();
-    imageViewer->SetInput(imagePairManager->original);
+	imageViewer->SetInput(imagePairManager->original);
 	qvtkWidget->SetRenderWindow(imageViewer->GetRenderWindow());
 	imageViewer->SetupInteractor(qvtkWidget->GetRenderWindow()->GetInteractor());
 

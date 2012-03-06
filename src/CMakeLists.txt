@@ -37,13 +37,13 @@ if(CMAKE_COMPILER_IS_GNUCXX)
 endif()
 
 #Source file definitions
-SET(SIMI_SOURCES main.cpp mainwindow.cpp imagepairmanager.cpp seedpointmanager.cpp viewmanager.cpp drawmanager.cpp segmenter.cpp)
+SET(SIMI_SOURCES main.cpp mainwindow.cpp imagepairmanager.cpp seedpointmanager.cpp viewmanager.cpp drawmanager.cpp segmenter.cpp rendermanager.cpp)
 
 #Headers that need to have moc run on them (generates moc_*.cpp)
 # Note that new cmake >=2.8.6 supports the variable AUTOMOC which means
 # using QT4_WRAP_CPP isn't necessary but because most development machines
 # we have are using have old version we'e stuck with the old way of making this work
-SET(SIMI_HEADERS mainwindow.h imagepairmanager.h seedpointmanager.h viewmanager.h drawmanager.h segmenter.h)
+SET(SIMI_HEADERS mainwindow.h imagepairmanager.h seedpointmanager.h viewmanager.h drawmanager.h segmenter.h rendermanager.h)
 
 #User interface files (*.ui) that will have uic run on them (generates ui_*.h)
 SET(SIMI_FORMS mainwindow.ui)
