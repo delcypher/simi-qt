@@ -65,6 +65,8 @@ bool ImagePairManager::loadImage(QFileInfo image)
 	//Initialise segblock
 	//setSimBlockVoxelsTo(BACKGROUND);
 
+	segblockInitTime = segblock->GetMTime(); //Record modification time which we'll use later to check if segblock has been modified.
+
 	qDebug() << "segblock now occupies :" << segblock->GetActualMemorySize() << "KB";
 
 	//should probably initialise now...
@@ -74,15 +76,7 @@ bool ImagePairManager::loadImage(QFileInfo image)
 }
 
 
-void ImagePairManager::resetSegmentation(int slice)
-{
 
-}
-
-void ImagePairManager::resetBlocking(int slice)
-{
-
-}
 
 double ImagePairManager::getYSpacing()
 {
@@ -106,6 +100,58 @@ double ImagePairManager::getMaximumIntensity()
     return range[1];
 }
 
+bool ImagePairManager::setAll(int slice, ImagePairManager::BlockType from, ImagePairManager::BlockType to)
+{
+    if(segblock==NULL)
+    {
+        qDebug() << "segblock does NOT exist!";
+        return false;
+    }
+
+        //get ranges to loop over
+    /*
+    * [0] : x_min
+    * [1] : x_max
+    * [2] : y_min
+    * [3] : y_max
+    * [4] : z_min
+    * [5] : z_max
+    */
+    int extent[6];
+    segblock->GetExtent(extent);
+
+    char* voxel=NULL;
+
+    if( slice < getZMin() || slice > getZMax())
+    {
+        qWarning() << "Slice " << slice << " is not in the valid range [" << getZMin() << "," << getZMax() << "]";
+        return false;
+    }
+
+    for(int x= extent[0]; x < extent[1]; x++)
+    {
+        for(int y= extent[2]; y < extent[3]; y++)
+        {
+            voxel = static_cast<char*>(segblock->GetScalarPointer(x,y,slice));
+
+            if(voxel==0)
+            {
+                qWarning() << "Error getting pointer to voxel at (" << x << "," << "y" << "," << slice << ")";
+                return false;
+            }
+
+            //check to see if voxel value is set to from
+            if(*voxel== from)
+            {
+                *voxel = to;
+            }
+        }
+    }
+
+    segblock->Modified(); //Mark as modifed so if a re-render is done VTK knows that this part of the pipeline needs to be reprocessed
+    return true; //success
+}
+
 bool ImagePairManager::setSimBlockVoxelsTo(ImagePairManager::BlockType type)
 {
     if(segblock==NULL)
@@ -126,7 +172,7 @@ bool ImagePairManager::setSimBlockVoxelsTo(ImagePairManager::BlockType type)
     int extent[6];
     segblock->GetExtent(extent);
 
-    short* voxel=NULL;
+    char* voxel=NULL;
 
      //loop over each voxel and set
     for(int z= extent[4]; z <= extent[5]; z++)
@@ -138,14 +184,38 @@ bool ImagePairManager::setSimBlockVoxelsTo(ImagePairManager::BlockType type)
             for(int x= extent[0]; x <= extent[1] ; x++)
             {
                 //get pointer to voxel
-                voxel = static_cast<short*>(segblock->GetScalarPointer(x,y,z));
+                voxel = static_cast<char*>(segblock->GetScalarPointer(x,y,z));
 
                 *voxel = type;
             }
         }
 
     }
+
+    segblock->Modified(); //Mark as modifed so if a re-render is done VTK knows that this part of the pipeline needs to be reprocessed
     return true;
+}
+
+bool ImagePairManager::saveSegblock(QFileInfo path)
+{
+    //TODO
+    qDebug() << "ImagePairManager::saveSegblock(" << path.absoluteFilePath() << ")" ;
+    return true;
+}
+
+bool ImagePairManager::loadSegblock(QFileInfo path)
+{
+    //TODO
+    qDebug() << "ImagePairManager::loadSegblock(" << path.absoluteFilePath() << ")" ;
+    return true;
+}
+
+bool ImagePairManager::segblockModified()
+{
+    if(segblock==0)
+        return false;
+
+    return (segblock->GetMTime() > segblockInitTime);
 }
 
 void ImagePairManager::debugDump()

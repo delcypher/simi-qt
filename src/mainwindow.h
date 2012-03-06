@@ -56,13 +56,19 @@ class MainWindow : public QMainWindow
         void on_actionCrosshairTool_triggered();
         void on_actionEraseTool_triggered();
 
-	  void on_minSegIntensitySlider_valueChanged(int value);
+        void on_minSegIntensitySlider_valueChanged(int value);
+        void on_maxSegIntensitySlider_valueChanged(int value);
 
-	  void on_maxSegIntensitySlider_valueChanged(int value);
+        void on_doSegmentation2D_clicked();
+        void on_doSegmentation3D_clicked();
 
-	  void on_doSegmentation2D_clicked();
+        void on_actionClear_Drawing_triggered();
+        void on_actionClear_Segmentation_triggered();
 
-	  void on_doSegmentation3D_clicked();
+        void on_actionLoad_Segmentation_triggered();
+        void on_actionSave_Segmentation_triggered();
+
+
 
 	  void on_do3Drendering_clicked();
 
@@ -71,6 +77,7 @@ private:
 		QDir workPath; //Directory used file open dialogs
 		Ui::MainWindow* ui; //handle to user interface
 		QActionGroup* toolbarActions;
+		bool allowOpen;
 
 
 

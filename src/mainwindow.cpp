@@ -11,7 +11,7 @@
 #include "vtkCamera.h"
 
 
-MainWindow::MainWindow() : imageInfo(""), workPath(QDir::home())
+MainWindow::MainWindow() : imageInfo(""), workPath(QDir::home()), allowOpen(false)
 {
 	ui = new Ui::MainWindow;
 	ui->setupUi(this); //set up user interface
@@ -62,7 +62,7 @@ void MainWindow::on_actionOpen_Image_triggered()
 	std::cerr << "Opening image" << std::endl;
 
 	//check okay to open image
-	if(!isWindowModified())
+	if(imagePairManager==NULL || (!imagePairManager->segblockModified()) || allowOpen)
 	{
 		newImagePath = QFileDialog::getOpenFileName(this,
 							tr("Open Image"),
@@ -142,17 +142,29 @@ void MainWindow::on_actionOpen_Image_triggered()
 			//allow debug information to be shown from menu
 			connect(ui->actionDump_debug,SIGNAL(triggered()),viewManager,SLOT(debugDump()));
 
+			//allow load/save segblock menus now
+			ui->actionLoad_Segmentation->setEnabled(true);
+			ui->actionSave_Segmentation->setEnabled(true);
+
 
 			//set window title
 			QString newWindowTitle(PROGRAM_NAME);
 			newWindowTitle.append(" - ").append(imageInfo.fileName());
 			setWindowTitle(newWindowTitle);
+
+			allowOpen=false;
 		}
 
 	}
 	else
 	{
-		// offer to save stuff
+		// offer to save stuff TODO
+		qDebug() << "Need to offer to save segblock!!";
+
+		//now try to open again.
+		allowOpen=true;
+		on_actionOpen_Image_triggered();
+
 	}
 }
 
@@ -458,7 +470,59 @@ void MainWindow::seedPointChanged()
 void MainWindow::on_doSegmentation3D_clicked()
 {
 	if(segmenter!=0)
-		segmenter->doSegmentation3D(viewManager->getCurrentSlice(), ui->minSegIntensitySlider->value(), ui->maxSegIntensitySlider->value());
+        segmenter->doSegmentation3D(viewManager->getCurrentSlice(), ui->minSegIntensitySlider->value(), ui->maxSegIntensitySlider->value());
+}
+
+void MainWindow::on_actionClear_Drawing_triggered()
+{
+    if(imagePairManager!=0 && viewManager!=0)
+    {
+        imagePairManager->setAll(viewManager->getCurrentSlice(), ImagePairManager::BLOCKING, ImagePairManager::BACKGROUND);
+        viewManager->update();
+    }
+}
+
+void MainWindow::on_actionClear_Segmentation_triggered()
+{
+    if(imagePairManager!=0 && viewManager!=0)
+    {
+        imagePairManager->setAll(viewManager->getCurrentSlice(), ImagePairManager::SEGMENTATION, ImagePairManager::BACKGROUND);
+        viewManager->update();
+    }
+}
+
+void MainWindow::on_actionLoad_Segmentation_triggered()
+{
+    QFileInfo loadPath;
+
+    if(imagePairManager==0)
+        return;
+
+    //Check if we need to save our current segblock first
+    if(imagePairManager->segblockModified())
+    {
+        //TO DO
+        qDebug() << "Offer to save before load!";
+
+    }
+
+    imagePairManager->loadSegblock(loadPath);
+
+
+}
+
+void MainWindow::on_actionSave_Segmentation_triggered()
+{
+    QFileInfo savePath;
+
+    if(imagePairManager!=0)
+    {
+        //TO DO
+
+        imagePairManager->saveSegblock(savePath);
+    }
+
+
 }
 
 void MainWindow::on_do3Drendering_clicked()
