@@ -128,9 +128,10 @@ bool ImagePairManager::setAll(int slice, ImagePairManager::BlockType from, Image
         return false;
     }
 
-    for(int x= extent[0]; x < extent[1]; x++)
+    qDebug() << "ImagePairManager::setAll() on slice " << slice << ". Set from " << from << " to " << to;
+    for(int x= extent[0]; x <= extent[1]; x++)
     {
-        for(int y= extent[2]; y < extent[3]; y++)
+	for(int y= extent[2]; y <= extent[3]; y++)
         {
             voxel = static_cast<char*>(segblock->GetScalarPointer(x,y,slice));
 
