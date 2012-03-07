@@ -53,5 +53,9 @@ class Segmenter : public QObject
 
                 void doSegmentationIter3D_I(Node start, int minThreshold, int maxThreshold);
 
+                int img_x;
+                int img_y;
+                int img_z;
+
 
 };

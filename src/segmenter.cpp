@@ -4,8 +4,13 @@
 
 Segmenter::Segmenter(SeedPointManager* seedPointManager, ImagePairManager* imagePairManager)
 {
-    this->imagePairManager=imagePairManager;        
+        this->imagePairManager=imagePairManager;
+        int* dims = imagePairManager->original->GetDimensions();
+        img_x = dims[0];
+        img_y = dims[1];
+        img_z = dims[2];
 
+        qDebug() << "Constructing segmenter: " << img_x << " " << img_y << " " << img_z;
 }
 
 Segmenter::~Segmenter()
@@ -61,7 +66,7 @@ bool Segmenter::predicate2D(int pos_x, int pos_y, int pos_z, int minThreshold, i
 
 bool Segmenter::predicate3D(int pos_x, int pos_y, int pos_z, int minThreshold, int maxThreshold)
 {
-        if (pos_x < 0 || pos_x == 512 || pos_y < 0 || pos_y == 512 || pos_z < 0 || pos_z == 120)
+        if (pos_x < 0 || pos_x == img_x || pos_y < 0 || pos_y == img_y || pos_z < 0 || pos_z == img_z)
                 return false;
 
         char* pixel_visited = static_cast<char*>(imagePairManager->segblock->GetScalarPointer(pos_x,pos_y,pos_z));
@@ -167,7 +172,7 @@ void Segmenter::doSegmentationIter3D_I(Node start, int minThreshold, int maxThre
 
 bool Segmenter::predicate2D(Node& node, int minThreshold, int maxThreshold)
 {
-        if (node.pos_x < 0 || node.pos_x == 512 || node.pos_y < 0 || node.pos_y == 512)
+        if (node.pos_x < 0 || node.pos_x == img_x || node.pos_y < 0 || node.pos_y == img_y)
                 return false;
 
         char* pixel_visited = static_cast<char*>(imagePairManager->segblock->GetScalarPointer(node.pos_x, node.pos_y, node.pos_z));
@@ -187,7 +192,7 @@ bool Segmenter::predicate2D(Node& node, int minThreshold, int maxThreshold)
 
 bool Segmenter::predicate3D(Node& node, int minThreshold, int maxThreshold)
 {
-        if (node.pos_x < 0 || node.pos_x == 512 || node.pos_y < 0 || node.pos_y == 512 || node.pos_z < 0 || node.pos_z == 120)
+        if (node.pos_x < 0 || node.pos_x == img_x || node.pos_y < 0 || node.pos_y == img_y || node.pos_z < 0 || node.pos_z == img_z)
                 return false;
 
         char* pixel_visited = static_cast<char*>(imagePairManager->segblock->GetScalarPointer(node.pos_x, node.pos_y, node.pos_z));
