@@ -223,8 +223,8 @@
       <rect>
        <x>10</x>
        <y>350</y>
-       <width>251</width>
-       <height>111</height>
+       <width>291</width>
+       <height>131</height>
       </rect>
      </property>
      <property name="title">
@@ -437,13 +437,6 @@
      </property>
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
-       <widget class="QPushButton" name="doClose2D">
-        <property name="text">
-         <string>Close2D</string>
-        </property>
-       </widget>
-      </item>
-      <item>
        <widget class="QPushButton" name="doDilate2D">
         <property name="text">
          <string>Dilate2D</string>
@@ -451,16 +444,23 @@
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="doOpen2D">
+       <widget class="QPushButton" name="doErode2D">
         <property name="text">
-         <string>Open2D</string>
+         <string>Erode2D</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="doErode2D">
+       <widget class="QPushButton" name="doClose2D">
         <property name="text">
-         <string>Erode2D</string>
+         <string>Close2D</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="doOpen2D">
+        <property name="text">
+         <string>Open2D</string>
         </property>
        </widget>
       </item>

@@ -27,6 +27,11 @@ class Segmenter : public QObject
                         SEGMENTATION_3D
                 };
 
+                enum Morphology{
+                        DILATE,
+                        ERODE
+                };
+
                 void doSegmentation2D(int pos_x, int pos_y, int pos_z, int minThreshold, int maxThreshold);
 
                 void doSegmentation3D(int pos_x, int pos_y, int pos_z, int minThreshold, int maxThreshold);
@@ -67,7 +72,7 @@ class Segmenter : public QObject
 
                 void dilate(int pos_z);
 
-                bool contains_segmentation(int pos_x, int pos_y, int pos_z);
+                int contains_segmentation(int pos_x, int pos_y, int pos_z, Morphology type);
 
                 int img_x;
                 int img_y;

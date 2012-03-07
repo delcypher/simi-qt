@@ -647,10 +647,16 @@ void MainWindow::on_doDilate2D_clicked()
 {
         if(segmenter!=0)
         {
-                //disable segmentation widgets whilst filtering
-                ui->segmentationGroupBox_2->setEnabled(false);
                 int pos_z = viewManager->getCurrentSlice();
-
                 segmenter->doDilate(pos_z);
+        }
+}
+
+void MainWindow::on_doErode2D_clicked()
+{
+        if(segmenter!=0)
+        {
+                int pos_z = viewManager->getCurrentSlice();
+                segmenter->doErode(pos_z);
         }
 }

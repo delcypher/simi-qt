@@ -210,8 +210,9 @@ bool Segmenter::predicate3D(Node& node, int minThreshold, int maxThreshold)
         return true;
 }
 
-bool Segmenter::contains_segmentation(int pos_x, int pos_y, int pos_z)
+int Segmenter::contains_segmentation(int pos_x, int pos_y, int pos_z, Morphology type)
 {
+        int output = 0;
         char* pixels[4];
         pixels[0] = static_cast<char*>(imagePairManager->segblock->GetScalarPointer(pos_x+1, pos_y, pos_z));
         pixels[1] = static_cast<char*>(imagePairManager->segblock->GetScalarPointer(pos_x-1, pos_y, pos_z));
@@ -220,10 +221,11 @@ bool Segmenter::contains_segmentation(int pos_x, int pos_y, int pos_z)
 
         for (int i=0; i<4; i++)
         {
-                if ((char)pixels[i][0] == imagePairManager->SEGMENTATION) return true;
+                if ((char)pixels[i][0] == imagePairManager->SEGMENTATION) output++;
+                if (type == DILATE) return output;
         }
 
-        return false;
+        return output;
 }
 
 void Segmenter::dilate(int pos_z)
@@ -246,7 +248,7 @@ void Segmenter::dilate(int pos_z)
                         char* pixel = static_cast<char*>(imagePairManager->segblock->GetScalarPointer(pos_x, pos_y, pos_z));
                         if ((char)pixel[0] == imagePairManager->BACKGROUND)
                         {
-                                if (contains_segmentation(pos_x, pos_y, pos_z))
+                                if (contains_segmentation(pos_x, pos_y, pos_z, DILATE))
                                 {
                                         modified[pos_x][pos_y] = imagePairManager->SEGMENTATION;
                                 }
@@ -264,6 +266,56 @@ void Segmenter::dilate(int pos_z)
                         {
                                 char* pixel = static_cast<char*>(imagePairManager->segblock->GetScalarPointer(pos_x, pos_y, pos_z));
                                 pixel[0] = imagePairManager->SEGMENTATION;
+                        }
+                }
+        }
+
+        //relese the memorey
+        for (int i=0; i<512; i++)
+                delete[] modified[i];
+        delete[] modified;
+}
+
+void Segmenter::erode(int pos_z)
+{
+        //array with pixels to be changed
+        char** modified = new char*[512];
+        for (int i=0; i<512; i++)
+                modified[i] = new char[512];
+
+        //fill with SEGMENTATION
+        for (int i=0; i<512; i++)
+                for (int j=0; j<512; j++)
+                        modified[i][j] = imagePairManager->SEGMENTATION;
+
+        //mark pixels for removal
+        for (int pos_x=1; pos_x < img_x-1; pos_x++)
+        {
+                for (int pos_y=1; pos_y < img_y-1; pos_y++)
+                {
+                        char* pixel = static_cast<char*>(imagePairManager->segblock->GetScalarPointer(pos_x, pos_y, pos_z));
+                        if ((char)pixel[0] == imagePairManager->SEGMENTATION)
+                        {
+                                int neighbours = contains_segmentation(pos_x, pos_y, pos_z, ERODE);
+                                if (neighbours != 4)
+                                {
+                                        modified[pos_x][pos_y] = imagePairManager->BACKGROUND;
+                                }
+                        }
+
+                }
+        }
+
+        //copy the results
+        for (int pos_x=0; pos_x < img_x; pos_x++)
+        {
+                for (int pos_y=0; pos_y < img_y; pos_y++)
+                {
+                        if ((int)modified[pos_x][pos_y] == imagePairManager->BACKGROUND)
+                        {
+                                cout << "!!!" << endl;
+                                char* pixel = static_cast<char*>(imagePairManager->segblock->GetScalarPointer(pos_x, pos_y, pos_z));
+                                pixel[0] = imagePairManager->BACKGROUND;
                         }
                 }
         }
@@ -294,6 +346,15 @@ void Segmenter::doDilate(int pos_z)
         emit segmentationDone(pos_z);
 }
 
+void Segmenter::doErode(int pos_z)
+{
+        //run algorithm
+        erode(pos_z);
+
+        //signal that we're complete
+        imagePairManager->segblock->Modified(); //Mark the segblock as modified so VTK know's to trigger an update along the pipline
+        emit segmentationDone(pos_z);
+}
 
 
 
