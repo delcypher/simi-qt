@@ -221,8 +221,11 @@ int Segmenter::contains_segmentation(int pos_x, int pos_y, int pos_z, Morphology
 
         for (int i=0; i<4; i++)
         {
-                if ((char)pixels[i][0] == imagePairManager->SEGMENTATION) output++;
-                if (type == DILATE) return output;
+                if ((char)pixels[i][0] == imagePairManager->SEGMENTATION)
+                {
+                        output++;
+                        if (type == DILATE) return output;
+                }
         }
 
         return output;
@@ -248,7 +251,8 @@ void Segmenter::dilate(int pos_z)
                         char* pixel = static_cast<char*>(imagePairManager->segblock->GetScalarPointer(pos_x, pos_y, pos_z));
                         if ((char)pixel[0] == imagePairManager->BACKGROUND)
                         {
-                                if (contains_segmentation(pos_x, pos_y, pos_z, DILATE))
+                                int neighbours = contains_segmentation(pos_x, pos_y, pos_z, DILATE);
+                                if (neighbours >= 1)
                                 {
                                         modified[pos_x][pos_y] = imagePairManager->SEGMENTATION;
                                 }
@@ -313,7 +317,6 @@ void Segmenter::erode(int pos_z)
                 {
                         if ((int)modified[pos_x][pos_y] == imagePairManager->BACKGROUND)
                         {
-                                cout << "!!!" << endl;
                                 char* pixel = static_cast<char*>(imagePairManager->segblock->GetScalarPointer(pos_x, pos_y, pos_z));
                                 pixel[0] = imagePairManager->BACKGROUND;
                         }
@@ -328,7 +331,19 @@ void Segmenter::erode(int pos_z)
 
 void Segmenter::doMorphClose(int pos_z)
 {
-        //run algorithm
+        //run algorithms
+        dilate(pos_z);
+        erode(pos_z);
+
+        //signal that we're complete
+        imagePairManager->segblock->Modified(); //Mark the segblock as modified so VTK know's to trigger an update along the pipline
+        emit segmentationDone(pos_z);
+}
+
+void Segmenter::doMorphOpen(int pos_z)
+{
+        //run algorithms
+        erode(pos_z);
         dilate(pos_z);
 
         //signal that we're complete

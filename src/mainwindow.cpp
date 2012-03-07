@@ -660,3 +660,21 @@ void MainWindow::on_doErode2D_clicked()
                 segmenter->doErode(pos_z);
         }
 }
+
+void MainWindow::on_doClose2D_clicked()
+{
+        if(segmenter!=0)
+        {
+                int pos_z = viewManager->getCurrentSlice();
+                segmenter->doMorphClose(pos_z);
+        }
+}
+
+void MainWindow::on_doOpen2D_clicked()
+{
+        if(segmenter!=0)
+        {
+                int pos_z = viewManager->getCurrentSlice();
+                segmenter->doMorphOpen(pos_z);
+        }
+}

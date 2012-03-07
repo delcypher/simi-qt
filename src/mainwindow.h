@@ -81,6 +81,10 @@ class MainWindow : public QMainWindow
 
         void on_doErode2D_clicked();
 
+        void on_doClose2D_clicked();
+
+        void on_doOpen2D_clicked();
+
 protected:
 	  void closeEvent(QCloseEvent* close);
 
