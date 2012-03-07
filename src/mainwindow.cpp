@@ -438,7 +438,12 @@ void MainWindow::on_doSegmentation2D_clicked()
                 ui->segmentationGroupBox_2->setEnabled(false);
                 int pos_z = viewManager->getCurrentSlice();
                 int pos_x, pos_y;
-                assert(seedPointManager->getSeedPoint(pos_z,pos_x,pos_y));
+
+                if(!seedPointManager->getSeedPoint(pos_z,pos_x,pos_y))
+                {
+                    qWarning() << "Can't do segmentation. The seed point isn't set!";
+                }
+
                 segmenter->doSegmentation2D(pos_x, pos_y, pos_z, ui->minSegIntensitySlider->value(), ui->maxSegIntensitySlider->value());
 	}
 }
@@ -482,7 +487,12 @@ void MainWindow::on_doSegmentation3D_clicked()
                 ui->segmentationGroupBox_2->setEnabled(false);
                 int pos_z = viewManager->getCurrentSlice();
                 int pos_x, pos_y;
-                assert(seedPointManager->getSeedPoint(pos_z,pos_x,pos_y));
+
+                if(!seedPointManager->getSeedPoint(pos_z,pos_x,pos_y))
+                {
+                    qWarning() << "Can't do segmentation. The seed point isn't set!";
+                }
+
                 segmenter->doSegmentation3D(pos_x, pos_y, pos_z, ui->minSegIntensitySlider->value(), ui->maxSegIntensitySlider->value());
         }
 }
