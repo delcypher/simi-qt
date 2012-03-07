@@ -137,7 +137,6 @@ void MainWindow::on_actionOpen_Image_triggered()
 			//Update the work path to the location of the new image
 			workPath.setPath(imageInfo.absolutePath());
 
-			setWindowModified(false); //because we've loaded new image nothing can be modified
 
 			//allow debug information to be shown from menu
 			connect(ui->actionDump_debug,SIGNAL(triggered()),viewManager,SLOT(debugDump()));
