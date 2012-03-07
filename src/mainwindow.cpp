@@ -620,11 +620,12 @@ bool MainWindow::okToContinue()
 }
 
 
-void MainWindow::on_do3Drendering_clicked()
+
+
+void MainWindow::on_do3Drender_clicked()
 {
 	qDebug() << "3D draw button is clicked" ;
 	//setup volumeRenderManager
 
 	volumeRenderManager->render3D();
-
 }

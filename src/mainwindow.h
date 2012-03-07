@@ -72,8 +72,10 @@ class MainWindow : public QMainWindow
 
         void tryEnableSegmentationWidgets();
 
+	void on_do3Drender_clicked();
 
-	protected:
+
+protected:
 	  void closeEvent(QCloseEvent* close);
 
 	private:

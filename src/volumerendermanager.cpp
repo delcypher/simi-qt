@@ -10,6 +10,7 @@
 #include "vtkRenderWindowInteractor.h"
 #include <QDebug>
 #include "vtkImageMaskBits.h"
+#include "vtkViewport.h"
 
 VolumeRenderManager::VolumeRenderManager(ImagePairManager* imagePairManager, QVTKWidget* qvtk3Ddisplayer)
 {
@@ -28,11 +29,24 @@ VolumeRenderManager::VolumeRenderManager(ImagePairManager* imagePairManager, QVT
 	mask->SetMask( static_cast<unsigned int>(ImagePairManager::SEGMENTATION));
 	mask->SetOperationToAnd();
 
+	double bounds[6];
+	imagePairManager->segblock->GetBounds(bounds);
+	for(int i = 0 ; i < 6 ; i++)
+	{
+		double range = bounds[i+1]-bounds[i];
+		bounds[i] = bounds[i] - 0.1*range ;
+		bounds[i+1] = bounds[i+1] + 0.1*range ;
+	}
+
+
 	surface->SetInputConnection(mask->GetOutputPort());
 	surface->ComputeNormalsOn();
 	surface->SetValue(0, 0.1);
 	renderer->SetBackground(0.0,0.0,0.0);
 	renderWindow->AddRenderer(renderer);
+
+	renderer->ResetCamera(bounds);
+
 	qvtk3Ddisplayer->SetRenderWindow(renderWindow);
 	mapper->SetInputConnection(surface->GetOutputPort());
 	actor->SetMapper(mapper);
@@ -47,6 +61,7 @@ VolumeRenderManager::~VolumeRenderManager()
 void VolumeRenderManager::render3D()
 {
 	qDebug() << "This is renderManager function" ;
+	//qDebug() << "Currently, the viewport is " << renderer->GetCenter()[0] << " " << renderer->GetCenter()[1] << " " << renderer->GetCenter()[2];
 
 	renderWindow->Render();
 	qvtk3Ddisplayer->update();
