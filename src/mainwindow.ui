@@ -278,7 +278,12 @@
         <widget class="QComboBox" name="drawOnComboBox">
          <item>
           <property name="text">
-           <string>Blocking</string>
+           <string>Blocking (Current Slice)</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Blocking (All Slices)</string>
           </property>
          </item>
          <item>
