@@ -47,6 +47,11 @@ class Segmenter : public QObject
 
                 bool predicate2D(Node& node, int minThreshold, int maxThreshold);
 
+                bool predicate3D(Node& node, int minThreshold, int maxThreshold);
+
                 void doSegmentationIter2D_I(Node start, int minThreshold, int maxThreshold);
+
+                void doSegmentationIter3D_I(Node start, int minThreshold, int maxThreshold);
+
 
 };
