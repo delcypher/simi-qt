@@ -14,7 +14,7 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QVTKWidget" name="qvtkWidget" native="true">
+   <widget class="QVTKWidget" name="qvtkWidget">
     <property name="geometry">
      <rect>
       <x>10</x>
@@ -24,7 +24,7 @@
      </rect>
     </property>
    </widget>
-   <widget class="QVTKWidget" name="qvtk3Ddisplayer" native="true">
+   <widget class="QVTKWidget" name="qvtk3Ddisplayer">
     <property name="geometry">
      <rect>
       <x>10</x>
@@ -41,7 +41,7 @@
      <x>0</x>
      <y>0</y>
      <width>1163</width>
-     <height>20</height>
+     <height>19</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -278,7 +278,12 @@
         <widget class="QComboBox" name="drawOnComboBox">
          <item>
           <property name="text">
-           <string>Blocking</string>
+           <string>Blocking (Current Slice)</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Blocking (All Slices)</string>
           </property>
          </item>
          <item>
