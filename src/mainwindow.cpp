@@ -21,7 +21,7 @@ MainWindow::MainWindow() : imageInfo(""), workPath(QDir::home())
 	viewManager=0;
 	drawManager=0;
 	segmenter=0;
-	renderManager=0;
+	volumeRenderManager=0;
 
 
 	//Setup About Qt Dialog
@@ -51,8 +51,8 @@ MainWindow::~MainWindow()
 	if(segmenter!=0)
 	delete segmenter;
 
-	if(renderManager!=0)
-	delete renderManager;
+	if(volumeRenderManager!=0)
+	delete volumeRenderManager;
 }
 
 void MainWindow::on_actionOpen_Image_triggered()
@@ -105,10 +105,10 @@ void MainWindow::on_actionOpen_Image_triggered()
 				delete segmenter;
 			segmenter = new Segmenter(seedPointManager,imagePairManager);
 
-			//setup renderManager
-			if(renderManager!=0)
-			  delete renderManager;
-			renderManager = new RenderManager(imagePairManager,ui->qvtk3Ddisplayer);
+			//setup volumeRenderManager
+			if(volumeRenderManager!=0)
+			  delete volumeRenderManager;
+			volumeRenderManager = new VolumeRenderManager(imagePairManager,ui->qvtk3Ddisplayer);
 
 			sliceControlSetup();
 			contrastControlSetup();
@@ -620,8 +620,8 @@ bool MainWindow::okToContinue()
 void MainWindow::on_do3Drendering_clicked()
 {
 	qDebug() << "3D draw button is clicked" ;
-	//setup renderManager
+	//setup volumeRenderManager
 
-	renderManager->render3D();
+	volumeRenderManager->render3D();
 
 }

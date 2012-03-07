@@ -15,7 +15,7 @@
 #include "viewmanager.h"
 #include "drawmanager.h"
 #include "segmenter.h"
-#include "rendermanager.h"
+#include "volumerendermanager.h"
 
 
 
@@ -37,7 +37,7 @@ class MainWindow : public QMainWindow
 		ViewManager* viewManager;
 		DrawManager* drawManager;
 		Segmenter* segmenter;
-		RenderManager* renderManager;
+		VolumeRenderManager* volumeRenderManager;
 
 
 	private slots:

@@ -1,4 +1,4 @@
-#include "rendermanager.h"
+#include "volumerendermanager.h"
 #include <QVTKWidget.h>
 #include "imagepairmanager.h"
 #include "vtkMarchingCubes.h"
@@ -11,7 +11,7 @@
 #include <QDebug>
 #include "vtkImageMaskBits.h"
 
-RenderManager::RenderManager(ImagePairManager* imagePairManager, QVTKWidget* qvtk3Ddisplayer)
+VolumeRenderManager::VolumeRenderManager(ImagePairManager* imagePairManager, QVTKWidget* qvtk3Ddisplayer)
 {
 	this->imagePairManager = imagePairManager;
 	this->qvtk3Ddisplayer = qvtk3Ddisplayer;
@@ -39,12 +39,12 @@ RenderManager::RenderManager(ImagePairManager* imagePairManager, QVTKWidget* qvt
 	renderer->AddActor(actor);
 }
 
-RenderManager::~RenderManager()
+VolumeRenderManager::~VolumeRenderManager()
 {
 
 }
 
-void RenderManager::render3D()
+void VolumeRenderManager::render3D()
 {
 	qDebug() << "This is renderManager function" ;
 
