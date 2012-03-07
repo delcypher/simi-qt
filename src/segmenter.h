@@ -1,7 +1,17 @@
 #include <QObject>
 #include "seedpointmanager.h"
 #include "imagepairmanager.h"
+#include <list>
 
+using std::list;
+
+struct Node
+{
+        int pos_x;
+        int pos_y;
+        int pos_z;
+        Node(int x, int y, int z):pos_x(x), pos_y(y), pos_z(z){}
+};
 
 
 class Segmenter : public QObject
@@ -22,7 +32,7 @@ class Segmenter : public QObject
                 void doSegmentation3D(int pos_x, int pos_y, int pos_z, int minThreshold, int maxThreshold);
 
 	signals:
-		void segmentationDone(int sliceNumber);
+                void segmentationDone(int sliceNumber);
 
 	private:
                 ImagePairManager* imagePairManager;
@@ -35,5 +45,8 @@ class Segmenter : public QObject
 
                 void doSegmentation3D_I(int pos_x, int pos_y, int pos_z, int minThreshold, int maxThreshold);
 
+                bool predicate2D(Node& node, int minThreshold, int maxThreshold);
+
+                void doSegmentationIter2D_I(Node start, int minThreshold, int maxThreshold);
 
 };
