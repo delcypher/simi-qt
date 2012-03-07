@@ -137,7 +137,6 @@ void MainWindow::on_actionOpen_Image_triggered()
 			//Update the work path to the location of the new image
 			workPath.setPath(imageInfo.absolutePath());
 
-			setWindowModified(false); //because we've loaded new image nothing can be modified
 
 			//allow debug information to be shown from menu
 			connect(ui->actionDump_debug,SIGNAL(triggered()),viewManager,SLOT(debugDump()));
@@ -145,6 +144,13 @@ void MainWindow::on_actionOpen_Image_triggered()
 			//allow load/save segblock menus now
 			ui->actionLoad_Segmentation->setEnabled(true);
 			ui->actionSave_Segmentation->setEnabled(true);
+
+			//The segmentation widgets are disabled whilst segmenting, enable them when done
+			connect(segmenter, SIGNAL(segmentationDone(int)), this, SLOT(tryEnableSegmentationWidgets()));
+
+			//At start up no seed point will be set so disable segmentation widgets
+			ui->segmentationGroupBox_2->setEnabled(false);
+			connect(viewManager,SIGNAL(sliceChanged(int)), this, SLOT(tryEnableSegmentationWidgets()));
 
 
 			//set window title
@@ -427,7 +433,19 @@ void MainWindow::on_maxSegIntensitySlider_valueChanged(int value)
 void MainWindow::on_doSegmentation2D_clicked()
 {
 	if(segmenter!=0)
-		segmenter->doSegmentation2D(viewManager->getCurrentSlice(), ui->minSegIntensitySlider->value(), ui->maxSegIntensitySlider->value());
+	{
+                //disable segmentation widgets whilst segmenting
+                ui->segmentationGroupBox_2->setEnabled(false);
+                int pos_z = viewManager->getCurrentSlice();
+                int pos_x, pos_y;
+
+                if(!seedPointManager->getSeedPoint(pos_z,pos_x,pos_y))
+                {
+                    qWarning() << "Can't do segmentation. The seed point isn't set!";
+                }
+
+                segmenter->doSegmentation2D(pos_x, pos_y, pos_z, ui->minSegIntensitySlider->value(), ui->maxSegIntensitySlider->value());
+	}
 }
 
 void MainWindow::updateStatusBar()
@@ -456,12 +474,27 @@ void MainWindow::seedPointChanged()
 	seedPoint += QString::number(y);
 	seedPoint +=")";
 	ui->seedPointLineEdit->setText(seedPoint);
+
+	//enable the segmentation widgets
+	tryEnableSegmentationWidgets();
 }
 
 void MainWindow::on_doSegmentation3D_clicked()
 {
-	if(segmenter!=0)
-        segmenter->doSegmentation3D(viewManager->getCurrentSlice(), ui->minSegIntensitySlider->value(), ui->maxSegIntensitySlider->value());
+        if(segmenter!=0)
+        {
+                //disable segmentation widgets whilst segmenting
+                ui->segmentationGroupBox_2->setEnabled(false);
+                int pos_z = viewManager->getCurrentSlice();
+                int pos_x, pos_y;
+
+                if(!seedPointManager->getSeedPoint(pos_z,pos_x,pos_y))
+                {
+                    qWarning() << "Can't do segmentation. The seed point isn't set!";
+                }
+
+                segmenter->doSegmentation3D(pos_x, pos_y, pos_z, ui->minSegIntensitySlider->value(), ui->maxSegIntensitySlider->value());
+        }
 }
 
 void MainWindow::on_actionClear_Drawing_triggered()
@@ -526,6 +559,23 @@ bool MainWindow::on_actionSave_Segmentation_triggered()
     return false;
 }
 
+void MainWindow::tryEnableSegmentationWidgets()
+{
+    int dummy;
+
+    if(seedPointManager!=0 && viewManager!=0 && seedPointManager->getSeedPoint(viewManager->getCurrentSlice(),dummy,dummy))
+    {
+        qDebug() << "Enable segmentation widgets!";
+        ui->segmentationGroupBox_2->setEnabled(true);
+    }
+    else
+    {
+        qDebug() << "Cannot enable segmentation widgets!";
+        ui->segmentationGroupBox_2->setEnabled(false);
+    }
+}
+
+
 void MainWindow::closeEvent(QCloseEvent *close)
 {
 	if(okToContinue())
@@ -536,7 +586,7 @@ void MainWindow::closeEvent(QCloseEvent *close)
 
 bool MainWindow::okToContinue()
 {
-	if(imagePairManager==NULL)
+        if(imagePairManager==NULL)
 		return true; //segblock was never loaded so it's fine
 
 	if(!(imagePairManager->segblockModified()))

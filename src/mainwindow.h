@@ -7,6 +7,7 @@
 #include <QFileInfo>
 #include <QActionGroup>
 #include <QCloseEvent>
+#include <assert.h>
 #include "ui_mainwindow.h"
 
 #include "imagepairmanager.h"
@@ -68,6 +69,9 @@ class MainWindow : public QMainWindow
 
         void on_actionLoad_Segmentation_triggered();
 	bool on_actionSave_Segmentation_triggered();
+
+        void tryEnableSegmentationWidgets();
+
 
 	protected:
 	  void closeEvent(QCloseEvent* close);
