@@ -26,8 +26,9 @@ class VolumeRenderManager : public QObject
 	public:
 	VolumeRenderManager(ImagePairManager* imagePairManager, QVTKWidget* qvtk3Ddisplayer);
 	~VolumeRenderManager();
-	
-	void render3D();
+
+	public slots:
+		void render3D();
 
 	private:
         ImagePairManager* imagePairManager;

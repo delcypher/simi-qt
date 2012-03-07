@@ -152,6 +152,9 @@ void MainWindow::on_actionOpen_Image_triggered()
 			ui->segmentationGroupBox_2->setEnabled(false);
 			connect(viewManager,SIGNAL(sliceChanged(int)), this, SLOT(tryEnableSegmentationWidgets()));
 
+			//connect redraw volume rendering when segmentation is done
+			connect(segmenter,SIGNAL(segmentationDone(int)),volumeRenderManager,SLOT(render3D()));
+
 
 			//set window title
 			QString newWindowTitle(PROGRAM_NAME);
