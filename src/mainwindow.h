@@ -70,8 +70,7 @@ class MainWindow : public QMainWindow
         void on_actionLoad_Segmentation_triggered();
 	bool on_actionSave_Segmentation_triggered();
 
-        void enableSegmentationWidgets();
-        void disableSegmentationWidgets();
+        void tryEnableSegmentationWidgets();
 
 
 	protected:

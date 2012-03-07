@@ -147,7 +147,11 @@ void MainWindow::on_actionOpen_Image_triggered()
 			ui->actionSave_Segmentation->setEnabled(true);
 
 			//The segmentation widgets are disabled whilst segmenting, enable them when done
-			connect(segmenter, SIGNAL(segmentationDone(int)), this, SLOT(enableSegmentationWidgets()));
+			connect(segmenter, SIGNAL(segmentationDone(int)), this, SLOT(tryEnableSegmentationWidgets()));
+
+			//At start up no seed point will be set so disable segmentation widgets
+			ui->segmentationGroupBox_2->setEnabled(false);
+			connect(viewManager,SIGNAL(sliceChanged(int)), this, SLOT(tryEnableSegmentationWidgets()));
 
 
 			//set window title
@@ -432,7 +436,7 @@ void MainWindow::on_doSegmentation2D_clicked()
 	if(segmenter!=0)
 	{
                 //disable segmentation widgets whilst segmenting
-                disableSegmentationWidgets();
+                ui->segmentationGroupBox_2->setEnabled(false);
                 int pos_z = viewManager->getCurrentSlice();
                 int pos_x, pos_y;
                 assert(seedPointManager->getSeedPoint(pos_z,pos_x,pos_y));
@@ -466,6 +470,9 @@ void MainWindow::seedPointChanged()
 	seedPoint += QString::number(y);
 	seedPoint +=")";
 	ui->seedPointLineEdit->setText(seedPoint);
+
+	//enable the segmentation widgets
+	tryEnableSegmentationWidgets();
 }
 
 void MainWindow::on_doSegmentation3D_clicked()
@@ -473,7 +480,7 @@ void MainWindow::on_doSegmentation3D_clicked()
         if(segmenter!=0)
         {
                 //disable segmentation widgets whilst segmenting
-                disableSegmentationWidgets();
+                ui->segmentationGroupBox_2->setEnabled(false);
                 int pos_z = viewManager->getCurrentSlice();
                 int pos_x, pos_y;
                 assert(seedPointManager->getSeedPoint(pos_z,pos_x,pos_y));
@@ -543,17 +550,22 @@ bool MainWindow::on_actionSave_Segmentation_triggered()
     return false;
 }
 
-void MainWindow::enableSegmentationWidgets()
+void MainWindow::tryEnableSegmentationWidgets()
 {
-    ui->segmentationGroupBox_2->setEnabled(true);
-    qDebug() << "Enable segmentation widgets.";
+    int dummy;
+
+    if(seedPointManager!=0 && viewManager!=0 && seedPointManager->getSeedPoint(viewManager->getCurrentSlice(),dummy,dummy))
+    {
+        qDebug() << "Enable segmentation widgets!";
+        ui->segmentationGroupBox_2->setEnabled(true);
+    }
+    else
+    {
+        qDebug() << "Cannot enable segmentation widgets!";
+        ui->segmentationGroupBox_2->setEnabled(false);
+    }
 }
 
-void MainWindow::disableSegmentationWidgets()
-{
-    ui->segmentationGroupBox_2->setEnabled(false);
-    qDebug() << "Disable segmentation widgets.";
-}
 
 void MainWindow::closeEvent(QCloseEvent *close)
 {
