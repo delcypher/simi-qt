@@ -410,7 +410,7 @@
       </layout>
      </widget>
     </widget>
-    <widget class="QPushButton" name="do3Drendering">
+    <widget class="QPushButton" name="do3Drender">
      <property name="geometry">
       <rect>
        <x>30</x>
