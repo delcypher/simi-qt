@@ -16,9 +16,9 @@ struct Node
 
 class Segmenter : public QObject
 {
-	Q_OBJECT
+        Q_OBJECT
 
-	public:
+        public:
                 Segmenter(SeedPointManager* seedPointManager, ImagePairManager* imagePairManager);
                 ~Segmenter();
 
@@ -31,10 +31,20 @@ class Segmenter : public QObject
 
                 void doSegmentation3D(int pos_x, int pos_y, int pos_z, int minThreshold, int maxThreshold);
 
-	signals:
+                void doMorphOpen(int pos_z);
+
+                void doMorphClose(int pos_z);
+
+                void doDilate(int pos_z);
+
+                void doErode(int pos_z);
+
+        signals:
                 void segmentationDone(int sliceNumber);
 
-	private:
+                void filteringDone(int sliceNumber);
+
+        private:
                 ImagePairManager* imagePairManager;
 
                 bool predicate2D(int pos_x, int pos_y, int pos_z, int minThreshold, int maxThreshold);
@@ -52,6 +62,12 @@ class Segmenter : public QObject
                 void doSegmentationIter2D_I(Node start, int minThreshold, int maxThreshold);
 
                 void doSegmentationIter3D_I(Node start, int minThreshold, int maxThreshold);
+
+                void erode(int pos_z);
+
+                void dilate(int pos_z);
+
+                bool contains_segmentation(int pos_x, int pos_y, int pos_z);
 
                 int img_x;
                 int img_y;

@@ -77,6 +77,8 @@ class MainWindow : public QMainWindow
 	void on_do3Drender_clicked();
 
 
+        void on_doDilate2D_clicked();
+
 protected:
 	  void closeEvent(QCloseEvent* close);
 

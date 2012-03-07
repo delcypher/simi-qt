@@ -642,3 +642,15 @@ void MainWindow::on_actionClear_Blocking_on_All_Slices_triggered()
 	imagePairManager->setAllSimBlockVoxels(ImagePairManager::BLOCKING, ImagePairManager::BACKGROUND);
 	viewManager->update();
 }
+
+void MainWindow::on_doDilate2D_clicked()
+{
+        if(segmenter!=0)
+        {
+                //disable segmentation widgets whilst filtering
+                ui->segmentationGroupBox_2->setEnabled(false);
+                int pos_z = viewManager->getCurrentSlice();
+
+                segmenter->doDilate(pos_z);
+        }
+}
