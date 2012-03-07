@@ -43,38 +43,75 @@ void DrawManager::erase(int xVoxel, int yVoxel, int zVoxel)
 
 void DrawManager::drawAlgorithm(int &xVoxel, int &yVoxel, int &zVoxel, int &mode)
 {
-	//Check for draw type and mode
-	int blockType;
-	if (mode == DrawManager::DRAW)
-	{
-		if (drawType->currentText() == "Blocking") { blockType = ImagePairManager::BLOCKING; }
-		else if (drawType->currentText() == "Segmentation") { blockType = ImagePairManager::SEGMENTATION; }
-	}
-	else if (mode == DrawManager::ERASE) { blockType = ImagePairManager::BACKGROUND; }
-
 	//Get the boundary of the segblock
 	int* boundary = imagePairManager->segblock->GetExtent();
 
 	qDebug() << "DrawManager::drawAlgorithm->boundary(" << boundary[0] << "," << boundary[1] << "," << boundary[2] << ","
 			 << boundary[3] << "," << boundary[4] << "," << boundary[5] << ")";
 
-	//Set corresponding pixels to the corresponding mode
-	for (int y = -(drawSize->value()); y <= drawSize->value(); y++)
+	//Check for draw type and mode
+	int blockType;
+	if (mode == DrawManager::DRAW)
 	{
-		for (int x = -(drawSize->value()); x <= drawSize->value(); x++)
-		{
-			//Check boundary condition
-			if (xVoxel + x < boundary[0] || xVoxel + x > boundary[1] || yVoxel + y < boundary[2] || yVoxel + y > boundary[3])
-			{
-				qDebug() << "DrawManager::drawAlgorithm->OUT_OF_BOUND_AT(" << xVoxel + x << "," << yVoxel + y << "," << zVoxel << ")";
-			}
-			else
-			{
-				//short* voxel = static_cast<short*>(imagePairManager->segblock->GetScalarPointer(xVoxel + x, yVoxel + y, zVoxel));
-				unsigned char* voxel = static_cast<unsigned char*>(imagePairManager->segblock->GetScalarPointer(xVoxel + x, yVoxel + y, zVoxel));
-				*voxel = blockType;
+		//Set blocking according to the drawType spinbox
+		if (drawType->currentText() == "Blocking (Current Slice)" || drawType->currentText() == "Blocking (All Slices)") { blockType = ImagePairManager::BLOCKING; }
+		else if (drawType->currentText() == "Segmentation") { blockType = ImagePairManager::SEGMENTATION; }
 
-				qDebug() << "DrawManager::drawAlgorithm->DRAWN_AT(" << xVoxel + x << "," << yVoxel + y << "," << zVoxel << ")";
+		//Set corresponding pixels to the corresponding blocking type
+		for (int y = -(drawSize->value()); y <= drawSize->value(); y++)
+		{
+			for (int x = -(drawSize->value()); x <= drawSize->value(); x++)
+			{
+				//Check boundary condition
+				if (xVoxel + x < boundary[0] || xVoxel + x > boundary[1] || yVoxel + y < boundary[2] || yVoxel + y > boundary[3])
+				{
+					qDebug() << "DrawManager::drawAlgorithm->OUT_OF_BOUND_AT(" << xVoxel + x << "," << yVoxel + y << ")";
+				}
+				else
+				{
+					//Check for blockType - whether to draw to single or all slices
+					if (drawType->currentText() == "Blocking (All Slices)")
+					{
+						for (int z = boundary[4]; z <= boundary[5]; z++)
+						{
+							unsigned char* voxel = static_cast<unsigned char*>(imagePairManager->segblock->GetScalarPointer(xVoxel + x, yVoxel + y, z));
+							*voxel = blockType;
+						}
+						qDebug() << "DrawManager::drawAlgorithm->DRAWN_AT(" << xVoxel + x << "," << yVoxel + y << ") for all slices";
+					}
+					else
+					{
+						unsigned char* voxel = static_cast<unsigned char*>(imagePairManager->segblock->GetScalarPointer(xVoxel + x, yVoxel + y, zVoxel));
+						*voxel = blockType;
+
+						qDebug() << "DrawManager::drawAlgorithm->DRAWN_AT(" << xVoxel + x << "," << yVoxel + y << ") for single slices";
+					}
+				}
+			}
+		}
+	}
+	else if (mode == DrawManager::ERASE)
+	{
+		//Set blocking to erase
+		blockType = ImagePairManager::BACKGROUND;
+
+		//Set corresponding pixels to the corresponding blocking type
+		for (int y = -(drawSize->value()); y <= drawSize->value(); y++)
+		{
+			for (int x = -(drawSize->value()); x <= drawSize->value(); x++)
+			{
+				//Check boundary condition
+				if (xVoxel + x < boundary[0] || xVoxel + x > boundary[1] || yVoxel + y < boundary[2] || yVoxel + y > boundary[3])
+				{
+					qDebug() << "DrawManager::drawAlgorithm->OUT_OF_BOUND_AT(" << xVoxel + x << "," << yVoxel + y << ")";
+				}
+				else
+				{
+					unsigned char* voxel = static_cast<unsigned char*>(imagePairManager->segblock->GetScalarPointer(xVoxel + x, yVoxel + y, zVoxel));
+					*voxel = blockType;
+
+					qDebug() << "DrawManager::drawAlgorithm->ERASE_AT(" << xVoxel + x << "," << yVoxel + y << ")";
+				}
 			}
 		}
 	}
