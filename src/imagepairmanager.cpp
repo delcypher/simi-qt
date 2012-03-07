@@ -156,7 +156,7 @@ bool ImagePairManager::setAll(int slice, ImagePairManager::BlockType from, Image
     return true; //success
 }
 
-bool ImagePairManager::setSimBlockVoxelsTo(ImagePairManager::BlockType type)
+bool ImagePairManager::setAllSimBlockVoxels(ImagePairManager::BlockType from, ImagePairManager::BlockType to)
 {
     if(segblock==NULL)
     {
@@ -190,7 +190,8 @@ bool ImagePairManager::setSimBlockVoxelsTo(ImagePairManager::BlockType type)
                 //get pointer to voxel
                 voxel = static_cast<char*>(segblock->GetScalarPointer(x,y,z));
 
-                *voxel = type;
+		if(*voxel == from)
+			*voxel = to;
             }
         }
 

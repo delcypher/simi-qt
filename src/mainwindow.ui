@@ -81,10 +81,13 @@
    </widget>
    <widget class="QMenu" name="menuSlice">
     <property name="title">
-     <string>Slice</string>
+     <string>Image</string>
     </property>
     <addaction name="actionClear_Drawing"/>
     <addaction name="actionClear_Segmentation"/>
+    <addaction name="separator"/>
+    <addaction name="actionClear_Segmentation_on_All_Slices"/>
+    <addaction name="actionClear_Blocking_on_All_Slices"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuSlice"/>
@@ -220,7 +223,7 @@
       <rect>
        <x>20</x>
        <y>340</y>
-       <width>221</width>
+       <width>251</width>
        <height>111</height>
       </rect>
      </property>
@@ -232,7 +235,7 @@
        <rect>
         <x>10</x>
         <y>20</y>
-        <width>191</width>
+        <width>221</width>
         <height>86</height>
        </rect>
       </property>
@@ -593,12 +596,22 @@
   </action>
   <action name="actionClear_Drawing">
    <property name="text">
-    <string>Clear Drawing</string>
+    <string>Clear Drawing on Slice</string>
    </property>
   </action>
   <action name="actionClear_Segmentation">
    <property name="text">
-    <string>Clear Segmentation</string>
+    <string>Clear Segmentation on Slice</string>
+   </property>
+  </action>
+  <action name="actionClear_Segmentation_on_All_Slices">
+   <property name="text">
+    <string>Clear Segmentation on All Slices</string>
+   </property>
+  </action>
+  <action name="actionClear_Blocking_on_All_Slices">
+   <property name="text">
+    <string>Clear Blocking on All Slices</string>
    </property>
   </action>
  </widget>

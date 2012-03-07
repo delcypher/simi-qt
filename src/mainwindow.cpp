@@ -86,9 +86,9 @@ void MainWindow::on_actionOpen_Image_triggered()
 			}
 
 			//setup SeedPointManager
-            if(seedPointManager!=0)
-                delete seedPointManager;
-            seedPointManager = new SeedPointManager(imagePairManager->getZDim());
+			if(seedPointManager!=0)
+				delete seedPointManager;
+			seedPointManager = new SeedPointManager(imagePairManager->getZDim());
 
 			//setup LayoutManager
 			if(viewManager!=0)
@@ -627,4 +627,18 @@ void MainWindow::on_do3Drendering_clicked()
 
 	volumeRenderManager->render3D();
 
+}
+
+void MainWindow::on_actionClear_Segmentation_on_All_Slices_triggered()
+{
+	qDebug() << "Clearing all simblock voxels!";
+	imagePairManager->setAllSimBlockVoxels(ImagePairManager::SEGMENTATION, ImagePairManager::BACKGROUND);
+	viewManager->update();
+}
+
+void MainWindow::on_actionClear_Blocking_on_All_Slices_triggered()
+{
+	qDebug() << "Clearing all blocking voxels!";
+	imagePairManager->setAllSimBlockVoxels(ImagePairManager::BLOCKING, ImagePairManager::BACKGROUND);
+	viewManager->update();
 }

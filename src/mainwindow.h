@@ -51,6 +51,8 @@ class MainWindow : public QMainWindow
 		void on_sliceSlider_valueChanged(int value);
 		void updateStatusBar();
 		void seedPointChanged();
+		void on_actionClear_Segmentation_on_All_Slices_triggered();
+		void on_actionClear_Blocking_on_All_Slices_triggered();
 
         //toolbar slots
         void on_actionHandTool_triggered();
