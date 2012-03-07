@@ -6,6 +6,7 @@
 #include "vtkSmartPointer.h"
 #include <vtkStructuredPoints.h>
 #include "vtkStructuredPointsReader.h"
+#include "vtkStructuredPointsWriter.h"
 
 
 /* Responsible for loading original image and making it avaliable.
