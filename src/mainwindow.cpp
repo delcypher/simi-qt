@@ -536,8 +536,7 @@ void MainWindow::on_actionLoad_Segmentation_triggered()
 
 
     imagePairManager->loadSegblock(loadFile);
-
-
+    viewManager->update(); //update
 }
 
 bool MainWindow::on_actionSave_Segmentation_triggered()
