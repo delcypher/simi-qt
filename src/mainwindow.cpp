@@ -146,6 +146,9 @@ void MainWindow::on_actionOpen_Image_triggered()
 			ui->actionLoad_Segmentation->setEnabled(true);
 			ui->actionSave_Segmentation->setEnabled(true);
 
+			//The segmentation widgets are disabled whilst segmenting, enable them when done
+			connect(segmenter, SIGNAL(segmentationDone(int)), this, SLOT(enableSegmentationWidgets()));
+
 
 			//set window title
 			QString newWindowTitle(PROGRAM_NAME);
@@ -427,12 +430,14 @@ void MainWindow::on_maxSegIntensitySlider_valueChanged(int value)
 void MainWindow::on_doSegmentation2D_clicked()
 {
 	if(segmenter!=0)
-        {
+	{
+                //disable segmentation widgets whilst segmenting
+                disableSegmentationWidgets();
                 int pos_z = viewManager->getCurrentSlice();
                 int pos_x, pos_y;
                 assert(seedPointManager->getSeedPoint(pos_z,pos_x,pos_y));
                 segmenter->doSegmentation2D(pos_x, pos_y, pos_z, ui->minSegIntensitySlider->value(), ui->maxSegIntensitySlider->value());
-        }
+	}
 }
 
 void MainWindow::updateStatusBar()
@@ -467,6 +472,8 @@ void MainWindow::on_doSegmentation3D_clicked()
 {
         if(segmenter!=0)
         {
+                //disable segmentation widgets whilst segmenting
+                disableSegmentationWidgets();
                 int pos_z = viewManager->getCurrentSlice();
                 int pos_x, pos_y;
                 assert(seedPointManager->getSeedPoint(pos_z,pos_x,pos_y));
@@ -534,6 +541,18 @@ bool MainWindow::on_actionSave_Segmentation_triggered()
     }
 
     return false;
+}
+
+void MainWindow::enableSegmentationWidgets()
+{
+    ui->segmentationGroupBox_2->setEnabled(true);
+    qDebug() << "Enable segmentation widgets.";
+}
+
+void MainWindow::disableSegmentationWidgets()
+{
+    ui->segmentationGroupBox_2->setEnabled(false);
+    qDebug() << "Disable segmentation widgets.";
 }
 
 void MainWindow::closeEvent(QCloseEvent *close)
