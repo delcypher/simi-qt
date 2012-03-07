@@ -14,11 +14,14 @@ ImagePairManager::ImagePairManager()
 
 ImagePairManager::~ImagePairManager()
 {
-
+	reader->CloseVTKFile();
 }
 
 bool ImagePairManager::loadImage(QFileInfo image)
 {
+	//close file just incase we already had one open
+	reader->CloseVTKFile();
+
 	reader->SetFileName(image.absoluteFilePath().toAscii());
 	reader->Update();
 
