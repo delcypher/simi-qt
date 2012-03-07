@@ -199,8 +199,18 @@ bool ImagePairManager::setSimBlockVoxelsTo(ImagePairManager::BlockType type)
 
 bool ImagePairManager::saveSegblock(QString path)
 {
-    //TODO
-    qDebug() << "ImagePairManager::saveSegblock(" << path << ")" ;
+	// Setup and connect the structured points writer with the segblock
+	vtkStructuredPointsWriter* segblockWriter = vtkStructuredPointsWriter::New();
+	segblockWriter->SetInput(segblock);
+
+	// Pass in the file name and path
+	const char* filename = path.toAscii() + ".vtk";
+	segblockWriter->SetFileName(filename);
+
+	// Write out file
+	segblockWriter->Write();
+
+	qDebug() << "ImagePairManager::saveSegblock(" << filename << ")";
 
     segblockInitTime = segblock->GetMTime(); //update the init time
     return true;
