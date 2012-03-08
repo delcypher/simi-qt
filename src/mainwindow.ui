@@ -41,7 +41,7 @@
      <x>0</x>
      <y>0</y>
      <width>1163</width>
-     <height>25</height>
+     <height>19</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -69,6 +69,7 @@
     <addaction name="actionPan_down"/>
     <addaction name="separator"/>
     <addaction name="actionRe_centre"/>
+    <addaction name="actionRotate_view_by_180"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
@@ -676,6 +677,14 @@
   <action name="actionClear_Blocking_on_All_Slices">
    <property name="text">
     <string>Clear Blocking on All Slices</string>
+   </property>
+  </action>
+  <action name="actionRotate_view_by_180">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Rotate view by 180</string>
    </property>
   </action>
  </widget>

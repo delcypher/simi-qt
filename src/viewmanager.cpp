@@ -512,5 +512,16 @@ void ViewManager::addSegblock()
 	qvtkWidget->update();
 }
 
+void ViewManager::flipView(bool flip)
+{
+	if(flip)
+		imageViewer->GetRenderer()->GetActiveCamera()->SetRoll(180.0);
+	else
+		imageViewer->GetRenderer()->GetActiveCamera()->SetRoll(0.0);
+
+	update();
+
+}
+
 
 

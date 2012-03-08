@@ -86,6 +86,8 @@ class MainWindow : public QMainWindow
 
         void on_doOpen2D_clicked();
 
+	void on_actionRotate_view_by_180_toggled(bool flip);
+
 protected:
 	  void closeEvent(QCloseEvent* close);
 

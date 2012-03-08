@@ -39,6 +39,7 @@ class ViewManager : public QObject
 		void buildLookUpTable();
 		bool setBlockingAlpha(double alpha);
 		bool setSegmentationAlpha(double alpha);
+		void flipView(bool flip);
 
 	private slots:
 		void mouseLeftClick(vtkObject* caller, unsigned long vtkEvent, void* clientData, void* callData, vtkCommand* command);

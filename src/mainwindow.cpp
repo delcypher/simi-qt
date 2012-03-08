@@ -723,3 +723,10 @@ void MainWindow::hideWaitDialog()
 {
 	progressDialog->hide();
 }
+
+void MainWindow::on_actionRotate_view_by_180_toggled(bool flip)
+{
+	if(viewManager!=0)
+		viewManager->flipView(flip);
+
+}
