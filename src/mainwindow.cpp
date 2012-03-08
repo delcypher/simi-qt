@@ -518,6 +518,7 @@ void MainWindow::on_actionClear_Segmentation_triggered()
     if(imagePairManager!=0 && viewManager!=0)
     {
         imagePairManager->setAll(viewManager->getCurrentSlice(), ImagePairManager::SEGMENTATION, ImagePairManager::BACKGROUND);
+	volumeRenderManager->render3D();
         viewManager->update();
     }
 }
