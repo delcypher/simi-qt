@@ -476,8 +476,11 @@ void ViewManager::enterLeaveHandler(vtkObject *caller, unsigned long vtkEvent)
 
 void ViewManager::redrawCrossHair(int z, int x, int y)
 {
-    hcrosshairSource->SetPoint1(-256.0,y- 256,1000);
-    hcrosshairSource->SetPoint2(256,y -256,1000);
+    double offset= imagePairManager->getYSpacing()*imagePairManager->getYDim()/2.0;
+    double position = y*imagePairManager->getYSpacing();
+
+    hcrosshairSource->SetPoint1(-256.0,position - offset,1000);
+    hcrosshairSource->SetPoint2(256, position -offset ,1000);
     hcrosshairSource->Update();
     update();
     qDebug() << "Redraw cross hair at " << x << "," << y;

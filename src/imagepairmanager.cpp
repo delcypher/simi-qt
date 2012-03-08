@@ -90,6 +90,13 @@ double ImagePairManager::getYSpacing()
     return spacing[1];
 }
 
+double ImagePairManager::getXSpacing()
+{
+    double spacing[3];
+    original->GetSpacing(spacing);
+    return spacing[0];
+}
+
 double ImagePairManager::getMinimumIntensity()
 {
 	double range[2];
