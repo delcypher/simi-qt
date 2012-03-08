@@ -22,6 +22,7 @@ MainWindow::MainWindow() : imageInfo(""), workPath(QDir::home())
 	drawManager=0;
 	segmenter=0;
 	volumeRenderManager=0;
+	progressDialog=0;
 
 
 	//Setup About Qt Dialog
@@ -29,7 +30,6 @@ MainWindow::MainWindow() : imageInfo(""), workPath(QDir::home())
 
 
 	setWindowTitle(PROGRAM_NAME);
-
 }
 
 MainWindow::~MainWindow()
@@ -632,15 +632,26 @@ void MainWindow::on_do3Drender_clicked()
 void MainWindow::on_actionClear_Segmentation_on_All_Slices_triggered()
 {
 	qDebug() << "Clearing all simblock voxels!";
+
+	showWaitDialog();
 	imagePairManager->setAllSimBlockVoxels(ImagePairManager::SEGMENTATION, ImagePairManager::BACKGROUND);
 	viewManager->update();
+	hideWaitDialog();
 }
 
 void MainWindow::on_actionClear_Blocking_on_All_Slices_triggered()
 {
 	qDebug() << "Clearing all blocking voxels!";
+
+	showWaitDialog();
+
 	imagePairManager->setAllSimBlockVoxels(ImagePairManager::BLOCKING, ImagePairManager::BACKGROUND);
 	viewManager->update();
+
+	hideWaitDialog();
+
+
+
 }
 
 void MainWindow::on_doDilate2D_clicked()
@@ -677,4 +688,30 @@ void MainWindow::on_doOpen2D_clicked()
                 int pos_z = viewManager->getCurrentSlice();
                 segmenter->doMorphOpen(pos_z);
         }
+}
+
+void MainWindow::showWaitDialog()
+{
+	if(progressDialog==NULL)
+	{
+		//Setup
+		progressDialog = new QProgressDialog(this);
+		progressDialog->setLabelText("Please wait...");
+
+		progressDialog->setWindowModality(Qt::WindowModal);
+		progressDialog->setRange(0,0); // always show the dialog
+
+		progressDialog->setMinimumDuration(0);// do no assumed time calculation
+
+		progressDialog->setCancelButton(0); // disable the cancel button
+		// eventually show the dialog
+		progressDialog->setValue(1);
+	}
+	else
+		progressDialog->show();
+}
+
+void MainWindow::hideWaitDialog()
+{
+	progressDialog->hide();
 }

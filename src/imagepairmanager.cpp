@@ -1,6 +1,6 @@
 #include "imagepairmanager.h"
 #include <QDebug>
-
+#include <QApplication>
 
 ImagePairManager::ImagePairManager()
 {
@@ -194,7 +194,7 @@ bool ImagePairManager::setAllSimBlockVoxels(ImagePairManager::BlockType from, Im
 			*voxel = to;
             }
         }
-
+	QApplication::processEvents();
     }
 
     segblock->Modified(); //Mark as modifed so if a re-render is done VTK knows that this part of the pipeline needs to be reprocessed

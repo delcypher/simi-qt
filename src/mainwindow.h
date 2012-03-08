@@ -7,6 +7,7 @@
 #include <QFileInfo>
 #include <QActionGroup>
 #include <QCloseEvent>
+#include <QProgressDialog>
 #include <assert.h>
 #include "ui_mainwindow.h"
 
@@ -97,6 +98,7 @@ private:
 		QDir workPath; //Directory used file open dialogs
 		Ui::MainWindow* ui; //handle to user interface
 		QActionGroup* toolbarActions;
+		QProgressDialog* progressDialog;
 
 
 
@@ -105,6 +107,8 @@ private:
 		void sliceControlSetup();
 		void toolbarSetup();
 		void segmentationControlSetup();
+		void showWaitDialog();
+		void hideWaitDialog();
 
 
 		void changeContrast();
