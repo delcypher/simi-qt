@@ -5,7 +5,7 @@
 #include <QVTKWidget.h>
 #include "imagepairmanager.h"
 #include "vtkMarchingCubes.h"
-#include "rendermanager.h"
+#include "volumerendermanager.h"
 
 
 #include "vtkSmartPointer.h"
@@ -19,15 +19,16 @@
 
 
 
-class RenderManager : public QObject
+class VolumeRenderManager : public QObject
 {
 	Q_OBJECT
 
 	public:
-        RenderManager(ImagePairManager* imagePairManager, QVTKWidget* qvtk3Ddisplayer);
-	~RenderManager();
-	
-	void render3D();
+	VolumeRenderManager(ImagePairManager* imagePairManager, QVTKWidget* qvtk3Ddisplayer);
+	~VolumeRenderManager();
+
+	public slots:
+		void render3D();
 
 	private:
         ImagePairManager* imagePairManager;

@@ -14,7 +14,7 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QVTKWidget" name="qvtkWidget" native="true">
+   <widget class="QVTKWidget" name="qvtkWidget">
     <property name="geometry">
      <rect>
       <x>10</x>
@@ -24,7 +24,7 @@
      </rect>
     </property>
    </widget>
-   <widget class="QVTKWidget" name="qvtk3Ddisplayer" native="true">
+   <widget class="QVTKWidget" name="qvtk3Ddisplayer">
     <property name="geometry">
      <rect>
       <x>10</x>
@@ -41,7 +41,7 @@
      <x>0</x>
      <y>0</y>
      <width>1163</width>
-     <height>20</height>
+     <height>25</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -81,10 +81,13 @@
    </widget>
    <widget class="QMenu" name="menuSlice">
     <property name="title">
-     <string>Slice</string>
+     <string>Image</string>
     </property>
     <addaction name="actionClear_Drawing"/>
     <addaction name="actionClear_Segmentation"/>
+    <addaction name="separator"/>
+    <addaction name="actionClear_Segmentation_on_All_Slices"/>
+    <addaction name="actionClear_Blocking_on_All_Slices"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuSlice"/>
@@ -218,10 +221,10 @@
     <widget class="QGroupBox" name="groupBox">
      <property name="geometry">
       <rect>
-       <x>20</x>
-       <y>340</y>
-       <width>221</width>
-       <height>111</height>
+       <x>10</x>
+       <y>350</y>
+       <width>291</width>
+       <height>131</height>
       </rect>
      </property>
      <property name="title">
@@ -232,8 +235,8 @@
        <rect>
         <x>10</x>
         <y>20</y>
-        <width>191</width>
-        <height>86</height>
+        <width>260</width>
+        <height>95</height>
        </rect>
       </property>
       <layout class="QGridLayout" name="gridLayout_6">
@@ -278,7 +281,12 @@
         <widget class="QComboBox" name="drawOnComboBox">
          <item>
           <property name="text">
-           <string>Blocking</string>
+           <string>Blocking (Current Slice)</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Blocking (All Slices)</string>
           </property>
          </item>
          <item>
@@ -316,7 +324,7 @@
         <x>10</x>
         <y>20</y>
         <width>321</width>
-        <height>122</height>
+        <height>132</height>
        </rect>
       </property>
       <layout class="QGridLayout" name="gridLayout_5">
@@ -402,11 +410,11 @@
       </layout>
      </widget>
     </widget>
-    <widget class="QPushButton" name="do3Drendering">
+    <widget class="QPushButton" name="do3Drender">
      <property name="geometry">
       <rect>
-       <x>30</x>
-       <y>460</y>
+       <x>20</x>
+       <y>490</y>
        <width>85</width>
        <height>27</height>
       </rect>
@@ -414,6 +422,70 @@
      <property name="text">
       <string>draw 3D</string>
      </property>
+    </widget>
+    <widget class="QGroupBox" name="morphologyGroupBox">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>540</y>
+       <width>384</width>
+       <height>96</height>
+      </rect>
+     </property>
+     <property name="title">
+      <string>Morphology</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_7">
+      <item row="0" column="0">
+       <widget class="QPushButton" name="doDilate2D">
+        <property name="text">
+         <string>Dilate2D</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QPushButton" name="doErode2D">
+        <property name="text">
+         <string>Erode2D</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="2">
+       <widget class="QPushButton" name="doClose2D">
+        <property name="text">
+         <string>Close2D</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="3">
+       <widget class="QPushButton" name="doOpen2D">
+        <property name="text">
+         <string>Open2D</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="label_4">
+        <property name="text">
+         <string>Kernel Type:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QComboBox" name="kernelComboBox">
+        <item>
+         <property name="text">
+          <string>Cross</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Square</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+     </layout>
     </widget>
    </widget>
   </widget>
@@ -588,12 +660,22 @@
   </action>
   <action name="actionClear_Drawing">
    <property name="text">
-    <string>Clear Drawing</string>
+    <string>Clear Drawing on Slice</string>
    </property>
   </action>
   <action name="actionClear_Segmentation">
    <property name="text">
-    <string>Clear Segmentation</string>
+    <string>Clear Segmentation on Slice</string>
+   </property>
+  </action>
+  <action name="actionClear_Segmentation_on_All_Slices">
+   <property name="text">
+    <string>Clear Segmentation on All Slices</string>
+   </property>
+  </action>
+  <action name="actionClear_Blocking_on_All_Slices">
+   <property name="text">
+    <string>Clear Blocking on All Slices</string>
    </property>
   </action>
  </widget>

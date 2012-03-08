@@ -21,7 +21,7 @@ MainWindow::MainWindow() : imageInfo(""), workPath(QDir::home())
 	viewManager=0;
 	drawManager=0;
 	segmenter=0;
-	renderManager=0;
+	volumeRenderManager=0;
 
 
 	//Setup About Qt Dialog
@@ -51,8 +51,8 @@ MainWindow::~MainWindow()
 	if(segmenter!=0)
 	delete segmenter;
 
-	if(renderManager!=0)
-	delete renderManager;
+	if(volumeRenderManager!=0)
+	delete volumeRenderManager;
 }
 
 void MainWindow::on_actionOpen_Image_triggered()
@@ -86,9 +86,9 @@ void MainWindow::on_actionOpen_Image_triggered()
 			}
 
 			//setup SeedPointManager
-            if(seedPointManager!=0)
-                delete seedPointManager;
-            seedPointManager = new SeedPointManager(imagePairManager->getZDim());
+			if(seedPointManager!=0)
+				delete seedPointManager;
+			seedPointManager = new SeedPointManager(imagePairManager->getZDim());
 
 			//setup LayoutManager
 			if(viewManager!=0)
@@ -103,12 +103,12 @@ void MainWindow::on_actionOpen_Image_triggered()
 			//setup segmenter
 			if(segmenter!=0)
 				delete segmenter;
-			segmenter = new Segmenter(seedPointManager,imagePairManager);
+                        segmenter = new Segmenter(seedPointManager,imagePairManager,ui->kernelComboBox);
 
-			//setup renderManager
-			if(renderManager!=0)
-			  delete renderManager;
-			renderManager = new RenderManager(imagePairManager,ui->qvtk3Ddisplayer);
+			//setup volumeRenderManager
+			if(volumeRenderManager!=0)
+			  delete volumeRenderManager;
+			volumeRenderManager = new VolumeRenderManager(imagePairManager,ui->qvtk3Ddisplayer);
 
 			sliceControlSetup();
 			contrastControlSetup();
@@ -151,6 +151,9 @@ void MainWindow::on_actionOpen_Image_triggered()
 			//At start up no seed point will be set so disable segmentation widgets
 			ui->segmentationGroupBox_2->setEnabled(false);
 			connect(viewManager,SIGNAL(sliceChanged(int)), this, SLOT(tryEnableSegmentationWidgets()));
+
+			//connect redraw volume rendering when segmentation is done
+			connect(segmenter,SIGNAL(segmentationDone(int)),volumeRenderManager,SLOT(render3D()));
 
 
 			//set window title
@@ -533,8 +536,7 @@ void MainWindow::on_actionLoad_Segmentation_triggered()
 
 
     imagePairManager->loadSegblock(loadFile);
-
-
+    viewManager->update(); //update
 }
 
 bool MainWindow::on_actionSave_Segmentation_triggered()
@@ -617,11 +619,62 @@ bool MainWindow::okToContinue()
 }
 
 
-void MainWindow::on_do3Drendering_clicked()
+
+
+void MainWindow::on_do3Drender_clicked()
 {
 	qDebug() << "3D draw button is clicked" ;
-	//setup renderManager
+	//setup volumeRenderManager
 
-	renderManager->render3D();
+	volumeRenderManager->render3D();
+}
 
+void MainWindow::on_actionClear_Segmentation_on_All_Slices_triggered()
+{
+	qDebug() << "Clearing all simblock voxels!";
+	imagePairManager->setAllSimBlockVoxels(ImagePairManager::SEGMENTATION, ImagePairManager::BACKGROUND);
+	viewManager->update();
+}
+
+void MainWindow::on_actionClear_Blocking_on_All_Slices_triggered()
+{
+	qDebug() << "Clearing all blocking voxels!";
+	imagePairManager->setAllSimBlockVoxels(ImagePairManager::BLOCKING, ImagePairManager::BACKGROUND);
+	viewManager->update();
+}
+
+void MainWindow::on_doDilate2D_clicked()
+{
+        if(segmenter!=0)
+        {
+                int pos_z = viewManager->getCurrentSlice();
+                segmenter->doDilate(pos_z);
+        }
+}
+
+void MainWindow::on_doErode2D_clicked()
+{
+        if(segmenter!=0)
+        {
+                int pos_z = viewManager->getCurrentSlice();
+                segmenter->doErode(pos_z);
+        }
+}
+
+void MainWindow::on_doClose2D_clicked()
+{
+        if(segmenter!=0)
+        {
+                int pos_z = viewManager->getCurrentSlice();
+                segmenter->doMorphClose(pos_z);
+        }
+}
+
+void MainWindow::on_doOpen2D_clicked()
+{
+        if(segmenter!=0)
+        {
+                int pos_z = viewManager->getCurrentSlice();
+                segmenter->doMorphOpen(pos_z);
+        }
 }

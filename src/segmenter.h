@@ -1,4 +1,5 @@
 #include <QObject>
+#include <QComboBox>
 #include "seedpointmanager.h"
 #include "imagepairmanager.h"
 #include <list>
@@ -16,10 +17,10 @@ struct Node
 
 class Segmenter : public QObject
 {
-	Q_OBJECT
+        Q_OBJECT
 
-	public:
-                Segmenter(SeedPointManager* seedPointManager, ImagePairManager* imagePairManager);
+        public:
+                Segmenter(SeedPointManager* seedPointManager, ImagePairManager* imagePairManager, QComboBox* kernelType);
                 ~Segmenter();
 
                 enum Segmentation{
@@ -27,14 +28,34 @@ class Segmenter : public QObject
                         SEGMENTATION_3D
                 };
 
+                enum Morphology{
+                        DILATE,
+                        ERODE
+                };
+
+                enum Kernel{
+                        CROSS,
+                        SQUARE
+                };
+
                 void doSegmentation2D(int pos_x, int pos_y, int pos_z, int minThreshold, int maxThreshold);
 
                 void doSegmentation3D(int pos_x, int pos_y, int pos_z, int minThreshold, int maxThreshold);
 
-	signals:
+                void doMorphOpen(int pos_z);
+
+                void doMorphClose(int pos_z);
+
+                void doDilate(int pos_z);
+
+                void doErode(int pos_z);
+
+        signals:
                 void segmentationDone(int sliceNumber);
 
-	private:
+                void filteringDone(int sliceNumber);
+
+        private:
                 ImagePairManager* imagePairManager;
 
                 bool predicate2D(int pos_x, int pos_y, int pos_z, int minThreshold, int maxThreshold);
@@ -53,9 +74,17 @@ class Segmenter : public QObject
 
                 void doSegmentationIter3D_I(Node start, int minThreshold, int maxThreshold);
 
+                void erode(int pos_z, Kernel kernel);
+
+                void dilate(int pos_z, Kernel kernel);
+
+                int contains_segmentation(int pos_x, int pos_y, int pos_z, Morphology type, Kernel kernel);
+
                 int img_x;
                 int img_y;
                 int img_z;
+
+                QComboBox* kernelType;
 
 
 };

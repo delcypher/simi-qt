@@ -6,6 +6,7 @@
 #include "vtkSmartPointer.h"
 #include <vtkStructuredPoints.h>
 #include "vtkStructuredPointsReader.h"
+#include "vtkStructuredPointsWriter.h"
 
 
 /* Responsible for loading original image and making it avaliable.
@@ -47,7 +48,7 @@ class ImagePairManager : public QObject
 		//Set all Voxels in slice "slice" that are value "from" to the value "to
 		bool setAll(int slice, ImagePairManager::BlockType from, ImagePairManager::BlockType to);
 
-		bool setSimBlockVoxelsTo(ImagePairManager::BlockType type);
+		bool setAllSimBlockVoxels(ImagePairManager::BlockType from, ImagePairManager::BlockType to);
 
 		bool saveSegblock(QString path);
 		bool loadSegblock(QString path);

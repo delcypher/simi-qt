@@ -15,11 +15,14 @@ ImagePairManager::ImagePairManager()
 
 ImagePairManager::~ImagePairManager()
 {
-
+	reader->CloseVTKFile();
 }
 
 bool ImagePairManager::loadImage(QFileInfo image)
 {
+	//close file just incase we already had one open
+	reader->CloseVTKFile();
+
 	reader->SetFileName(image.absoluteFilePath().toAscii());
 	reader->Update();
 
@@ -154,7 +157,7 @@ bool ImagePairManager::setAll(int slice, ImagePairManager::BlockType from, Image
     return true; //success
 }
 
-bool ImagePairManager::setSimBlockVoxelsTo(ImagePairManager::BlockType type)
+bool ImagePairManager::setAllSimBlockVoxels(ImagePairManager::BlockType from, ImagePairManager::BlockType to)
 {
     if(segblock==NULL)
     {
@@ -188,7 +191,8 @@ bool ImagePairManager::setSimBlockVoxelsTo(ImagePairManager::BlockType type)
                 //get pointer to voxel
                 voxel = static_cast<char*>(segblock->GetScalarPointer(x,y,z));
 
-                *voxel = type;
+		if(*voxel == from)
+			*voxel = to;
             }
         }
 
@@ -200,11 +204,22 @@ bool ImagePairManager::setSimBlockVoxelsTo(ImagePairManager::BlockType type)
 
 bool ImagePairManager::saveSegblock(QString path)
 {
-    //TODO
-    qDebug() << "ImagePairManager::saveSegblock(" << path << ")" ;
+	//Setup and connect the structured points writer with the segblock
+	vtkStructuredPointsWriter* segblockWriter = vtkStructuredPointsWriter::New();
+	segblockWriter->SetInput(segblock);
+
+	//Pass in the file name and path
+	const char* filename = path.toAscii() + ".vtk";
+	segblockWriter->SetFileName(filename);
+
+	//Write out file
+	int writeResult;
+	writeResult = segblockWriter->Write();
+
+	qDebug() << "ImagePairManager::saveSegblock(" << filename << ")";
 
     segblockInitTime = segblock->GetMTime(); //update the init time
-    return true;
+	return writeResult;
 }
 
 bool ImagePairManager::loadSegblock(QString path)

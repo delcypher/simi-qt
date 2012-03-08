@@ -15,7 +15,7 @@
 #include "viewmanager.h"
 #include "drawmanager.h"
 #include "segmenter.h"
-#include "rendermanager.h"
+#include "volumerendermanager.h"
 
 
 
@@ -37,7 +37,7 @@ class MainWindow : public QMainWindow
 		ViewManager* viewManager;
 		DrawManager* drawManager;
 		Segmenter* segmenter;
-		RenderManager* renderManager;
+		VolumeRenderManager* volumeRenderManager;
 
 
 	private slots:
@@ -51,6 +51,8 @@ class MainWindow : public QMainWindow
 		void on_sliceSlider_valueChanged(int value);
 		void updateStatusBar();
 		void seedPointChanged();
+		void on_actionClear_Segmentation_on_All_Slices_triggered();
+		void on_actionClear_Blocking_on_All_Slices_triggered();
 
         //toolbar slots
         void on_actionHandTool_triggered();
@@ -72,8 +74,18 @@ class MainWindow : public QMainWindow
 
         void tryEnableSegmentationWidgets();
 
+	void on_do3Drender_clicked();
 
-	protected:
+
+        void on_doDilate2D_clicked();
+
+        void on_doErode2D_clicked();
+
+        void on_doClose2D_clicked();
+
+        void on_doOpen2D_clicked();
+
+protected:
 	  void closeEvent(QCloseEvent* close);
 
 	private:
