@@ -726,7 +726,9 @@ void MainWindow::hideWaitDialog()
 
 void MainWindow::on_actionRotate_view_by_180_toggled(bool flip)
 {
-	if(viewManager!=0)
+	if(viewManager!=0 && volumeRenderManager!=0)
+	{
 		viewManager->flipView(flip);
-
+		volumeRenderManager->flipView(flip);
+	}
 }

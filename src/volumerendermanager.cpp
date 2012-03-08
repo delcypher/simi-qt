@@ -1,5 +1,6 @@
 #include "volumerendermanager.h"
 #include <QVTKWidget.h>
+#include <vtkCamera.h>
 #include "imagepairmanager.h"
 #include "vtkMarchingCubes.h"
 #include "vtkSmartPointer.h"
@@ -66,4 +67,14 @@ void VolumeRenderManager::render3D()
 	renderWindow->Render();
 	qvtk3Ddisplayer->update();
 
+}
+
+void VolumeRenderManager::flipView(bool flip)
+{
+	if(flip)
+		renderer->GetActiveCamera()->SetRoll(180.0);
+	else
+		renderer->GetActiveCamera()->SetRoll(0.0);
+
+	renderWindow->Render();
 }
