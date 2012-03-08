@@ -56,6 +56,7 @@ class ImagePairManager : public QObject
 
 	private:
 		vtkSmartPointer<vtkStructuredPointsReader> reader;
+		vtkSmartPointer<vtkStructuredPointsReader> readerSegBlock;
 
 		//Widths in terms of voxels
 		int xDim;
@@ -69,8 +70,6 @@ class ImagePairManager : public QObject
 		void debugDump();
 
 		unsigned long segblockInitTime;
-
-
 
 };
 

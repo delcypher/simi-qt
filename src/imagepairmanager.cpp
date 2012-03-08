@@ -5,6 +5,7 @@
 ImagePairManager::ImagePairManager()
 {
 	reader = vtkStructuredPointsReader::New();
+	readerSegBlock = vtkStructuredPointsReader::New();
 
 	//set other pointers to NULL
 	original = NULL;
@@ -208,7 +209,17 @@ bool ImagePairManager::saveSegblock(QString path)
 
 bool ImagePairManager::loadSegblock(QString path)
 {
-    //TODO
+    readerSegBlock->SetFileName(path.toAscii());
+
+    if(!readerSegBlock->IsFileStructuredPoints())
+    {
+	    qDebug() << "File with path " << path.toAscii() << " is not a VTK structured points file!";
+	    return false;
+    }
+
+    //setup the segmentation block
+    segblock = readerSegBlock->GetOutput();
+
     qDebug() << "ImagePairManager::loadSegblock(" << path << ")" ;
 
     segblockInitTime = segblock->GetMTime(); //update the init time
