@@ -63,11 +63,6 @@
     <addaction name="actionSlice_up"/>
     <addaction name="actionSlice_down"/>
     <addaction name="separator"/>
-    <addaction name="actionPan_left"/>
-    <addaction name="actionPan_right"/>
-    <addaction name="actionPan_up"/>
-    <addaction name="actionPan_down"/>
-    <addaction name="separator"/>
     <addaction name="actionResetView"/>
     <addaction name="actionRotate_view_by_180"/>
    </widget>
