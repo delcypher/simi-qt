@@ -57,7 +57,8 @@ class ViewManager : public QObject
 		void mouseLeavesWidget();
 
 	private:
-        void forceZoom();
+		void forceZoom();
+		void addSegblock();
 
 
 		vtkSmartPointer<vtkImageViewer2> imageViewer;
