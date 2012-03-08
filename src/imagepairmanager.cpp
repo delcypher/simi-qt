@@ -224,7 +224,11 @@ bool ImagePairManager::saveSegblock(QString path)
 
 bool ImagePairManager::loadSegblock(QString path)
 {
+    // make sure that the file is already closed
+    readerSegBlock->CloseVTKFile();
+
     readerSegBlock->SetFileName(path.toAscii());
+    readerSegBlock->Update();
 
     if(!readerSegBlock->IsFileStructuredPoints())
     {
