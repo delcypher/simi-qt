@@ -641,7 +641,9 @@ void MainWindow::on_actionClear_Segmentation_on_All_Slices_triggered()
 	showWaitDialog();
 	imagePairManager->setAllSimBlockVoxels(ImagePairManager::SEGMENTATION, ImagePairManager::BACKGROUND);
 	viewManager->update();
+	volumeRenderManager->render3D();
 	hideWaitDialog();
+
 }
 
 void MainWindow::on_actionClear_Blocking_on_All_Slices_triggered()
@@ -652,7 +654,7 @@ void MainWindow::on_actionClear_Blocking_on_All_Slices_triggered()
 
 	imagePairManager->setAllSimBlockVoxels(ImagePairManager::BLOCKING, ImagePairManager::BACKGROUND);
 	viewManager->update();
-
+	volumeRenderManager->render3D();
 	hideWaitDialog();
 
 
