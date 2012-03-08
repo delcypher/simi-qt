@@ -33,6 +33,9 @@ segmentationAlpha(0.5)
 
     //setup zoom control
     maxScale= ( imagePairManager->getYDim() )*( imagePairManager->getYSpacing() )/2.0;
+    minScale=1;
+    zoomSteps=20;
+    currentStep=0;
 
     imageViewer->GetRenderer()->GetActiveCamera()->SetParallelScale(maxScale);
 
@@ -484,6 +487,26 @@ void ViewManager::flipView(bool flip)
 
 	update();
 
+}
+
+void ViewManager::zoomIn()
+{
+	if(currentStep  < zoomSteps)
+		currentStep++;
+
+	imageViewer->GetRenderer()->GetActiveCamera()->SetParallelScale( maxScale - currentStep*(maxScale - minScale)/( static_cast<double>(zoomSteps))  );
+	imageViewer->GetRenderWindow()->Render();
+}
+
+void ViewManager::zoomOut()
+{
+	//make currentScale bigger
+	if(currentStep > 0)
+		currentStep--;
+
+
+	imageViewer->GetRenderer()->GetActiveCamera()->SetParallelScale( maxScale - currentStep*(maxScale - minScale)/( static_cast<double>(zoomSteps))  );
+	imageViewer->GetRenderWindow()->Render();
 }
 
 

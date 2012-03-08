@@ -39,6 +39,8 @@ class ViewManager : public QObject
 		bool setSegmentationAlpha(double alpha);
 		void flipView(bool flip);
 		void resetZoom();
+		void zoomIn();
+		void zoomOut();
 
 	private slots:
 		void mouseLeftClick(vtkObject* caller, unsigned long vtkEvent, void* clientData, void* callData, vtkCommand* command);
@@ -68,8 +70,10 @@ class ViewManager : public QObject
 		vtkSmartPointer<vtkImageActor> segblockActor;
 		vtkSmartPointer<vtkLookupTable> lut;
 
-
+		double minScale; //for Zoom
 		double maxScale; //for zoom
+		int currentStep;//for zoom
+		int zoomSteps;
 
 		//for dragging
 		bool dragOn;
