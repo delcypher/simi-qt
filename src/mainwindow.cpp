@@ -736,5 +736,8 @@ void MainWindow::on_actionRotate_view_by_180_toggled(bool flip)
 void MainWindow::on_actionResetView_triggered()
 {
 	if(viewManager!=0)
+	{
+		viewManager->resetPan();
 		viewManager->resetZoom();
+	}
 }

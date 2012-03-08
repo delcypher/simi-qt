@@ -568,6 +568,9 @@
    <property name="text">
     <string>Reset View</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+R</string>
+   </property>
   </action>
   <action name="actionAbout">
    <property name="text">

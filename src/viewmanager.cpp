@@ -7,6 +7,7 @@
 #include <QVTKInteractor.h>
 #include <vtkImageActor.h>
 #include <vtkImageMapToColors.h>
+#include <vtkInteractorStyle.h>
 
 
 ViewManager::ViewManager(ImagePairManager* imagePairManager, SeedPointManager* seedPointManager, QVTKWidget* qvtkWidget,  QDoubleSpinBox* blockingAlphaSpinBox, QDoubleSpinBox* segmentationAlphaSpinBox) :
@@ -39,6 +40,10 @@ segmentationAlpha(0.5)
 
     imageViewer->GetRenderer()->GetActiveCamera()->SetParallelScale(maxScale);
 
+    //get default camera positions so we reset to them later
+    imageViewer->GetRenderer()->GetActiveCamera()->GetViewUp(defaultViewUp);
+    imageViewer->GetRenderer()->GetActiveCamera()->GetFocalPoint(defaultFocalPoint);
+    imageViewer->GetRenderer()->GetActiveCamera()->GetPosition(defaultPosition);
 
     //setup segblock image
     addSegblock();
@@ -507,6 +512,14 @@ void ViewManager::zoomOut()
 
 	imageViewer->GetRenderer()->GetActiveCamera()->SetParallelScale( maxScale - currentStep*(maxScale - minScale)/( static_cast<double>(zoomSteps))  );
 	imageViewer->GetRenderWindow()->Render();
+}
+
+void ViewManager::resetPan()
+{
+	imageViewer->GetRenderer()->ResetCamera();
+	imageViewer->UpdateDisplayExtent();
+	imageViewer->GetRenderWindow()->Render();
+
 }
 
 

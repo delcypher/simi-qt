@@ -41,6 +41,7 @@ class ViewManager : public QObject
 		void resetZoom();
 		void zoomIn();
 		void zoomOut();
+		void resetPan();
 
 	private slots:
 		void mouseLeftClick(vtkObject* caller, unsigned long vtkEvent, void* clientData, void* callData, vtkCommand* command);
@@ -84,6 +85,11 @@ class ViewManager : public QObject
 		int mouseZ;
 		int mouseIntensity;
 		bool mouseOverWidget;
+
+		//for pan
+		double defaultViewUp[3];
+		double defaultFocalPoint[3];
+		double defaultPosition[3];
 
 		//for look up table
 		double blockingAlpha;
