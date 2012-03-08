@@ -27,6 +27,7 @@ class ViewManager : public QObject
 		int getLastMouseIntensity() { return mouseIntensity;}
 		bool mouseIsOverWidget() { return mouseOverWidget;}
 
+		void reBuildPipeline();
 
 	
 	public slots:

@@ -536,6 +536,7 @@ void MainWindow::on_actionLoad_Segmentation_triggered()
 
 
     imagePairManager->loadSegblock(loadFile);
+    viewManager->reBuildPipeline();
     viewManager->update(); //update
 }
 

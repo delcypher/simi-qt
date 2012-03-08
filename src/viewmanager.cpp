@@ -493,5 +493,29 @@ void ViewManager::enterLeaveHandler(vtkObject *caller, unsigned long vtkEvent)
 	}
 }
 
+void ViewManager::reBuildPipeline()
+{
+	imageViewer->GetRenderer()->RemoveActor(segblockActor);
+
+	lut= vtkLookupTable::New();
+	buildLookUpTable();
+
+	vtkSmartPointer<vtkImageMapToColors> segblockMapper = vtkImageMapToColors::New();
+	segblockMapper->SetLookupTable(lut);
+	segblockMapper->PassAlphaToOutputOn(); //do I need this?
+	segblockMapper->SetInput(imagePairManager->segblock);
+
+	segblockActor = vtkImageActor::New();
+	segblockActor->SetInput(segblockMapper->GetOutput());
+	segblockActor->InterpolateOff(); //No interpolation so our voxels don't get blurred when we zoom in.
+	imageViewer->GetRenderer()->AddViewProp(segblockActor);
+
+	//try to duplicate display bounds
+	int displayExtent[6];
+	imageViewer->GetImageActor()->GetDisplayExtent(displayExtent);
+	segblockActor->SetDisplayExtent(displayExtent);
+	qvtkWidget->update();
+}
+
 
 
