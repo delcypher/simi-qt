@@ -88,6 +88,8 @@ class MainWindow : public QMainWindow
 
 	void on_actionRotate_view_by_180_toggled(bool flip);
 
+	void on_actionResetView_triggered();
+
 protected:
 	  void closeEvent(QCloseEvent* close);
 

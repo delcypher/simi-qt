@@ -10,7 +10,6 @@
 
 
 ViewManager::ViewManager(ImagePairManager* imagePairManager, SeedPointManager* seedPointManager, QVTKWidget* qvtkWidget,  QDoubleSpinBox* blockingAlphaSpinBox, QDoubleSpinBox* segmentationAlphaSpinBox) :
-scaleStep(1.5),
 dragOn(false),
 mouseX(0),
 mouseY(0),
@@ -34,10 +33,8 @@ segmentationAlpha(0.5)
 
     //setup zoom control
     maxScale= ( imagePairManager->getYDim() )*( imagePairManager->getYSpacing() )/2.0;
-    minScale=1;
-    currentScale=maxScale;
 
-    imageViewer->GetRenderer()->GetActiveCamera()->SetParallelScale(currentScale);
+    imageViewer->GetRenderer()->GetActiveCamera()->SetParallelScale(maxScale);
 
 
     //setup segblock image
@@ -159,44 +156,10 @@ vtkRenderer *ViewManager::getRenderer()
 
 }
 
-void ViewManager::zoomIn()
-{
-    double tempScale = currentScale/scaleStep;
-
-    if(tempScale >= minScale)
-    {
-        currentScale=tempScale;
-        qDebug() << "Zoom scale set to " << currentScale;
-    }
-    else
-    {
-        qDebug() << "Zoom In limit reached";
-    }
-
-    forceZoom();
-
-}
-
-void ViewManager::zoomOut()
-{
-    double tempScale = currentScale*scaleStep;
-
-    if(tempScale <= maxScale)
-    {
-        currentScale=tempScale;
-        qDebug() << "Zoom scale set to " << currentScale;
-    }
-    else
-    {
-        qDebug() << "Zoom Out limit reached.";
-    }
-
-    forceZoom();
-}
-
 void ViewManager::mouseWheelForward(vtkObject *caller, unsigned long vtkEvent, void *clientData, void *callData, vtkCommand *command)
 {
-    zoomIn();
+
+    ChangeSlice( getCurrentSlice() -1);
 
     //Prevent vtkInteractorStyle from intercepting the event
     command->AbortFlagOn();
@@ -204,7 +167,7 @@ void ViewManager::mouseWheelForward(vtkObject *caller, unsigned long vtkEvent, v
 
 void ViewManager::mouseWheelBackward(vtkObject *caller, unsigned long vtkEvent, void *clientData, void *callData, vtkCommand *command)
 {
-    zoomOut();
+    ChangeSlice( getCurrentSlice() +1);
 
     //Prevent vtkInteractorStyle from intercepting the event
     command->AbortFlagOn();
@@ -229,12 +192,12 @@ void ViewManager::ChangeSlice(int slice)
 	}
 
     //workaround bug where changing slice causes zoom to reset to something unexpected
-    forceZoom();
+    resetZoom();
 }
 
-void ViewManager::forceZoom()
+void ViewManager::resetZoom()
 {
-    imageViewer->GetRenderer()->GetActiveCamera()->SetParallelScale(currentScale);
+    imageViewer->GetRenderer()->GetActiveCamera()->SetParallelScale(maxScale);
     imageViewer->GetRenderWindow()->Render();
 }
 

@@ -68,7 +68,7 @@
     <addaction name="actionPan_up"/>
     <addaction name="actionPan_down"/>
     <addaction name="separator"/>
-    <addaction name="actionRe_centre"/>
+    <addaction name="actionResetView"/>
     <addaction name="actionRotate_view_by_180"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
@@ -569,9 +569,9 @@
     <string>Pan down</string>
    </property>
   </action>
-  <action name="actionRe_centre">
+  <action name="actionResetView">
    <property name="text">
-    <string>Re-centre</string>
+    <string>Reset View</string>
    </property>
   </action>
   <action name="actionAbout">
