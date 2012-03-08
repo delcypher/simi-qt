@@ -103,7 +103,7 @@ void MainWindow::on_actionOpen_Image_triggered()
 			//setup segmenter
 			if(segmenter!=0)
 				delete segmenter;
-			segmenter = new Segmenter(seedPointManager,imagePairManager);
+                        segmenter = new Segmenter(seedPointManager,imagePairManager,ui->kernelComboBox);
 
 			//setup volumeRenderManager
 			if(volumeRenderManager!=0)

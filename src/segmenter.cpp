@@ -2,9 +2,11 @@
 #include <QDebug>
 
 
-Segmenter::Segmenter(SeedPointManager* seedPointManager, ImagePairManager* imagePairManager)
+Segmenter::Segmenter(SeedPointManager* seedPointManager, ImagePairManager* imagePairManager, QComboBox* kernelType)
 {
-        this->imagePairManager=imagePairManager;
+        this->imagePairManager = imagePairManager;
+        this->kernelType = kernelType;
+
         int* dims = imagePairManager->original->GetDimensions();
         img_x = dims[0];
         img_y = dims[1];
@@ -210,16 +212,25 @@ bool Segmenter::predicate3D(Node& node, int minThreshold, int maxThreshold)
         return true;
 }
 
-int Segmenter::contains_segmentation(int pos_x, int pos_y, int pos_z, Morphology type)
+int Segmenter::contains_segmentation(int pos_x, int pos_y, int pos_z, Morphology type, Kernel kernel)
 {
         int output = 0;
-        char* pixels[4];
+        char* pixels[8];
+        int count = 4;
         pixels[0] = static_cast<char*>(imagePairManager->segblock->GetScalarPointer(pos_x+1, pos_y, pos_z));
         pixels[1] = static_cast<char*>(imagePairManager->segblock->GetScalarPointer(pos_x-1, pos_y, pos_z));
         pixels[2] = static_cast<char*>(imagePairManager->segblock->GetScalarPointer(pos_x, pos_y+1, pos_z));
         pixels[3] = static_cast<char*>(imagePairManager->segblock->GetScalarPointer(pos_x, pos_y-1, pos_z));
+        if (kernel == SQUARE)
+        {
+                pixels[4] = static_cast<char*>(imagePairManager->segblock->GetScalarPointer(pos_x+1, pos_y+1, pos_z));
+                pixels[5] = static_cast<char*>(imagePairManager->segblock->GetScalarPointer(pos_x-1, pos_y+1, pos_z));
+                pixels[6] = static_cast<char*>(imagePairManager->segblock->GetScalarPointer(pos_x+1, pos_y-1, pos_z));
+                pixels[7] = static_cast<char*>(imagePairManager->segblock->GetScalarPointer(pos_x-1, pos_y-1, pos_z));
+                count = 8;
+        }
 
-        for (int i=0; i<4; i++)
+        for (int i=0; i<count; i++)
         {
                 if ((char)pixels[i][0] == imagePairManager->SEGMENTATION)
                 {
@@ -231,7 +242,7 @@ int Segmenter::contains_segmentation(int pos_x, int pos_y, int pos_z, Morphology
         return output;
 }
 
-void Segmenter::dilate(int pos_z)
+void Segmenter::dilate(int pos_z, Kernel kernel)
 {
         //array with pixels to be changed
         char** modified = new char*[512];
@@ -251,7 +262,7 @@ void Segmenter::dilate(int pos_z)
                         char* pixel = static_cast<char*>(imagePairManager->segblock->GetScalarPointer(pos_x, pos_y, pos_z));
                         if ((char)pixel[0] == imagePairManager->BACKGROUND)
                         {
-                                int neighbours = contains_segmentation(pos_x, pos_y, pos_z, DILATE);
+                                int neighbours = contains_segmentation(pos_x, pos_y, pos_z, DILATE, kernel);
                                 if (neighbours >= 1)
                                 {
                                         modified[pos_x][pos_y] = imagePairManager->SEGMENTATION;
@@ -280,7 +291,7 @@ void Segmenter::dilate(int pos_z)
         delete[] modified;
 }
 
-void Segmenter::erode(int pos_z)
+void Segmenter::erode(int pos_z, Kernel kernel)
 {
         //array with pixels to be changed
         char** modified = new char*[512];
@@ -300,8 +311,10 @@ void Segmenter::erode(int pos_z)
                         char* pixel = static_cast<char*>(imagePairManager->segblock->GetScalarPointer(pos_x, pos_y, pos_z));
                         if ((char)pixel[0] == imagePairManager->SEGMENTATION)
                         {
-                                int neighbours = contains_segmentation(pos_x, pos_y, pos_z, ERODE);
-                                if (neighbours != 4)
+                                int neighbours = contains_segmentation(pos_x, pos_y, pos_z, ERODE, kernel);
+                                int count = 4;
+                                if (kernel == SQUARE) count = 8;
+                                if (neighbours != count)
                                 {
                                         modified[pos_x][pos_y] = imagePairManager->BACKGROUND;
                                 }
@@ -331,9 +344,16 @@ void Segmenter::erode(int pos_z)
 
 void Segmenter::doMorphClose(int pos_z)
 {
+        //assign kernel type
+        Kernel kernel;
+        if (kernelType->currentText() == "Cross")
+                kernel = CROSS;
+        else if (kernelType->currentText() == "Square")
+                kernel = SQUARE;
+
         //run algorithms
-        dilate(pos_z);
-        erode(pos_z);
+        dilate(pos_z, kernel);
+        erode(pos_z, kernel);
 
         //signal that we're complete
         imagePairManager->segblock->Modified(); //Mark the segblock as modified so VTK know's to trigger an update along the pipline
@@ -342,9 +362,16 @@ void Segmenter::doMorphClose(int pos_z)
 
 void Segmenter::doMorphOpen(int pos_z)
 {
+        //assign kernel type
+        Kernel kernel;
+        if (kernelType->currentText() == "Cross")
+                kernel = CROSS;
+        else if (kernelType->currentText() == "Square")
+                kernel = SQUARE;
+
         //run algorithms
-        erode(pos_z);
-        dilate(pos_z);
+        erode(pos_z, kernel);
+        dilate(pos_z, kernel);
 
         //signal that we're complete
         imagePairManager->segblock->Modified(); //Mark the segblock as modified so VTK know's to trigger an update along the pipline
@@ -353,8 +380,15 @@ void Segmenter::doMorphOpen(int pos_z)
 
 void Segmenter::doDilate(int pos_z)
 {
+        //assign kernel type
+        Kernel kernel;
+        if (kernelType->currentText() == "Cross")
+                kernel = CROSS;
+        else if (kernelType->currentText() == "Square")
+                kernel = SQUARE;
+
         //run algorithm
-        dilate(pos_z);
+        dilate(pos_z, kernel);
 
         //signal that we're complete
         imagePairManager->segblock->Modified(); //Mark the segblock as modified so VTK know's to trigger an update along the pipline
@@ -363,8 +397,15 @@ void Segmenter::doDilate(int pos_z)
 
 void Segmenter::doErode(int pos_z)
 {
+        //assign kernel type
+        Kernel kernel;
+        if (kernelType->currentText() == "Cross")
+                kernel = CROSS;
+        else if (kernelType->currentText() == "Square")
+                kernel = SQUARE;
+
         //run algorithm
-        erode(pos_z);
+        erode(pos_z, kernel);
 
         //signal that we're complete
         imagePairManager->segblock->Modified(); //Mark the segblock as modified so VTK know's to trigger an update along the pipline
