@@ -496,7 +496,10 @@ void MainWindow::on_doSegmentation3D_clicked()
                     qWarning() << "Can't do segmentation. The seed point isn't set!";
                 }
 
+		showWaitDialog();
                 segmenter->doSegmentation3D(pos_x, pos_y, pos_z, ui->minSegIntensitySlider->value(), ui->maxSegIntensitySlider->value());
+		hideWaitDialog();
+		qDebug() << "3D segmentation complete.";
 
         }
 }

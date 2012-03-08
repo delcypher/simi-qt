@@ -1,5 +1,6 @@
 #include "segmenter.h"
 #include <QDebug>
+#include <QApplication>
 
 
 Segmenter::Segmenter(SeedPointManager* seedPointManager, ImagePairManager* imagePairManager, QComboBox* kernelType)
@@ -168,7 +169,9 @@ void Segmenter::doSegmentationIter3D_I(Node start, int minThreshold, int maxThre
                         queue.push_back(Node(n.pos_x, n.pos_y+1, n.pos_z));
                         queue.push_back(Node(n.pos_x, n.pos_y, n.pos_z-1));
                         queue.push_back(Node(n.pos_x, n.pos_y, n.pos_z+1));
+
                 }
+		QApplication::processEvents();
         }
 }
 
