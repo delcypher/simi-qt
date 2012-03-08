@@ -8,6 +8,7 @@
 #include <vtkImageActor.h>
 #include <vtkImageMapToColors.h>
 #include <vtkInteractorStyle.h>
+#include <vtkProperty.h>
 
 
 ViewManager::ViewManager(ImagePairManager* imagePairManager, SeedPointManager* seedPointManager, QVTKWidget* qvtkWidget,  QDoubleSpinBox* blockingAlphaSpinBox, QDoubleSpinBox* segmentationAlphaSpinBox) :
@@ -50,6 +51,24 @@ segmentationAlpha(0.5)
 
 
     //setup seedpoint drawing?
+    hcrosshairSource = vtkLineSource::New();
+    hcrosshairSource->SetPoint1(-256,0,1000);
+    hcrosshairSource->SetPoint2(256,0,1000);
+    hcrosshairSource->Update();
+
+    hcrosshairMapper = vtkPolyDataMapper::New();
+    hcrosshairMapper->SetInput(hcrosshairSource->GetOutput());
+
+    hcrosshairActor = vtkActor::New();
+    hcrosshairActor->SetMapper(hcrosshairMapper);
+    hcrosshairActor->GetProperty()->SetLineWidth(4.0);
+
+    imageViewer->GetRenderer()->AddActor(hcrosshairActor);
+    connect(seedPointManager, SIGNAL(seedPointChanged(int,int,int)),
+            this,
+            SLOT(redrawCrossHair(int,int,int)));
+
+
 
     //Enable connections between VTK events and our Qt Slots
     connections = vtkEventQtSlotConnect::New();
@@ -452,7 +471,17 @@ void ViewManager::enterLeaveHandler(vtkObject *caller, unsigned long vtkEvent)
 		default:
 			qWarning() << "Unexpected event received in ViewManager::enterLeaveHandler()";
 
-	}
+    }
+}
+
+void ViewManager::redrawCrossHair(int z, int x, int y)
+{
+    hcrosshairSource->SetPoint1(-256.0,y- 256,1000);
+    hcrosshairSource->SetPoint2(256,y -256,1000);
+    hcrosshairSource->Update();
+    update();
+    qDebug() << "Redraw cross hair at " << x << "," << y;
+
 }
 
 void ViewManager::reBuildPipeline()

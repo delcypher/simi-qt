@@ -10,6 +10,9 @@
 #include <vtkLookupTable.h>
 #include <QDoubleSpinBox>
 #include "seedpointmanager.h"
+#include <vtkPolyDataMapper.h>
+#include <vtkActor.h>
+#include <vtkLineSource.h>
 
 class ViewManager : public QObject
 {
@@ -50,6 +53,8 @@ class ViewManager : public QObject
 		void dragHandler(vtkObject* caller, unsigned long vtkEvent, void* clientData, void* callData, vtkCommand* command);
 		void enterLeaveHandler(vtkObject* caller, unsigned long vtkEvent);
 
+        void redrawCrossHair(int z, int x, int y);
+
 
 	signals:
 		void sliceChanged(int slice);
@@ -70,6 +75,10 @@ class ViewManager : public QObject
 		QVTKWidget* qvtkWidget;
 		vtkSmartPointer<vtkImageActor> segblockActor;
 		vtkSmartPointer<vtkLookupTable> lut;
+
+        vtkSmartPointer<vtkLineSource> hcrosshairSource;
+        vtkSmartPointer<vtkPolyDataMapper> hcrosshairMapper;
+        vtkSmartPointer<vtkActor> hcrosshairActor;
 
 		double minScale; //for Zoom
 		double maxScale; //for zoom
@@ -96,5 +105,7 @@ class ViewManager : public QObject
 		double segmentationAlpha;
 		QDoubleSpinBox* blockingAlphaSpinBox;
 		QDoubleSpinBox* segmentationAlphaSpinBox;
+
+
 
 };
