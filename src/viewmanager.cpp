@@ -507,6 +507,31 @@ void ViewManager::redrawCrossHair()
     else
     {
 
+	double zPosition;
+	vtkCamera* cam = imageViewer->GetRenderer()->GetActiveCamera();
+	double projectDirection[3];
+	cam->GetDirectionOfProjection(projectDirection);
+
+	/* Use the Z-range of of the original image to tell help tell us where to place the line.
+	*  We need to direction of projection so that we always place the line infront of the original image
+	*  from the camera's perspective
+	*/
+	double* imageActorRange;
+	imageActorRange = imageViewer->GetImageActor()->GetZRange();
+
+	if(projectDirection[2] < 0)
+	{
+		//camera is looking down the z-axis (decreasing z)
+		zPosition = imageActorRange[1] +1;
+	}
+	else
+	{
+		//camera is looking up the z-axis (increasing z)
+		zPosition = imageActorRange[1] -1;
+	}
+
+	qDebug() << "guess Z pos:" << zPosition;
+
         hcrosshairActor->GetProperty()->SetOpacity(1.0);
         vcrosshairActor->GetProperty()->SetOpacity(1.0);
         double Yoffset= imagePairManager->getYSpacing()*imagePairManager->getYDim()/2.0;
@@ -515,12 +540,12 @@ void ViewManager::redrawCrossHair()
         double Xoffset = imagePairManager->getXSpacing()*imagePairManager->getXDim()/2.0;
         double Xposition = seedX*imagePairManager->getXSpacing();
 
-        hcrosshairSource->SetPoint1(-256.0,Yposition - Yoffset,1000);
-        hcrosshairSource->SetPoint2(256, Yposition -Yoffset ,1000);
+	hcrosshairSource->SetPoint1(-256.0,Yposition - Yoffset,zPosition);
+	hcrosshairSource->SetPoint2(256, Yposition -Yoffset ,zPosition);
         hcrosshairSource->Update();
 
-        vcrosshairSource->SetPoint1(Xposition - Xoffset,-256.0,1000);
-        vcrosshairSource->SetPoint2(Xposition - Xoffset,256.0,1000);
+	vcrosshairSource->SetPoint1(Xposition - Xoffset,-256.0,zPosition);
+	vcrosshairSource->SetPoint2(Xposition - Xoffset,256.0,zPosition);
         vcrosshairSource->Update();
 
         update();
