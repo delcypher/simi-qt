@@ -516,6 +516,9 @@
      </layout>
     </widget>
     <widget class="QLabel" name="segmentationLabel">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
      <property name="geometry">
       <rect>
        <x>10</x>

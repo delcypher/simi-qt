@@ -24,6 +24,8 @@ MainWindow::MainWindow() : imageInfo(""), workPath(QDir::home())
 	volumeRenderManager=0;
 	progressDialog=0;
 
+        // Hide segmentation label
+        ui->segmentationLabel->clear();
 
 	//Setup About Qt Dialog
 	connect(ui->actionAboutQt,SIGNAL(triggered()),qApp,SLOT(aboutQt()));
@@ -488,6 +490,10 @@ void MainWindow::on_doSegmentation3D_clicked()
         {
                 //disable segmentation widgets whilst segmenting
                 ui->segmentationGroupBox_2->setEnabled(false);
+
+                //enable segmentation label
+                //ui->segmentationLabel->setText("Segmenting ... please wait");
+
                 int pos_z = viewManager->getCurrentSlice();
                 int pos_x, pos_y;
 
@@ -496,10 +502,13 @@ void MainWindow::on_doSegmentation3D_clicked()
                     qWarning() << "Can't do segmentation. The seed point isn't set!";
                 }
 
-		showWaitDialog();
+                showWaitDialog();
                 segmenter->doSegmentation3D(pos_x, pos_y, pos_z, ui->minSegIntensitySlider->value(), ui->maxSegIntensitySlider->value());
-		hideWaitDialog();
+                hideWaitDialog();
 		qDebug() << "3D segmentation complete.";
+
+                //disable segmentation label
+                //ui->segmentationLabel->hide();
 
         }
 }

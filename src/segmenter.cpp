@@ -157,6 +157,9 @@ void Segmenter::doSegmentationIter3D_I(Node start, int minThreshold, int maxThre
         // add the start node
         queue.push_back(start);
 
+        //counter for the event loop
+        int counter = 0;
+
         while (!queue.empty())
         {
                 Node n = queue.back();
@@ -171,7 +174,13 @@ void Segmenter::doSegmentationIter3D_I(Node start, int minThreshold, int maxThre
                         queue.push_back(Node(n.pos_x, n.pos_y, n.pos_z+1));
 
                 }
-		QApplication::processEvents();
+
+                counter++;
+                if (counter % 10000 == 0)
+                {
+                        QApplication::processEvents();
+                        counter = 0;
+                }
         }
 }
 
