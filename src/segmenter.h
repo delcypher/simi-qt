@@ -56,15 +56,7 @@ class Segmenter : public QObject
                 void filteringDone(int sliceNumber);
 
         private:
-                ImagePairManager* imagePairManager;
-
-                bool predicate2D(int pos_x, int pos_y, int pos_z, int minThreshold, int maxThreshold);
-
-                bool predicate3D(int pos_x, int pos_y, int pos_z, int minThreshold, int maxThreshold);
-
-                void doSegmentation2D_I(int pos_x, int pos_y, int pos_z, int minThreshold, int maxThreshold);
-
-                void doSegmentation3D_I(int pos_x, int pos_y, int pos_z, int minThreshold, int maxThreshold);
+                ImagePairManager* imagePairManager;                           
 
                 bool predicate2D(Node& node, int minThreshold, int maxThreshold);
 
