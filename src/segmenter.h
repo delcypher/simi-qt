@@ -40,7 +40,7 @@ class Segmenter : public QObject
 
                 void doSegmentation2D(int pos_x, int pos_y, int pos_z, int minThreshold, int maxThreshold);
 
-                void doSegmentation3D(int pos_x, int pos_y, int pos_z, int minThreshold, int maxThreshold);
+                void doSegmentation3D(int pos_x, int pos_y, int pos_z, int minThreshold, int maxThreshold, int min_Z, int max_Z);
 
                 void doMorphOpen(int pos_z);
 
@@ -68,11 +68,11 @@ class Segmenter : public QObject
 
                 bool predicate2D(Node& node, int minThreshold, int maxThreshold);
 
-                bool predicate3D(Node& node, int minThreshold, int maxThreshold);
+                bool predicate3D(Node& node, int minThreshold, int maxThreshold, int min_Z, int max_Z);
 
                 void doSegmentationIter2D_I(Node start, int minThreshold, int maxThreshold);
 
-                void doSegmentationIter3D_I(Node start, int minThreshold, int maxThreshold);
+                void doSegmentationIter3D_I(Node start, int minThreshold, int maxThreshold, int min_Z, int max_Z);
 
                 void erode(int pos_z, Kernel kernel);
 

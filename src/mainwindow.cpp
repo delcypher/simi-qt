@@ -488,9 +488,7 @@ void MainWindow::on_doSegmentation3D_clicked()
                 //disable segmentation widgets whilst segmenting
                 ui->segmentationGroupBox_2->setEnabled(false);
 
-                //enable segmentation label
-                //ui->segmentationLabel->setText("Segmenting ... please wait");
-
+                //segmentation parameters
                 int pos_z = viewManager->getCurrentSlice();
                 int pos_x, pos_y;
 
@@ -500,13 +498,9 @@ void MainWindow::on_doSegmentation3D_clicked()
                 }
 
                 showWaitDialog();
-                segmenter->doSegmentation3D(pos_x, pos_y, pos_z, ui->minSegIntensitySlider->value(), ui->maxSegIntensitySlider->value());
+                segmenter->doSegmentation3D(pos_x, pos_y, pos_z, ui->minSegIntensitySlider->value(), ui->maxSegIntensitySlider->value(), ui->minZSliceSpinBox->value(), ui->maxZSliceSpinBox->value());
                 hideWaitDialog();
 		qDebug() << "3D segmentation complete.";
-
-                //disable segmentation label
-                //ui->segmentationLabel->hide();
-
         }
 }
 

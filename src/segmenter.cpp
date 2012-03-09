@@ -34,13 +34,13 @@ void Segmenter::doSegmentation2D(int pos_x, int pos_y, int pos_z, int minThresho
         emit segmentationDone(pos_z);
 }
 
-void Segmenter::doSegmentation3D(int pos_x, int pos_y, int pos_z, int minThreshold, int maxThreshold)
+void Segmenter::doSegmentation3D(int pos_x, int pos_y, int pos_z, int minThreshold, int maxThreshold, int min_Z, int max_Z)
 {
         qDebug() << "Segmenter::doSegmentation3D(" << pos_z << "," << minThreshold << "," << maxThreshold << ")";
 
         //run algorithm
         //doSegmentation3D_I(pos_x, pos_y, pos_z, minThreshold, maxThreshold);
-        doSegmentationIter3D_I(Node(pos_x, pos_y, pos_z), minThreshold, maxThreshold);
+        doSegmentationIter3D_I(Node(pos_x, pos_y, pos_z), minThreshold, maxThreshold, min_Z, max_Z);
 
         //signal that we're complete
         imagePairManager->segblock->Modified(); //Mark the segblock as modified so VTK know's to trigger an update along the pipline
@@ -149,7 +149,7 @@ void Segmenter::doSegmentationIter2D_I(Node start, int minThreshold, int maxThre
         }
 }
 
-void Segmenter::doSegmentationIter3D_I(Node start, int minThreshold, int maxThreshold)
+void Segmenter::doSegmentationIter3D_I(Node start, int minThreshold, int maxThreshold, int min_Z, int max_Z)
 {
         //set emtpty queue
         list<Node> queue;
@@ -160,11 +160,14 @@ void Segmenter::doSegmentationIter3D_I(Node start, int minThreshold, int maxThre
         //counter for the event loop
         int counter = 0;
 
+        //process events
+        QApplication::processEvents();
+
         while (!queue.empty())
         {
                 Node n = queue.back();
                 queue.pop_back();
-                if (predicate3D(n, minThreshold, maxThreshold))
+                if (predicate3D(n, minThreshold, maxThreshold, min_Z, max_Z))
                 {
                         queue.push_back(Node(n.pos_x-1, n.pos_y, n.pos_z));
                         queue.push_back(Node(n.pos_x+1, n.pos_y, n.pos_z));
@@ -204,9 +207,9 @@ bool Segmenter::predicate2D(Node& node, int minThreshold, int maxThreshold)
         return true;
 }
 
-bool Segmenter::predicate3D(Node& node, int minThreshold, int maxThreshold)
+bool Segmenter::predicate3D(Node& node, int minThreshold, int maxThreshold, int min_Z, int max_Z)
 {
-        if (node.pos_x < 0 || node.pos_x == img_x || node.pos_y < 0 || node.pos_y == img_y || node.pos_z < 0 || node.pos_z == img_z)
+        if (node.pos_x < 0 || node.pos_x == img_x || node.pos_y < 0 || node.pos_y == img_y || node.pos_z < 0 || node.pos_z == img_z || node.pos_z < min_Z || node.pos_z > max_Z)
                 return false;
 
         char* pixel_visited = static_cast<char*>(imagePairManager->segblock->GetScalarPointer(node.pos_x, node.pos_y, node.pos_z));
