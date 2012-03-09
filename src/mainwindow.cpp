@@ -543,6 +543,8 @@ void MainWindow::on_actionLoad_Segmentation_triggered()
     imagePairManager->loadSegblock(loadFile);
     viewManager->reBuildPipeline();
     viewManager->update(); //update
+    volumeRenderManager->rebuildPipeline();
+    volumeRenderManager->render3D();
 }
 
 bool MainWindow::on_actionSave_Segmentation_triggered()

@@ -78,3 +78,15 @@ void VolumeRenderManager::flipView(bool flip)
 
 	renderWindow->Render();
 }
+
+void VolumeRenderManager::rebuildPipeline()
+{
+	/* It is assumed that segblock has been changed so we disconnect all inputs from the mask and
+	*  then reconnect
+	*/
+	mask->RemoveAllInputs();
+	mask->AddInput(imagePairManager->segblock);
+	mask->SetMask( static_cast<unsigned int>(ImagePairManager::SEGMENTATION));
+	mask->SetOperationToAnd();
+	qDebug() << "VolumeRenderManager::rebuildPipeline()";
+}

@@ -30,6 +30,7 @@ class VolumeRenderManager : public QObject
 	public slots:
 		void render3D();
 		void flipView(bool flip);
+		void rebuildPipeline();
 
 	private:
         ImagePairManager* imagePairManager;
