@@ -244,7 +244,7 @@ bool ImagePairManager::loadSegblock(QString path)
     }
 
     //setup the segmentation block
-    segblock = readerSegBlock->GetOutput();
+    segblock->DeepCopy(readerSegBlock->GetOutput());
 
     qDebug() << "ImagePairManager::loadSegblock(" << path << ")" ;
 
