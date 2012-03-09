@@ -11,7 +11,7 @@
 #include <vtkProperty.h>
 
 
-ViewManager::ViewManager(ImagePairManager* imagePairManager, SeedPointManager* seedPointManager, QVTKWidget* qvtkWidget,  QDoubleSpinBox* blockingAlphaSpinBox, QDoubleSpinBox* segmentationAlphaSpinBox) :
+ViewManager::ViewManager(ImagePairManager* imagePairManager, SeedPointManager* seedPointManager, QVTKWidget* qvtkWidget,  QDoubleSpinBox* blockingAlphaSpinBox, QDoubleSpinBox* segmentationAlphaSpinBox, QDoubleSpinBox* crosshairAlphaSpinBox) :
 dragOn(false),
 mouseX(0),
 mouseY(0),
@@ -19,13 +19,15 @@ mouseZ(0),
 mouseIntensity(0),
 mouseOverWidget(false),
 blockingAlpha(0.5),
-segmentationAlpha(0.5)
+segmentationAlpha(0.5),
+crossHairAlpha(0.5)
 {
     this->imagePairManager = imagePairManager;
     this->qvtkWidget = qvtkWidget;
     this->blockingAlphaSpinBox=blockingAlphaSpinBox;
     this->segmentationAlphaSpinBox=segmentationAlphaSpinBox;
     this->seedPointManager=seedPointManager;
+    this->crosshairAlphaSpinBox=crosshairAlphaSpinBox;
 
 	//setup original image
 	imageViewer = vtkImageViewer2::New();
@@ -173,6 +175,13 @@ segmentationAlpha(0.5)
     segmentationAlphaSpinBox->setSingleStep(0.05);
     segmentationAlphaSpinBox->setValue(segmentationAlpha);
     connect(segmentationAlphaSpinBox, SIGNAL(valueChanged(double)), this, SLOT(setSegmentationAlpha(double)));
+
+    //intialise crosshairAlphaSpinBox
+    crosshairAlphaSpinBox->setRange(0.0,1.0);
+    crosshairAlphaSpinBox->setSingleStep(0.05);
+    crosshairAlphaSpinBox->setValue(crossHairAlpha);
+    connect(crosshairAlphaSpinBox, SIGNAL(valueChanged(double)), this, SLOT(setCrosshairAlpha(double)));
+
 
 }
 
@@ -539,8 +548,8 @@ void ViewManager::redrawCrossHair()
 
 	qDebug() << "guess Z pos:" << zPosition;
 
-        hcrosshairActor->GetProperty()->SetOpacity(1.0);
-        vcrosshairActor->GetProperty()->SetOpacity(1.0);
+	hcrosshairActor->GetProperty()->SetOpacity(crossHairAlpha);
+	vcrosshairActor->GetProperty()->SetOpacity(crossHairAlpha);
         double Yoffset= imagePairManager->getYSpacing()*imagePairManager->getYDim()/2.0;
         double Yposition = seedY*imagePairManager->getYSpacing();
 
@@ -626,6 +635,16 @@ void ViewManager::resetPan()
 	imageViewer->UpdateDisplayExtent();
 	imageViewer->GetRenderWindow()->Render();
 
+}
+
+bool ViewManager::setCrosshairAlpha(double alpha)
+{
+	if(alpha > 1 || alpha < 0)
+		return false;
+
+	crossHairAlpha=alpha;
+	redrawCrossHair();
+	return true;
 }
 
 

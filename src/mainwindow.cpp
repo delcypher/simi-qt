@@ -93,7 +93,7 @@ void MainWindow::on_actionOpen_Image_triggered()
 			//setup LayoutManager
 			if(viewManager!=0)
 				delete viewManager;
-			viewManager = new ViewManager(imagePairManager, seedPointManager, ui->qvtkWidget,ui->blockingAlphadoubleSpinBox, ui->segmentationAlphadoubleSpinBox);
+			viewManager = new ViewManager(imagePairManager, seedPointManager, ui->qvtkWidget,ui->blockingAlphadoubleSpinBox, ui->segmentationAlphadoubleSpinBox, ui->crosshairAlphadoubleSpinBox);
 
 			//setup drawManager
 			if(drawManager!=0)

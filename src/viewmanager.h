@@ -18,7 +18,7 @@ class ViewManager : public QObject
 {
 	Q_OBJECT
 	public:
-	  ViewManager(ImagePairManager* imagePairManager, SeedPointManager* seedPointManager, QVTKWidget* vtkWidget, QDoubleSpinBox* blockingAlphaSpinBox, QDoubleSpinBox* segmentationAlphaSpinBox);
+	  ViewManager(ImagePairManager* imagePairManager, SeedPointManager* seedPointManager, QVTKWidget* vtkWidget, QDoubleSpinBox* blockingAlphaSpinBox, QDoubleSpinBox* segmentationAlphaSpinBox, QDoubleSpinBox* crosshairAlphaSpinBox);
 		~ViewManager();
 		void setConstrast(double minIntensity, double maxIntensity);
 		int getCurrentSlice();
@@ -45,6 +45,7 @@ class ViewManager : public QObject
 		void zoomIn();
 		void zoomOut();
 		void resetPan();
+		bool setCrosshairAlpha(double alpha);
 
 	private slots:
 		void mouseLeftClick(vtkObject* caller, unsigned long vtkEvent, void* clientData, void* callData, vtkCommand* command);
@@ -112,6 +113,8 @@ class ViewManager : public QObject
 
 		double crossHairXlength;
 		double crossHairYlength;
+		QDoubleSpinBox* crosshairAlphaSpinBox;
+		double crossHairAlpha;
 
 
 
