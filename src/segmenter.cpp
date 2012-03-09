@@ -72,6 +72,20 @@ void Segmenter::doSegmentationIter3D_I(Node start, int minThreshold, int maxThre
         //set emtpty queue
         list<Node> queue;
 
+        //set visited block
+        char*** visited = new char**[512];
+        for (int i=0; i<512; i++)
+                visited[i] = new char*[512];
+        for (int i=0; i<512; i++)
+                for (int j=0; j<512; j++)
+                        visited[i][j] = new char[120];
+
+        //fill with zeros
+        for (int i=0; i<512; i++)
+                for (int j=0; j<512; j++)
+                        for (int k=0; k<120; k++)
+                                visited[i][j][k] = 0;
+
         // add the start node
         queue.push_back(start);
 
@@ -85,7 +99,7 @@ void Segmenter::doSegmentationIter3D_I(Node start, int minThreshold, int maxThre
         {
                 Node n = queue.back();
                 queue.pop_back();
-                if (predicate3D(n, minThreshold, maxThreshold, min_Z, max_Z))
+                if (predicate3D(n, visited, minThreshold, maxThreshold, min_Z, max_Z))
                 {
                         queue.push_back(Node(n.pos_x-1, n.pos_y, n.pos_z));
                         queue.push_back(Node(n.pos_x+1, n.pos_y, n.pos_z));
@@ -103,6 +117,14 @@ void Segmenter::doSegmentationIter3D_I(Node start, int minThreshold, int maxThre
                         counter = 0;
                 }
         }
+
+        //release memory
+        for (int i=0; i<512; i++)
+                for (int j=0; j<512; j++)
+                        delete[] visited[i][j];
+        for (int i=0; i<512; i++)
+                delete[] visited[i];
+        delete[] visited;
 }
 
 bool Segmenter::predicate2D(Node& node, int minThreshold, int maxThreshold)
@@ -125,23 +147,27 @@ bool Segmenter::predicate2D(Node& node, int minThreshold, int maxThreshold)
         return true;
 }
 
-bool Segmenter::predicate3D(Node& node, int minThreshold, int maxThreshold, int min_Z, int max_Z)
+bool Segmenter::predicate3D(Node& node, char*** visited, int minThreshold, int maxThreshold, int min_Z, int max_Z)
 {
         if (node.pos_x < 0 || node.pos_x == img_x || node.pos_y < 0 || node.pos_y == img_y || node.pos_z < 0 || node.pos_z == img_z || node.pos_z < min_Z || node.pos_z > max_Z)
                 return false;
 
-        char* pixel_visited = static_cast<char*>(imagePairManager->segblock->GetScalarPointer(node.pos_x, node.pos_y, node.pos_z));
+        char* pixel_segmentation = static_cast<char*>(imagePairManager->segblock->GetScalarPointer(node.pos_x, node.pos_y, node.pos_z));
+        char pixel_visited = visited[node.pos_x][node.pos_y][node.pos_z];
         short* pixel_original = static_cast<short*>(imagePairManager->original->GetScalarPointer(node.pos_x, node.pos_y, node.pos_z));
 
-        if ((char)pixel_visited[0] == imagePairManager->SEGMENTATION)
+        if (pixel_visited == 1)
                 return false;
-        if ((char)pixel_visited[0] == imagePairManager->BLOCKING)
+        if ((char)pixel_segmentation[0] == imagePairManager->BLOCKING)
                 return false;
         if ((short)pixel_original[0] < minThreshold || (short)pixel_original[0] > maxThreshold)
                 return false;
 
         //otherwise mark as visited
-        pixel_visited[0] = imagePairManager->SEGMENTATION;
+        visited[node.pos_x][node.pos_y][node.pos_z] = 1;
+
+        //update segmentation results
+        pixel_segmentation[0] = imagePairManager->SEGMENTATION;
         return true;
 }
 
