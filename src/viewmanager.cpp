@@ -61,12 +61,29 @@ segmentationAlpha(0.5)
 
     hcrosshairActor = vtkActor::New();
     hcrosshairActor->SetMapper(hcrosshairMapper);
-    hcrosshairActor->GetProperty()->SetLineWidth(4.0);
+    hcrosshairActor->GetProperty()->SetOpacity(0.0); //hide by default
+    hcrosshairActor->GetProperty()->SetLineWidth(2.0);
+
+    vcrosshairSource = vtkLineSource::New();
+    vcrosshairSource->SetPoint1(0,-256.0,1000);
+    vcrosshairSource->SetPoint2(0,256.0,1000);
+    vcrosshairSource->Update();
+
+    vcrosshairMapper = vtkPolyDataMapper::New();
+    vcrosshairMapper->SetInput(vcrosshairSource->GetOutput());
+
+    vcrosshairActor = vtkActor::New();
+    vcrosshairActor->SetMapper(vcrosshairMapper);
+    vcrosshairActor->GetProperty()->SetOpacity(0.0); //hide by default
+    vcrosshairActor->GetProperty()->SetLineWidth(2.0);
+
 
     imageViewer->GetRenderer()->AddActor(hcrosshairActor);
+    imageViewer->GetRenderer()->AddActor(vcrosshairActor);
+
     connect(seedPointManager, SIGNAL(seedPointChanged(int,int,int)),
             this,
-            SLOT(redrawCrossHair(int,int,int)));
+            SLOT(redrawCrossHair()));
 
 
 
@@ -214,6 +231,8 @@ void ViewManager::ChangeSlice(int slice)
 
         //segblockActor->SetPropertyKeys(imageViewer->GetImageActor()->GetPropertyKeys());//try duplicate props
 
+        //Redraw crosshair if necessary
+        redrawCrossHair();
 
         emit sliceChanged(slice);
 	}
@@ -474,16 +493,39 @@ void ViewManager::enterLeaveHandler(vtkObject *caller, unsigned long vtkEvent)
     }
 }
 
-void ViewManager::redrawCrossHair(int z, int x, int y)
+void ViewManager::redrawCrossHair()
 {
-    double offset= imagePairManager->getYSpacing()*imagePairManager->getYDim()/2.0;
-    double position = y*imagePairManager->getYSpacing();
+    //check if we show display the crosshair
+    int seedX=0;
+    int seedY=0;
+    if(!seedPointManager->getSeedPoint(getCurrentSlice(),seedX,seedY))
+    {
+        //We shouldn't show the crosshair
+        hcrosshairActor->GetProperty()->SetOpacity(0.0);
+        vcrosshairActor->GetProperty()->SetOpacity(0.0);
+    }
+    else
+    {
 
-    hcrosshairSource->SetPoint1(-256.0,position - offset,1000);
-    hcrosshairSource->SetPoint2(256, position -offset ,1000);
-    hcrosshairSource->Update();
-    update();
-    qDebug() << "Redraw cross hair at " << x << "," << y;
+        hcrosshairActor->GetProperty()->SetOpacity(1.0);
+        vcrosshairActor->GetProperty()->SetOpacity(1.0);
+        double Yoffset= imagePairManager->getYSpacing()*imagePairManager->getYDim()/2.0;
+        double Yposition = seedY*imagePairManager->getYSpacing();
+
+        double Xoffset = imagePairManager->getXSpacing()*imagePairManager->getXDim()/2.0;
+        double Xposition = seedX*imagePairManager->getXSpacing();
+
+        hcrosshairSource->SetPoint1(-256.0,Yposition - Yoffset,1000);
+        hcrosshairSource->SetPoint2(256, Yposition -Yoffset ,1000);
+        hcrosshairSource->Update();
+
+        vcrosshairSource->SetPoint1(Xposition - Xoffset,-256.0,1000);
+        vcrosshairSource->SetPoint2(Xposition - Xoffset,256.0,1000);
+        vcrosshairSource->Update();
+
+        update();
+        qDebug() << "Redraw cross hair at " << seedX << "," << seedY << "," << getCurrentSlice();
+    }
 
 }
 

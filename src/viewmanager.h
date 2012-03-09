@@ -53,7 +53,7 @@ class ViewManager : public QObject
 		void dragHandler(vtkObject* caller, unsigned long vtkEvent, void* clientData, void* callData, vtkCommand* command);
 		void enterLeaveHandler(vtkObject* caller, unsigned long vtkEvent);
 
-        void redrawCrossHair(int z, int x, int y);
+        void redrawCrossHair();
 
 
 	signals:
@@ -79,6 +79,10 @@ class ViewManager : public QObject
         vtkSmartPointer<vtkLineSource> hcrosshairSource;
         vtkSmartPointer<vtkPolyDataMapper> hcrosshairMapper;
         vtkSmartPointer<vtkActor> hcrosshairActor;
+
+        vtkSmartPointer<vtkLineSource> vcrosshairSource;
+        vtkSmartPointer<vtkPolyDataMapper> vcrosshairMapper;
+        vtkSmartPointer<vtkActor> vcrosshairActor;
 
 		double minScale; //for Zoom
 		double maxScale; //for zoom
