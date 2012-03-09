@@ -51,13 +51,13 @@ void Segmenter::doSegmentationIter2D_I(Node start, int minThreshold, int maxThre
         list<Node> queue;
 
         //set visited block
-        char** visited = new char*[512];
-        for (int i=0; i<512; i++)
-                visited[i] = new char[512];
+        char** visited = new char*[img_x];
+        for (int i=0; i<img_x; i++)
+                visited[i] = new char[img_y];
 
         //fill with zeros
-        for (int i=0; i<512; i++)
-                for (int j=0; j<512; j++)
+        for (int i=0; i<img_x; i++)
+                for (int j=0; j<img_y; j++)
                         visited[i][j] = 0;
 
         // add the start node
@@ -77,7 +77,7 @@ void Segmenter::doSegmentationIter2D_I(Node start, int minThreshold, int maxThre
         }
 
         //release memory
-        for (int i=0; i<512; i++)
+        for (int i=0; i<img_x; i++)
                 delete[] visited[i];
         delete[] visited;
 }
@@ -88,17 +88,17 @@ void Segmenter::doSegmentationIter3D_I(Node start, int minThreshold, int maxThre
         list<Node> queue;
 
         //set visited block
-        char*** visited = new char**[512];
-        for (int i=0; i<512; i++)
-                visited[i] = new char*[512];
-        for (int i=0; i<512; i++)
-                for (int j=0; j<512; j++)
-                        visited[i][j] = new char[120];
+        char*** visited = new char**[img_x];
+        for (int i=0; i<img_x; i++)
+                visited[i] = new char*[img_y];
+        for (int i=0; i<img_x; i++)
+                for (int j=0; j<img_y; j++)
+                        visited[i][j] = new char[img_z];
 
         //fill with zeros
-        for (int i=0; i<512; i++)
-                for (int j=0; j<512; j++)
-                        for (int k=0; k<120; k++)
+        for (int i=0; i<img_x; i++)
+                for (int j=0; j<img_y; j++)
+                        for (int k=0; k<img_z; k++)
                                 visited[i][j][k] = 0;
 
         // add the start node
@@ -134,10 +134,10 @@ void Segmenter::doSegmentationIter3D_I(Node start, int minThreshold, int maxThre
         }
 
         //release memory
-        for (int i=0; i<512; i++)
-                for (int j=0; j<512; j++)
+        for (int i=0; i<img_x; i++)
+                for (int j=0; j<img_y; j++)
                         delete[] visited[i][j];
-        for (int i=0; i<512; i++)
+        for (int i=0; i<img_x; i++)
                 delete[] visited[i];
         delete[] visited;
 }
@@ -223,13 +223,13 @@ int Segmenter::contains_segmentation(int pos_x, int pos_y, int pos_z, Morphology
 void Segmenter::dilate(int pos_z, Kernel kernel)
 {
         //array with pixels to be changed
-        char** modified = new char*[512];
-        for (int i=0; i<512; i++)
-                modified[i] = new char[512];
+        char** modified = new char*[img_x];
+        for (int i=0; i<img_x; i++)
+                modified[i] = new char[img_y];
 
         //fill with BACKGROUNG
-        for (int i=0; i<512; i++)
-                for (int j=0; j<512; j++)
+        for (int i=0; i<img_x; i++)
+                for (int j=0; j<img_y; j++)
                         modified[i][j] = imagePairManager->BACKGROUND;
 
         //mark pixels for segmentation
@@ -264,7 +264,7 @@ void Segmenter::dilate(int pos_z, Kernel kernel)
         }
 
         //relese the memorey
-        for (int i=0; i<512; i++)
+        for (int i=0; i<img_x; i++)
                 delete[] modified[i];
         delete[] modified;
 }
@@ -272,13 +272,13 @@ void Segmenter::dilate(int pos_z, Kernel kernel)
 void Segmenter::erode(int pos_z, Kernel kernel)
 {
         //array with pixels to be changed
-        char** modified = new char*[512];
-        for (int i=0; i<512; i++)
-                modified[i] = new char[512];
+        char** modified = new char*[img_x];
+        for (int i=0; i<img_x; i++)
+                modified[i] = new char[img_y];
 
         //fill with SEGMENTATION
-        for (int i=0; i<512; i++)
-                for (int j=0; j<512; j++)
+        for (int i=0; i<img_x; i++)
+                for (int j=0; j<img_y; j++)
                         modified[i][j] = imagePairManager->SEGMENTATION;
 
         //mark pixels for removal
@@ -315,7 +315,7 @@ void Segmenter::erode(int pos_z, Kernel kernel)
         }
 
         //relese the memorey
-        for (int i=0; i<512; i++)
+        for (int i=0; i<img_x; i++)
                 delete[] modified[i];
         delete[] modified;
 }
