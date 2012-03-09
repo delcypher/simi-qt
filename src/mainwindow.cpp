@@ -24,9 +24,6 @@ MainWindow::MainWindow() : imageInfo(""), workPath(QDir::home())
 	volumeRenderManager=0;
 	progressDialog=0;
 
-        // Hide segmentation label
-        ui->segmentationLabel->clear();
-
 	//Setup About Qt Dialog
 	connect(ui->actionAboutQt,SIGNAL(triggered()),qApp,SLOT(aboutQt()));
 
