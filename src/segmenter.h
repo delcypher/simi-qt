@@ -58,7 +58,7 @@ class Segmenter : public QObject
         private:
                 ImagePairManager* imagePairManager;                           
 
-                bool predicate2D(Node& node, int minThreshold, int maxThreshold);
+                bool predicate2D(Node& node, char** visited, int minThreshold, int maxThreshold);
 
                 bool predicate3D(Node& node, char*** visited, int minThreshold, int maxThreshold, int min_Z, int max_Z);
 
