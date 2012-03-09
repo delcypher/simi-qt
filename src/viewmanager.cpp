@@ -474,18 +474,9 @@ void ViewManager::dragHandler(vtkObject *caller, unsigned long vtkEvent, void *c
 
 void ViewManager::update()
 {
-	qDebug() << "ViewManager::update() requested";
-
-	/* Rebuilding the LUT is a HACK.
-	*  When using a VtkStructuredPoints from a VtkStructuredPointsReader using
-	*  segblock->Modified() does not seem to make VTK realise that the pipeline needs updating.
-	*  Forcing the LUT to be regenerated is a WORKAROUND!
-	*/
-	buildLookUpTable();
-
+    qDebug() << "ViewManager::update() requested";
 	imageViewer->GetRenderWindow()->Render();
 	qvtkWidget->update();
-
 
 }
 
