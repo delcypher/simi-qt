@@ -71,6 +71,7 @@ crossHairAlpha(0.5)
     hcrosshairActor->SetMapper(hcrosshairMapper);
     hcrosshairActor->GetProperty()->SetOpacity(0.0); //hide by default
     hcrosshairActor->GetProperty()->SetLineWidth(2.0);
+    hcrosshairActor->GetProperty()->SetColor(1.0,1.0,0.0);
 
     vcrosshairSource = vtkLineSource::New();
     vcrosshairSource->SetPoint1(0,-256.0,1000);
@@ -80,11 +81,12 @@ crossHairAlpha(0.5)
     vcrosshairMapper = vtkPolyDataMapper::New();
     vcrosshairMapper->SetInput(vcrosshairSource->GetOutput());
 
+
     vcrosshairActor = vtkActor::New();
     vcrosshairActor->SetMapper(vcrosshairMapper);
     vcrosshairActor->GetProperty()->SetOpacity(0.0); //hide by default
     vcrosshairActor->GetProperty()->SetLineWidth(2.0);
-
+    vcrosshairActor->GetProperty()->SetColor(1.0,1.0,0.0);
 
     imageViewer->GetRenderer()->AddActor(hcrosshairActor);
     imageViewer->GetRenderer()->AddActor(vcrosshairActor);
