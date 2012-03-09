@@ -110,6 +110,9 @@ class ViewManager : public QObject
 		QDoubleSpinBox* blockingAlphaSpinBox;
 		QDoubleSpinBox* segmentationAlphaSpinBox;
 
+		double crossHairXlength;
+		double crossHairYlength;
+
 
 
 };

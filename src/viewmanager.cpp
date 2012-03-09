@@ -51,6 +51,12 @@ segmentationAlpha(0.5)
 
 
     //setup seedpoint drawing?
+
+    //Calculate half the length of the crosshair lines
+    crossHairXlength = imagePairManager->getXDim()*imagePairManager->getXSpacing()/2.0;
+    crossHairYlength = imagePairManager->getYDim()*imagePairManager->getYSpacing()/2.0;
+
+
     hcrosshairSource = vtkLineSource::New();
     hcrosshairSource->SetPoint1(-256,0,1000);
     hcrosshairSource->SetPoint2(256,0,1000);
@@ -81,6 +87,7 @@ segmentationAlpha(0.5)
     imageViewer->GetRenderer()->AddActor(hcrosshairActor);
     imageViewer->GetRenderer()->AddActor(vcrosshairActor);
 
+    //If the seed point is changed by the user we should redraw the crosshair
     connect(seedPointManager, SIGNAL(seedPointChanged(int,int,int)),
             this,
             SLOT(redrawCrossHair()));
@@ -540,12 +547,12 @@ void ViewManager::redrawCrossHair()
         double Xoffset = imagePairManager->getXSpacing()*imagePairManager->getXDim()/2.0;
         double Xposition = seedX*imagePairManager->getXSpacing();
 
-	hcrosshairSource->SetPoint1(-256.0,Yposition - Yoffset,zPosition);
-	hcrosshairSource->SetPoint2(256, Yposition -Yoffset ,zPosition);
+	hcrosshairSource->SetPoint1(-crossHairXlength, Yposition - Yoffset, zPosition);
+	hcrosshairSource->SetPoint2( crossHairXlength, Yposition -Yoffset , zPosition);
         hcrosshairSource->Update();
 
-	vcrosshairSource->SetPoint1(Xposition - Xoffset,-256.0,zPosition);
-	vcrosshairSource->SetPoint2(Xposition - Xoffset,256.0,zPosition);
+	vcrosshairSource->SetPoint1(Xposition - Xoffset, -crossHairYlength, zPosition);
+	vcrosshairSource->SetPoint2(Xposition - Xoffset,  crossHairYlength, zPosition);
         vcrosshairSource->Update();
 
         update();
