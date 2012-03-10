@@ -14,7 +14,7 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QVTKWidget" name="qvtkWidget">
+   <widget class="QVTKWidget" name="qvtkWidget" native="true">
     <property name="geometry">
      <rect>
       <x>10</x>
@@ -24,7 +24,7 @@
      </rect>
     </property>
    </widget>
-   <widget class="QVTKWidget" name="qvtk3Ddisplayer">
+   <widget class="QVTKWidget" name="qvtk3Ddisplayer" native="true">
     <property name="geometry">
      <rect>
       <x>10</x>
@@ -41,7 +41,7 @@
      <x>0</x>
      <y>0</y>
      <width>1163</width>
-     <height>25</height>
+     <height>20</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -437,19 +437,6 @@
       </layout>
      </widget>
     </widget>
-    <widget class="QPushButton" name="do3Drender">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>600</y>
-       <width>85</width>
-       <height>27</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>draw 3D</string>
-     </property>
-    </widget>
     <widget class="QGroupBox" name="morphologyGroupBox">
      <property name="geometry">
       <rect>
@@ -541,6 +528,32 @@
         </property>
         <property name="singleStep">
          <double>0.050000000000000</double>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+    <widget class="QWidget" name="">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>600</y>
+       <width>236</width>
+       <height>25</height>
+      </rect>
+     </property>
+     <layout class="QFormLayout" name="formLayout_2">
+      <item row="0" column="0">
+       <widget class="QPushButton" name="do3Drender">
+        <property name="text">
+         <string>draw 3D</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QCheckBox" name="automaticVolumeRender">
+        <property name="text">
+         <string>Automatic rendering</string>
         </property>
        </widget>
       </item>

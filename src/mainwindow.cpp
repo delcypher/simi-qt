@@ -151,8 +151,8 @@ void MainWindow::on_actionOpen_Image_triggered()
 			ui->segmentationGroupBox_2->setEnabled(false);
 			connect(viewManager,SIGNAL(sliceChanged(int)), this, SLOT(tryEnableSegmentationWidgets()));
 
-			//connect redraw volume rendering when segmentation is done
-			connect(segmenter,SIGNAL(segmentationDone(int)),volumeRenderManager,SLOT(render3D()));
+			//connect redraw volume rendering when segmentation is done by default
+			ui->automaticVolumeRender->setCheckState(Qt::Checked);
 
 
 			//set window title
@@ -740,4 +740,21 @@ void MainWindow::on_actionResetView_triggered()
 		viewManager->resetPan();
 		viewManager->resetZoom();
 	}
+}
+
+void MainWindow::on_automaticVolumeRender_toggled(bool checked)
+{
+    if(checked)
+    {
+        //connect redraw volume rendering when segmentation is done
+        qDebug() << "Enabling automatic volume rendering when segmentation completes";
+        connect(segmenter,SIGNAL(segmentationDone(int)),volumeRenderManager,SLOT(render3D()));
+    }
+    else
+    {
+        //disconnect redraw volume rendering when segmentation is done
+        qDebug() << "disabling automatic volume rendering when segmentation completes";
+        disconnect(segmenter,SIGNAL(segmentationDone(int)),volumeRenderManager,SLOT(render3D()));
+    }
+
 }
