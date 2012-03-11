@@ -23,11 +23,6 @@ class Segmenter : public QObject
                 Segmenter(SeedPointManager* seedPointManager, ImagePairManager* imagePairManager, QComboBox* kernelType);
                 ~Segmenter();
 
-                enum Segmentation{
-                        SEGMENTATION_2D,
-                        SEGMENTATION_3D
-                };
-
                 enum Morphology{
                         DILATE,
                         ERODE
@@ -60,7 +55,7 @@ class Segmenter : public QObject
 
                 bool predicate2D(Node& node, char** visited, int minThreshold, int maxThreshold);
 
-                bool predicate3D(Node& node, char*** visited, int minThreshold, int maxThreshold, int min_Z, int max_Z);
+                bool predicate3D(Node& node, int minThreshold, int maxThreshold, int min_Z, int max_Z);
 
                 void doSegmentationIter2D_I(Node start, int minThreshold, int maxThreshold);
 
@@ -78,5 +73,11 @@ class Segmenter : public QObject
 
                 QComboBox* kernelType;
 
+                char*** visited3D;
+
+                char** visited2D;
+
+                list<Node> visited3D_list;
+                list<Node> visited2D_list;
 
 };

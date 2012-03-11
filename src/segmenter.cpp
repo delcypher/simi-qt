@@ -13,11 +13,34 @@ Segmenter::Segmenter(SeedPointManager* seedPointManager, ImagePairManager* image
         img_y = dims[1];
         img_z = dims[2];
 
+        //set visited3D block
+        visited3D = new char**[img_x];
+        for (int i=0; i<img_x; i++)
+                visited3D[i] = new char*[img_y];
+        for (int i=0; i<img_x; i++)
+                for (int j=0; j<img_y; j++)
+                        visited3D[i][j] = new char[img_z];
+
+        //fill visited3D with zeros
+        for (int i=0; i<img_x; i++)
+                for (int j=0; j<img_y; j++)
+                        for (int k=0; k<img_z; k++)
+                                visited3D[i][j][k] = 0;
+
+
+
         qDebug() << "Constructing segmenter: " << img_x << " " << img_y << " " << img_z;
 }
 
 Segmenter::~Segmenter()
 {
+        //release memory for 3D visited block
+        for (int i=0; i<img_x; i++)
+                for (int j=0; j<img_y; j++)
+                        delete[] visited3D[i][j];
+        for (int i=0; i<img_x; i++)
+                delete[] visited3D[i];
+        delete[] visited3D;
 
 }
 
@@ -87,19 +110,13 @@ void Segmenter::doSegmentationIter3D_I(Node start, int minThreshold, int maxThre
         //set emtpty queue
         list<Node> queue;
 
-        //set visited block
-        char*** visited = new char**[img_x];
-        for (int i=0; i<img_x; i++)
-                visited[i] = new char*[img_y];
-        for (int i=0; i<img_x; i++)
-                for (int j=0; j<img_y; j++)
-                        visited[i][j] = new char[img_z];
-
-        //fill with zeros
-        for (int i=0; i<img_x; i++)
-                for (int j=0; j<img_y; j++)
-                        for (int k=0; k<img_z; k++)
-                                visited[i][j][k] = 0;
+        //clear the visited3D block
+        while(!visited3D_list.empty())
+        {
+                Node n = visited3D_list.back();
+                visited3D[n.pos_x][n.pos_y][n.pos_z] = 0;
+                visited3D_list.pop_back();
+        }
 
         // add the start node
         queue.push_back(start);
@@ -114,7 +131,7 @@ void Segmenter::doSegmentationIter3D_I(Node start, int minThreshold, int maxThre
         {
                 Node n = queue.back();
                 queue.pop_back();
-                if (predicate3D(n, visited, minThreshold, maxThreshold, min_Z, max_Z))
+                if (predicate3D(n, minThreshold, maxThreshold, min_Z, max_Z))
                 {
                         queue.push_back(Node(n.pos_x-1, n.pos_y, n.pos_z));
                         queue.push_back(Node(n.pos_x+1, n.pos_y, n.pos_z));
@@ -132,14 +149,6 @@ void Segmenter::doSegmentationIter3D_I(Node start, int minThreshold, int maxThre
                         counter = 0;
                 }
         }
-
-        //release memory
-        for (int i=0; i<img_x; i++)
-                for (int j=0; j<img_y; j++)
-                        delete[] visited[i][j];
-        for (int i=0; i<img_x; i++)
-                delete[] visited[i];
-        delete[] visited;
 }
 
 bool Segmenter::predicate2D(Node& node, char** visited, int minThreshold, int maxThreshold)
@@ -166,13 +175,13 @@ bool Segmenter::predicate2D(Node& node, char** visited, int minThreshold, int ma
         return true;
 }
 
-bool Segmenter::predicate3D(Node& node, char*** visited, int minThreshold, int maxThreshold, int min_Z, int max_Z)
+bool Segmenter::predicate3D(Node& node, int minThreshold, int maxThreshold, int min_Z, int max_Z)
 {
         if (node.pos_x < 0 || node.pos_x == img_x || node.pos_y < 0 || node.pos_y == img_y || node.pos_z < 0 || node.pos_z == img_z || node.pos_z < min_Z || node.pos_z > max_Z)
                 return false;
 
         char* pixel_segmentation = static_cast<char*>(imagePairManager->segblock->GetScalarPointer(node.pos_x, node.pos_y, node.pos_z));
-        char pixel_visited = visited[node.pos_x][node.pos_y][node.pos_z];
+        char pixel_visited = visited3D[node.pos_x][node.pos_y][node.pos_z];
         short* pixel_original = static_cast<short*>(imagePairManager->original->GetScalarPointer(node.pos_x, node.pos_y, node.pos_z));
 
         if (pixel_visited == 1)
@@ -183,7 +192,8 @@ bool Segmenter::predicate3D(Node& node, char*** visited, int minThreshold, int m
                 return false;
 
         //otherwise mark as visited
-        visited[node.pos_x][node.pos_y][node.pos_z] = 1;
+        visited3D[node.pos_x][node.pos_y][node.pos_z] = 1;
+        visited3D_list.push_back(Node(node.pos_x, node.pos_y, node.pos_z));
 
         //update segmentation results
         pixel_segmentation[0] = imagePairManager->SEGMENTATION;
