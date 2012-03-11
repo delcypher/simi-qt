@@ -27,7 +27,15 @@ Segmenter::Segmenter(SeedPointManager* seedPointManager, ImagePairManager* image
                         for (int k=0; k<img_z; k++)
                                 visited3D[i][j][k] = 0;
 
+        //set visited2D block
+        visited2D = new char*[img_x];
+        for (int i=0; i<img_x; i++)
+                visited2D[i] = new char[img_y];
 
+        //fill visited2D block with zeros
+        for (int i=0; i<img_x; i++)
+                for (int j=0; j<img_y; j++)
+                        visited2D[i][j] = 0;
 
         qDebug() << "Constructing segmenter: " << img_x << " " << img_y << " " << img_z;
 }
@@ -42,6 +50,10 @@ Segmenter::~Segmenter()
                 delete[] visited3D[i];
         delete[] visited3D;
 
+        //release memory for 2D visited block
+        for (int i=0; i<img_x; i++)
+                delete[] visited2D[i];
+        delete[] visited2D;
 }
 
 void Segmenter::doSegmentation2D(int pos_x, int pos_y, int pos_z, int minThreshold, int maxThreshold)
@@ -73,15 +85,13 @@ void Segmenter::doSegmentationIter2D_I(Node start, int minThreshold, int maxThre
         //set emtpty queue
         list<Node> queue;
 
-        //set visited block
-        char** visited = new char*[img_x];
-        for (int i=0; i<img_x; i++)
-                visited[i] = new char[img_y];
-
-        //fill with zeros
-        for (int i=0; i<img_x; i++)
-                for (int j=0; j<img_y; j++)
-                        visited[i][j] = 0;
+        //clear the visited2D block
+        while(!visited2D_list.empty())
+        {
+                Node n = visited2D_list.back();
+                visited2D[n.pos_x][n.pos_y] = 0;
+                visited2D_list.pop_back();
+        }
 
         // add the start node
         queue.push_back(start);
@@ -90,7 +100,7 @@ void Segmenter::doSegmentationIter2D_I(Node start, int minThreshold, int maxThre
         {
                 Node n = queue.back();
                 queue.pop_back();
-                if (predicate2D(n, visited, minThreshold, maxThreshold))
+                if (predicate2D(n, minThreshold, maxThreshold))
                 {
                         queue.push_back(Node(n.pos_x-1, n.pos_y, n.pos_z));
                         queue.push_back(Node(n.pos_x+1, n.pos_y, n.pos_z));
@@ -98,11 +108,6 @@ void Segmenter::doSegmentationIter2D_I(Node start, int minThreshold, int maxThre
                         queue.push_back(Node(n.pos_x, n.pos_y+1, n.pos_z));
                 }
         }
-
-        //release memory
-        for (int i=0; i<img_x; i++)
-                delete[] visited[i];
-        delete[] visited;
 }
 
 void Segmenter::doSegmentationIter3D_I(Node start, int minThreshold, int maxThreshold, int min_Z, int max_Z)
@@ -151,13 +156,13 @@ void Segmenter::doSegmentationIter3D_I(Node start, int minThreshold, int maxThre
         }
 }
 
-bool Segmenter::predicate2D(Node& node, char** visited, int minThreshold, int maxThreshold)
+bool Segmenter::predicate2D(Node& node, int minThreshold, int maxThreshold)
 {
         if (node.pos_x < 0 || node.pos_x == img_x || node.pos_y < 0 || node.pos_y == img_y)
                 return false;
 
         char* pixel_segmentation = static_cast<char*>(imagePairManager->segblock->GetScalarPointer(node.pos_x, node.pos_y, node.pos_z));
-        char pixel_visited = visited[node.pos_x][node.pos_y];
+        char pixel_visited = visited2D[node.pos_x][node.pos_y];
         short* pixel_original = static_cast<short*>(imagePairManager->original->GetScalarPointer(node.pos_x, node.pos_y, node.pos_z));
 
         if (pixel_visited == 1)
@@ -168,7 +173,8 @@ bool Segmenter::predicate2D(Node& node, char** visited, int minThreshold, int ma
                 return false;
 
         //otherwise mark as visited
-        visited[node.pos_x][node.pos_y] = 1;
+        visited2D[node.pos_x][node.pos_y] = 1;
+        visited2D_list.push_back(Node(node.pos_x, node.pos_y, node.pos_z));
 
         //update segmentation results
         pixel_segmentation[0] = imagePairManager->SEGMENTATION;
