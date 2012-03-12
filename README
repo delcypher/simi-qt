@@ -77,11 +77,16 @@ $ make help
 ... rebuild_cache
 ... test
 ... simi-qt
+... all_tests
 ... coverage_clean
 ... coverage_gen
 ... ui_tester
 
-3. All targets that have "_tester" as a suffix are unit tests. Build the ones you want and run them once.
+3. All targets that have "_tester" as a suffix are unit tests. Build the ones you want and run them once.  If you want to build all tests at once run
+$ make all_tests
+
+If you want to run all tests at once then run
+$ make test
 
 4. Run the following the generate the coverage information as a HTML document in "build-dir/coverage_html/"
 $ make coverage_gen
