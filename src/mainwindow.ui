@@ -20,11 +20,11 @@
       <x>430</x>
       <y>20</y>
       <width>361</width>
-      <height>101</height>
+      <height>121</height>
      </rect>
     </property>
     <property name="title">
-     <string>Contrast</string>
+     <string>Display</string>
     </property>
     <widget class="QWidget" name="layoutWidget">
      <property name="geometry">
@@ -72,184 +72,12 @@
       </item>
      </layout>
     </widget>
-   </widget>
-   <widget class="QGroupBox" name="segmentationGroupBox_2">
-    <property name="geometry">
-     <rect>
-      <x>430</x>
-      <y>130</y>
-      <width>361</width>
-      <height>201</height>
-     </rect>
-    </property>
-    <property name="title">
-     <string>Segmentation</string>
-    </property>
-    <widget class="QWidget" name="layoutWidget">
-     <property name="geometry">
-      <rect>
-       <x>20</x>
-       <y>30</y>
-       <width>331</width>
-       <height>56</height>
-      </rect>
-     </property>
-     <layout class="QGridLayout" name="gridLayout_2">
-      <item row="0" column="0">
-       <widget class="QLabel" name="minSegIntensityLabel">
-        <property name="text">
-         <string>Minimum Intensity:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1">
-       <widget class="QSlider" name="minSegIntensitySlider">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="3">
-       <widget class="QSpinBox" name="minSegIntensitySpinBox"/>
-      </item>
-      <item row="1" column="0">
-       <widget class="QLabel" name="maxSegIntensityLabel">
-        <property name="text">
-         <string>Maximum Intensity:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1">
-       <widget class="QSlider" name="maxSegIntensitySlider">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="3">
-       <widget class="QSpinBox" name="maxSegIntensitySpinBox"/>
-      </item>
-     </layout>
-    </widget>
-    <widget class="QWidget" name="layoutWidget">
-     <property name="geometry">
-      <rect>
-       <x>20</x>
-       <y>94</y>
-       <width>331</width>
-       <height>95</height>
-      </rect>
-     </property>
-     <layout class="QVBoxLayout" name="segmentation">
-      <item>
-       <layout class="QHBoxLayout" name="horizontalLayout_2">
-        <item>
-         <widget class="QLabel" name="label">
-          <property name="text">
-           <string>Seed Point:</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QLineEdit" name="seedPointLineEdit">
-          <property name="readOnly">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QLabel" name="displayAlphaLabel">
-          <property name="text">
-           <string>Display Alpha:</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QDoubleSpinBox" name="segmentationAlphadoubleSpinBox">
-          <property name="maximum">
-           <double>1.000000000000000</double>
-          </property>
-          <property name="singleStep">
-           <double>0.050000000000000</double>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </item>
-      <item>
-       <layout class="QHBoxLayout" name="horizontalLayout_3">
-        <item>
-         <widget class="QLabel" name="label_6">
-          <property name="text">
-           <string>Min Z Slice:</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QSpinBox" name="minZSliceSpinBox">
-          <property name="maximum">
-           <number>119</number>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QLabel" name="label_7">
-          <property name="text">
-           <string>Max Z Slice</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QSpinBox" name="maxZSliceSpinBox">
-          <property name="maximum">
-           <number>119</number>
-          </property>
-          <property name="value">
-           <number>119</number>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </item>
-      <item>
-       <layout class="QHBoxLayout" name="horizontalLayout_4">
-        <item>
-         <widget class="QPushButton" name="doSegmentation2D">
-          <property name="text">
-           <string>Segment2D</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="doSegmentation3D">
-          <property name="text">
-           <string>Segment3D</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </item>
-     </layout>
-    </widget>
-   </widget>
-   <widget class="QGroupBox" name="drawingGroupBox">
-    <property name="geometry">
-     <rect>
-      <x>430</x>
-      <y>340</y>
-      <width>361</width>
-      <height>151</height>
-     </rect>
-    </property>
-    <property name="title">
-     <string>Drawing</string>
-    </property>
     <widget class="QWidget" name="layoutWidget">
      <property name="geometry">
       <rect>
        <x>20</x>
        <y>90</y>
-       <width>191</width>
+       <width>161</width>
        <height>31</height>
       </rect>
      </property>
@@ -270,87 +98,180 @@
       <item row="0" column="0">
        <widget class="QLabel" name="label_5">
         <property name="text">
-         <string>Crosshair alpha:</string>
+         <string>Crosshair Opacity:</string>
         </property>
        </widget>
       </item>
      </layout>
     </widget>
-    <widget class="QWidget" name="layoutWidget">
+   </widget>
+   <widget class="QGroupBox" name="segmentationGroupBox_2">
+    <property name="geometry">
+     <rect>
+      <x>430</x>
+      <y>160</y>
+      <width>361</width>
+      <height>201</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>Segmentation</string>
+    </property>
+    <widget class="QWidget" name="">
      <property name="geometry">
       <rect>
        <x>20</x>
-       <y>120</y>
-       <width>331</width>
-       <height>29</height>
+       <y>30</y>
+       <width>334</width>
+       <height>159</height>
       </rect>
      </property>
-     <layout class="QHBoxLayout" name="drawingLayout4">
-      <item>
-       <widget class="QPushButton" name="do3Drender">
-        <property name="text">
-         <string>draw 3D</string>
-        </property>
-       </widget>
+     <layout class="QGridLayout" name="gridLayout_3">
+      <item row="0" column="0">
+       <layout class="QGridLayout" name="gridLayout_2">
+        <item row="0" column="0">
+         <widget class="QLabel" name="minSegIntensityLabel">
+          <property name="text">
+           <string>Minimum Intensity:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QSlider" name="minSegIntensitySlider">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="3">
+         <widget class="QSpinBox" name="minSegIntensitySpinBox"/>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="maxSegIntensityLabel">
+          <property name="text">
+           <string>Maximum Intensity:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QSlider" name="maxSegIntensitySlider">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="3">
+         <widget class="QSpinBox" name="maxSegIntensitySpinBox"/>
+        </item>
+       </layout>
       </item>
-      <item>
-       <widget class="QCheckBox" name="automaticVolumeRender">
-        <property name="text">
-         <string>Automatic rendering</string>
-        </property>
-       </widget>
+      <item row="1" column="0">
+       <layout class="QVBoxLayout" name="segmentation">
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_2">
+          <item>
+           <widget class="QLabel" name="label">
+            <property name="text">
+             <string>Seed Point:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="seedPointLineEdit">
+            <property name="readOnly">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="displayAlphaLabel">
+            <property name="text">
+             <string>Display Opacity:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QDoubleSpinBox" name="segmentationAlphadoubleSpinBox">
+            <property name="maximum">
+             <double>1.000000000000000</double>
+            </property>
+            <property name="singleStep">
+             <double>0.050000000000000</double>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_3">
+          <item>
+           <widget class="QLabel" name="label_6">
+            <property name="text">
+             <string>Min Z Slice:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QSpinBox" name="minZSliceSpinBox">
+            <property name="maximum">
+             <number>119</number>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_7">
+            <property name="text">
+             <string>Max Z Slice</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QSpinBox" name="maxZSliceSpinBox">
+            <property name="maximum">
+             <number>119</number>
+            </property>
+            <property name="value">
+             <number>119</number>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_4">
+          <item>
+           <widget class="QPushButton" name="doSegmentation2D">
+            <property name="text">
+             <string>Segment2D</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="doSegmentation3D">
+            <property name="text">
+             <string>Segment3D</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
       </item>
      </layout>
     </widget>
-    <widget class="QWidget" name="layoutWidget">
-     <property name="geometry">
-      <rect>
-       <x>20</x>
-       <y>60</y>
-       <width>331</width>
-       <height>26</height>
-      </rect>
-     </property>
-     <layout class="QHBoxLayout" name="drawingLayout2">
-      <item>
-       <widget class="QLabel" name="label_2">
-        <property name="text">
-         <string>Draw size:</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QSpinBox" name="drawSizeSpinBox">
-        <property name="minimum">
-         <number>1</number>
-        </property>
-        <property name="maximum">
-         <number>20</number>
-        </property>
-        <property name="singleStep">
-         <number>1</number>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLabel" name="displayAlphaLabel_2">
-        <property name="text">
-         <string>Display Alpha:</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QDoubleSpinBox" name="blockingAlphadoubleSpinBox">
-        <property name="maximum">
-         <double>1.000000000000000</double>
-        </property>
-        <property name="singleStep">
-         <double>0.050000000000000</double>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </widget>
+   </widget>
+   <widget class="QGroupBox" name="drawingGroupBox">
+    <property name="geometry">
+     <rect>
+      <x>430</x>
+      <y>370</y>
+      <width>361</width>
+      <height>131</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>Drawing</string>
+    </property>
     <widget class="QWidget" name="layoutWidget">
      <property name="geometry">
       <rect>
@@ -389,6 +310,77 @@
       </item>
      </layout>
     </widget>
+    <widget class="QWidget" name="">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>60</y>
+       <width>331</width>
+       <height>63</height>
+      </rect>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout">
+      <item>
+       <layout class="QHBoxLayout" name="drawingLayout2">
+        <item>
+         <widget class="QLabel" name="label_2">
+          <property name="text">
+           <string>Draw size:</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QSpinBox" name="drawSizeSpinBox">
+          <property name="minimum">
+           <number>1</number>
+          </property>
+          <property name="maximum">
+           <number>20</number>
+          </property>
+          <property name="singleStep">
+           <number>1</number>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="displayAlphaLabel_2">
+          <property name="text">
+           <string>Display Opacity:</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QDoubleSpinBox" name="blockingAlphadoubleSpinBox">
+          <property name="maximum">
+           <double>1.000000000000000</double>
+          </property>
+          <property name="singleStep">
+           <double>0.050000000000000</double>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="drawingLayout4">
+        <item>
+         <widget class="QPushButton" name="do3Drender">
+          <property name="text">
+           <string>draw 3D</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="automaticVolumeRender">
+          <property name="text">
+           <string>Automatic rendering</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </widget>
    </widget>
    <widget class="QGroupBox" name="morphologyGroupBox">
     <property name="geometry">
@@ -411,29 +403,29 @@
        <height>29</height>
       </rect>
      </property>
-     <layout class="QHBoxLayout" name="morphologyLayout1">
-      <item>
+     <layout class="QGridLayout" name="gridLayout">
+      <item row="0" column="0">
        <widget class="QPushButton" name="doDilate2D">
         <property name="text">
          <string>Dilate2D</string>
         </property>
        </widget>
       </item>
-      <item>
+      <item row="0" column="1">
        <widget class="QPushButton" name="doErode2D">
         <property name="text">
          <string>Erode2D</string>
         </property>
        </widget>
       </item>
-      <item>
+      <item row="0" column="2">
        <widget class="QPushButton" name="doClose2D">
         <property name="text">
          <string>Close2D</string>
         </property>
        </widget>
       </item>
-      <item>
+      <item row="0" column="3">
        <widget class="QPushButton" name="doOpen2D">
         <property name="text">
          <string>Open2D</string>
