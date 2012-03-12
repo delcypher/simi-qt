@@ -209,6 +209,9 @@ void MainWindow::contrastControlSetup()
 		ui->maxIntensitySpinBox->setRange(static_cast<int>(imagePairManager->getMinimumIntensity()),static_cast<int>(imagePairManager->getMaximumIntensity()));
 	}
 
+	//Disable keyboard tracking so users can type values in before emit valueChanged() happens. They confirm by pressing enter or loosing focus
+	ui->minIntensitySpinBox->setKeyboardTracking(false);
+	ui->maxIntensitySpinBox->setKeyboardTracking(false);
 
 	//Doing this change should cause the valueChanged() signal to be emitted by the sliders
 	ui->minIntensitySlider->setValue(static_cast<int>(imagePairManager->getMinimumIntensity()));
@@ -411,6 +414,9 @@ void MainWindow::segmentationControlSetup()
 		ui->maxSegIntensitySpinBox->setRange(static_cast<int>(imagePairManager->getMinimumIntensity()),static_cast<int>(imagePairManager->getMaximumIntensity()));
 	}
 
+	//Disable keyboard tracking so users can type values in before emit valueChanged() happens. They confirm by pressing enter or loosing focus
+	ui->minSegIntensitySpinBox->setKeyboardTracking(false);
+	ui->maxSegIntensitySpinBox->setKeyboardTracking(false);
 
 	//Doing this change should cause the valueChanged() signal to be emitted by the sliders
 	ui->minSegIntensitySlider->setValue(static_cast<int>(imagePairManager->getMinimumIntensity()));
