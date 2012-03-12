@@ -1,3 +1,6 @@
+#Set the name of the unit test
+SET(UNIT_TEST_NAME "ui_tester")
+
 #Remove main.cpp and use our own
 LIST(REMOVE_ITEM SIMI_SOURCES "main.cpp")
 PREPEND_SOURCES(SIMI_PREPEND_SOURCES SIMI_SOURCES "../")
@@ -13,7 +16,7 @@ QT4_WRAP_CPP(UI_TEST_HEADERS_MOC ${SIMI_HP} ui_tester.h)
 PREPEND_SOURCES(SIMI_R SIMI_RESOURCES "../")
 QT4_ADD_RESOURCES(SIMI_RESOURCES_RCC ${SIMI_R})
 
-ADD_EXECUTABLE(ui_tester
+ADD_EXECUTABLE(${UNIT_TEST_NAME}
 		${UI_TEST_HEADERS_MOC}
 		${SIMI_PREPEND_SOURCES}
 		${SIMI_FORMS_HEADERS}
@@ -21,13 +24,13 @@ ADD_EXECUTABLE(ui_tester
 		ui_tester.cpp
 		)
 
-TARGET_LINK_LIBRARIES(ui_tester
+TARGET_LINK_LIBRARIES(${UNIT_TEST_NAME}
 			${QT_LIBRARIES} 
 			${VTK_LIBRARIES}
 			QVTK
 			${COVERAGE_LIB}
 			)
-ADD_TEST(UserInterfaceTester ui_tester)
+ADD_TEST(UserInterfaceTester ${UNIT_TEST_NAME})
 
 #Add the unit test to the list of unit tests that could be built
-LIST(APPEND UNIT_TESTS ui_tester)
+LIST(APPEND UNIT_TESTS ${UNIT_TEST_NAME})
