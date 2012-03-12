@@ -220,8 +220,7 @@ vtkRenderer *ViewManager::getRenderer()
 
 void ViewManager::mouseWheelForward(vtkObject *caller, unsigned long vtkEvent, void *clientData, void *callData, vtkCommand *command)
 {
-
-    ChangeSlice( getCurrentSlice() -1);
+	ChangeSlice( getCurrentSlice() +1);
 
     //Prevent vtkInteractorStyle from intercepting the event
     command->AbortFlagOn();
@@ -229,7 +228,8 @@ void ViewManager::mouseWheelForward(vtkObject *caller, unsigned long vtkEvent, v
 
 void ViewManager::mouseWheelBackward(vtkObject *caller, unsigned long vtkEvent, void *clientData, void *callData, vtkCommand *command)
 {
-    ChangeSlice( getCurrentSlice() +1);
+
+    ChangeSlice( getCurrentSlice() -1);
 
     //Prevent vtkInteractorStyle from intercepting the event
     command->AbortFlagOn();
