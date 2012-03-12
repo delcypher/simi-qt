@@ -29,10 +29,11 @@ INCLUDE("cmake/lcov.cmake")
 
 ###User Interface unit test
 INCLUDE("ui_tester.cmake")
+INCLUDE("seedpointmanager_tester.cmake")
 
 
 ###END OF UNIT TESTS
 
 #Add custom target "all_tests" that will build everthing in UNIT_TESTS
-ADD_CUSTOM_TARGET(all_tests COMMAND ${CMAKE_COMMAND} -E echo "Built unit tests:${UNIT_TESTS}"
+ADD_CUSTOM_TARGET(all_tests COMMAND ${CMAKE_COMMAND} -E echo "Finished Building all unit tests"
 		DEPENDS ${UNIT_TESTS})

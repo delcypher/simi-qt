@@ -37,7 +37,6 @@ class UiTester: public QObject
 		mw->ui->minIntensitySlider->setValue(0);
 		mw->ui->maxIntensitySlider->setValue(5);
 
-
 		mw->ui->minIntensitySlider->setValue( mw->ui->maxIntensitySlider->value() + 5);
 
 		QVERIFY(mw->ui->minIntensitySlider->value() <= mw->ui->maxIntensitySlider->value());
