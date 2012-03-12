@@ -2,16 +2,6 @@
 LIST(REMOVE_ITEM SIMI_SOURCES "main.cpp")
 PREPEND_SOURCES(SIMI_PREPEND_SOURCES SIMI_SOURCES "../")
 
-#Unset variables from parent directory as they stop build from working
-unset(SIMI_HEADERS_MOC)
-unset(SIMI_FORMS_HEADERS)
-unset(SIMI_RESOURCES_RCC)
-
-#If using GNU compiler enable coverage generation
-INCLUDE("cmake/lcov.cmake")
-
-#Include parent directory for mainwindow.h
-INCLUDE_DIRECTORIES("${CMAKE_SOURCE_DIR}/src")
 
 PREPEND_SOURCES(SIMI_F SIMI_FORMS "../")
 QT4_WRAP_UI(SIMI_FORMS_HEADERS ${SIMI_F})
@@ -22,9 +12,6 @@ QT4_WRAP_CPP(UI_TEST_HEADERS_MOC ${SIMI_HP} ui_tester.h)
 
 PREPEND_SOURCES(SIMI_R SIMI_RESOURCES "../")
 QT4_ADD_RESOURCES(SIMI_RESOURCES_RCC ${SIMI_R})
-
-INCLUDE_DIRECTORIES(${CMAKE_CURRENT_BINARY_DIR})
-
 
 ADD_EXECUTABLE(ui_tester
 		${UI_TEST_HEADERS_MOC}

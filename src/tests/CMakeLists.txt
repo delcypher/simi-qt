@@ -10,6 +10,20 @@ INCLUDE("cmake/prependlist.cmake")
 #This is to work around a CMake bug where running make test does not build the tests!
 SET( UNIT_TESTS "")
 
+#Unset variables from parent directory as they stop build from working if we use those variable names
+unset(SIMI_HEADERS_MOC)
+unset(SIMI_FORMS_HEADERS)
+unset(SIMI_RESOURCES_RCC)
+
+#Include parent directory for the header files
+INCLUDE_DIRECTORIES("${CMAKE_SOURCE_DIR}/src")
+
+#Include this folder for the intermediate build files
+INCLUDE_DIRECTORIES(${CMAKE_CURRENT_BINARY_DIR})
+
+#If using GNU compiler enable coverage generation
+INCLUDE("cmake/lcov.cmake")
+
 ###START OF UNIT TESTS
 
 
