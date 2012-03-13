@@ -280,6 +280,9 @@ void MainWindow::on_actionHandTool_triggered()
 		SLOT(erase(int,int,int))
 		);
 
+    //enable panning
+    viewManager->panning(true);
+
 }
 
 void MainWindow::on_actionPenTool_triggered()
@@ -300,6 +303,9 @@ void MainWindow::on_actionPenTool_triggered()
 		drawManager,
 		SLOT(erase(int,int,int))
 		);
+
+    //disable panning
+    viewManager->panning(false);
 
     //enable connection
     connect(viewManager,
@@ -335,6 +341,8 @@ void MainWindow::on_actionCrosshairTool_triggered()
 		SLOT(erase(int,int,int))
 		);
 
+    //disable panning
+    viewManager->panning(false);
 
 
     //enable connection
@@ -363,6 +371,9 @@ void MainWindow::on_actionEraseTool_triggered()
 		drawManager,
 		SLOT(draw(int,int,int))
 		);
+
+    //disable panning
+    viewManager->panning(false);
 
     //enable connection
     connect(viewManager,
