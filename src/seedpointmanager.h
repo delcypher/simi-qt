@@ -59,7 +59,13 @@ class SeedPointManager : public QObject
 
 
 	private:
+        //! A private member keeps the number of all slices of the image.
 		int numberOfSlices;
+
+        //! An array with two columns (x,y) that keeps track of all seed points per slice.
+        /*!
+            If a slice has no seed point set, the coordinates of this seed point are set to (-1,-1).
+        */
 		vector< vector<int> > seedPerSlice;
 };
 
