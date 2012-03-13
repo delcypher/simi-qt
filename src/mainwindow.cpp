@@ -513,21 +513,28 @@ void MainWindow::on_doSegmentation3D_clicked()
                 if(!seedPointManager->getSeedPoint(pos_z,pos_x,pos_y))
                 {
                     qWarning() << "Can't do segmentation. The seed point isn't set!";
+                    return;
                 }
 
-		//Modify the dialog to have a cancel button
-		showWaitDialog();
-		progressDialog->setCancelButtonText(QString("Cancel"));
-		connect(progressDialog,SIGNAL(canceled()), segmenter, SLOT(cancel3D()));
+                if(segmenter->isWorking())
+                {
+                    qWarning() << "Can't do segmentation as it is already running";
+                    return;
+                }
+
+                //Modify the dialog to have a cancel button
+                showWaitDialog();
+                progressDialog->setCancelButtonText(QString("Cancel"));
+                connect(progressDialog,SIGNAL(canceled()), segmenter, SLOT(cancel3D()));
 
                 segmenter->doSegmentation3D(pos_x, pos_y, pos_z, ui->minSegIntensitySlider->value(), ui->maxSegIntensitySlider->value(), ui->minZSliceSpinBox->value(), ui->maxZSliceSpinBox->value());
                 hideWaitDialog();
 
-		//remove cancel button and connection for other dialogs
-		progressDialog->setCancelButtonText(QString());
-		disconnect(progressDialog,SIGNAL(canceled()), segmenter, SLOT(cancel3D()));
+                //remove cancel button and connection for other dialogs
+                progressDialog->setCancelButtonText(QString());
+                disconnect(progressDialog,SIGNAL(canceled()), segmenter, SLOT(cancel3D()));
 
-		qDebug() << "3D segmentation complete.";
+                qDebug() << "3D segmentation complete.";
         }
 }
 
