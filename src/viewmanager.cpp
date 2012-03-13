@@ -266,6 +266,11 @@ void ViewManager::ChangeSlice(int slice)
 		//Redraw crosshair if necessary
 		redrawCrossHair();
 
+		/* We need to make the view update so that the segblock data
+		*  is drawn correctly on top of the new slice
+		*/
+		update();
+
 		emit sliceChanged(slice);
 	}
 
