@@ -727,8 +727,10 @@ void MainWindow::showWaitDialog()
 		progressDialog->setMinimumDuration(0);// do no assumed time calculation
 
 		progressDialog->setCancelButton(0); // disable the cancel button
-		// eventually show the dialog
+
 		progressDialog->setValue(1);
+
+		progressDialog->show();
 
 	}
 	else
