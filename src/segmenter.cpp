@@ -104,7 +104,7 @@ void Segmenter::doSegmentationIter2D_I(Node start, int minThreshold, int maxThre
         // add the start node
         queue.push_back(start);
 
-        while (!queue.empty() && segmentation_running)
+        while (!queue.empty())
         {
                 Node n = queue.back();
                 queue.pop_back();
@@ -140,7 +140,7 @@ void Segmenter::doSegmentationIter3D_I(Node start, int minThreshold, int maxThre
         //process events
         QApplication::processEvents();
 
-        while (!queue.empty())
+        while (!queue.empty() && segmentation_running)
         {
                 Node n = queue.back();
                 queue.pop_back();
