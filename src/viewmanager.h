@@ -32,6 +32,8 @@ class ViewManager : public QObject
 
 		void reBuildPipeline();
 
+        void panning(bool enabled);
+
 	
 	public slots:
 		void ChangeSlice(int slice);
@@ -115,6 +117,11 @@ class ViewManager : public QObject
 		double crossHairYlength;
 		QDoubleSpinBox* crosshairAlphaSpinBox;
 		double crossHairAlpha;
+
+        //for panning
+        bool panEnabled;
+        int originalX;
+        int originalY;
 
 
 

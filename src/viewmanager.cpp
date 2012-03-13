@@ -20,7 +20,10 @@ mouseIntensity(0),
 mouseOverWidget(false),
 blockingAlpha(0.5),
 segmentationAlpha(0.5),
-crossHairAlpha(0.5)
+crossHairAlpha(0.5),
+panEnabled(false),
+originalX(0),
+originalY(0)
 {
     this->imagePairManager = imagePairManager;
     this->qvtkWidget = qvtkWidget;
@@ -424,7 +427,9 @@ void ViewManager::mouseLeftClick(vtkObject *caller, unsigned long vtkEvent, void
 
 void ViewManager::dragHandler(vtkObject *caller, unsigned long vtkEvent, void *clientData, void *callData, vtkCommand *command)
 {
-	//Get event co-ordinates before processing the event type
+    bool inImage=true; //Tells us if mouse is over the image
+
+    //Get event co-ordinates before processing the event type
 
 	vtkRenderWindowInteractor* iren = vtkRenderWindowInteractor::SafeDownCast(caller);
 
@@ -436,32 +441,46 @@ void ViewManager::dragHandler(vtkObject *caller, unsigned long vtkEvent, void *c
 	// Pick from this location.
 	picker->Pick(pos[0], pos[1], 0, imageViewer->GetRenderer());
 
-	//check we are in the image
-	if(picker->GetCellId() == -1)
-		return; //not in the image!
+    //check we are in the image
+    if(picker->GetCellId() != -1)
+    {
 
-	mouseX= picker->GetCellIJK()[0];
-	mouseY= picker->GetCellIJK()[1];
-	mouseZ= picker->GetCellIJK()[2];
-	//This is VERY dirty we should work out the cast at run time!
-	mouseIntensity = *(static_cast<short*>(imagePairManager->original->GetScalarPointer(mouseX, mouseY, mouseZ)));
 
-	//Inform other classes that the mouse has moved.
-	emit mouseHasMoved();
+        mouseX= picker->GetCellIJK()[0];
+        mouseY= picker->GetCellIJK()[1];
+        mouseZ= picker->GetCellIJK()[2];
+        //This is VERY dirty we should work out the cast at run time!
+        mouseIntensity = *(static_cast<short*>(imagePairManager->original->GetScalarPointer(mouseX, mouseY, mouseZ)));
+
+        //Inform other classes that the mouse has moved.
+        emit mouseHasMoved();
+    }
+    else
+        inImage=false; //not in the image!
 
 	switch(vtkEvent)
 	{
 		case vtkCommand::LeftButtonPressEvent :
 			dragOn = true;
 			//qDebug() << "Drag start";
-			emit dragEvent(picker->GetCellIJK()[0],picker->GetCellIJK()[1], picker->GetCellIJK()[2]);
+
+            if(inImage)
+                emit dragEvent(picker->GetCellIJK()[0],picker->GetCellIJK()[1], picker->GetCellIJK()[2]);
+
+            if(panEnabled)
+            {
+                //record click down position
+                originalX=pos[0];
+                originalY=pos[1];
+            }
 
 		break;
 
 		case vtkCommand::LeftButtonReleaseEvent :
 			dragOn = false;
 			//qDebug() << "Drag stop";
-			emit dragEvent(picker->GetCellIJK()[0],picker->GetCellIJK()[1], picker->GetCellIJK()[2]);
+            if(inImage)
+                emit dragEvent(picker->GetCellIJK()[0],picker->GetCellIJK()[1], picker->GetCellIJK()[2]);
 
 		break;
 
@@ -469,8 +488,32 @@ void ViewManager::dragHandler(vtkObject *caller, unsigned long vtkEvent, void *c
 			if(dragOn)
 			{
 				//qDebug() << "Dragging...";
-				emit dragEvent(picker->GetCellIJK()[0],picker->GetCellIJK()[1], picker->GetCellIJK()[2]);
-			}
+                if(inImage)
+                    emit dragEvent(picker->GetCellIJK()[0],picker->GetCellIJK()[1], picker->GetCellIJK()[2]);
+
+                if(panEnabled)
+                {
+                    //Get current camera position
+                    vtkCamera* cam = imageViewer->GetRenderer()->GetActiveCamera();
+
+                    double currentPos[3];
+                    double currentFocalPoint[3];
+                    cam->GetPosition(currentPos);
+                    cam->GetFocalPoint(currentFocalPoint);
+                    //Reposition the camera
+                    double xOffset = 0.1*(originalX - pos[0])*(imagePairManager->getXSpacing());
+                    double yOffset = 0.1*(originalY - pos[1])*(imagePairManager->getYSpacing());
+
+                    qDebug() << "Pan Xoffset: " << xOffset << " Yoffset" << yOffset;
+                    cam->SetPosition(currentPos[0] + xOffset,
+                                    currentPos[1] +yOffset,
+                                    currentPos[2]);
+                    cam->SetFocalPoint(currentFocalPoint[0] +xOffset,
+                                        currentFocalPoint[1] + yOffset,
+                                        currentFocalPoint[2]);
+                    update();
+                }
+            }
 
 
 
@@ -576,7 +619,12 @@ void ViewManager::redrawCrossHair()
 void ViewManager::reBuildPipeline()
 {
 	imageViewer->GetRenderer()->RemoveActor(segblockActor);
-	addSegblock();
+    addSegblock();
+}
+
+void ViewManager::panning(bool enabled)
+{
+    panEnabled=enabled;
 }
 
 void ViewManager::addSegblock()
