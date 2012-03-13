@@ -8,6 +8,8 @@ Segmenter::Segmenter(SeedPointManager* seedPointManager, ImagePairManager* image
         this->imagePairManager = imagePairManager;
         this->kernelType = kernelType;
 
+        segmentation_running = false;
+
         int* dims = imagePairManager->original->GetDimensions();
         img_x = dims[0];
         img_y = dims[1];
@@ -72,12 +74,18 @@ void Segmenter::doSegmentation3D(int pos_x, int pos_y, int pos_z, int minThresho
 {
         qDebug() << "Segmenter::doSegmentation3D(" << pos_z << "," << minThreshold << "," << maxThreshold << ")";
 
+        //enable event flag
+        segmentation_running = true;
+
         //run algorithm       
         doSegmentationIter3D_I(Node(pos_x, pos_y, pos_z), minThreshold, maxThreshold, min_Z, max_Z);
 
         //signal that we're complete
         imagePairManager->segblock->Modified(); //Mark the segblock as modified so VTK know's to trigger an update along the pipline
         emit segmentationDone(pos_z);
+
+        //disable event flag
+        segmentation_running = false;
 }
 
 void Segmenter::doSegmentationIter2D_I(Node start, int minThreshold, int maxThreshold)
@@ -96,7 +104,7 @@ void Segmenter::doSegmentationIter2D_I(Node start, int minThreshold, int maxThre
         // add the start node
         queue.push_back(start);
 
-        while (!queue.empty())
+        while (!queue.empty() && segmentation_running)
         {
                 Node n = queue.back();
                 queue.pop_back();
@@ -404,6 +412,22 @@ void Segmenter::doErode(int pos_z)
         //signal that we're complete
         imagePairManager->segblock->Modified(); //Mark the segblock as modified so VTK know's to trigger an update along the pipline
         emit segmentationDone(pos_z);
+}
+
+bool Segmenter::isWorking()
+{
+        return segmentation_running;
+}
+
+bool Segmenter::cancel3D()
+{
+        if (segmentation_running)
+        {
+                segmentation_running = false;
+                return true;
+        }
+        else
+                return false;
 }
 
 

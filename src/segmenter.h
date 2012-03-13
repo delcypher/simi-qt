@@ -93,8 +93,13 @@ class Segmenter : public QObject
                       */
                 void doErode(int pos_z);
 
+                bool isWorking();
+
         signals:
-                void segmentationDone(int sliceNumber);                
+                void segmentationDone(int sliceNumber);
+
+        public slots:
+                bool cancel3D();
 
         private:
                 ImagePairManager* imagePairManager;                           
@@ -125,5 +130,7 @@ class Segmenter : public QObject
 
                 list<Node> visited3D_list;
                 list<Node> visited2D_list;
+
+                bool segmentation_running;
 
 };
