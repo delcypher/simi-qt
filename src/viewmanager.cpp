@@ -47,16 +47,11 @@ originalY(0)
     //Set the default zoom at start up
     imageViewer->GetRenderer()->GetActiveCamera()->SetParallelScale(maxScale);
 
-    //get default camera positions so we reset to them later
-    imageViewer->GetRenderer()->GetActiveCamera()->GetViewUp(defaultViewUp);
-    imageViewer->GetRenderer()->GetActiveCamera()->GetFocalPoint(defaultFocalPoint);
-    imageViewer->GetRenderer()->GetActiveCamera()->GetPosition(defaultPosition);
-
     //setup segblock image
     addSegblock();
 
 
-    //setup seedpoint drawing?
+    //setup crosshiar
 
     //Calculate half the length of the crosshair lines
     crossHairXlength = imagePairManager->getXDim()*imagePairManager->getXSpacing()/2.0;

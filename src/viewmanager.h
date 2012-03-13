@@ -102,11 +102,6 @@ class ViewManager : public QObject
 		int mouseIntensity;
 		bool mouseOverWidget;
 
-		//for pan
-		double defaultViewUp[3];
-		double defaultFocalPoint[3];
-		double defaultPosition[3];
-
 		//for look up table
 		double blockingAlpha;
 		double segmentationAlpha;
