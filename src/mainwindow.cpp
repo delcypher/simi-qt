@@ -413,6 +413,7 @@ void MainWindow::toolbarSetup()
 
     //set default action
     ui->actionHandTool->setChecked(true);
+    viewManager->panning(true);
 }
 
 void MainWindow::segmentationControlSetup()
