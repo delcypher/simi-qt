@@ -41,6 +41,7 @@ crossHairAlpha(0.5)
     zoomSteps=20;
     currentStep=0;
 
+    //Set the default zoom at start up
     imageViewer->GetRenderer()->GetActiveCamera()->SetParallelScale(maxScale);
 
     //get default camera positions so we reset to them later
@@ -238,25 +239,34 @@ void ViewManager::mouseWheelBackward(vtkObject *caller, unsigned long vtkEvent, 
 
 void ViewManager::ChangeSlice(int slice)
 {
+
+
 	if(slice >= imagePairManager->getZMin() && slice <= imagePairManager->getZMax())
-	{
-        imageViewer->SetSlice(slice);
+	{		
+		/* WORKAROUND:
+		*  We record the zoom level before changing slice so we can force that zoom level after calling
+		*  SetSlice() on the VtkImageViewer2 which has a bug that the zoom level changes in an undesirable way
+		*  after calling SetSlice()
+		*/
+		double recordedZoomLevel= imageViewer->GetRenderer()->GetActiveCamera()->GetParallelScale();
 
-        //try to duplicate display extent so correct segblock slice is shown.
-        int displayExtent[6];
-        imageViewer->GetImageActor()->GetDisplayExtent(displayExtent);
-        segblockActor->SetDisplayExtent(displayExtent);
+		imageViewer->SetSlice(slice);
+		imageViewer->GetRenderer()->GetActiveCamera()->SetParallelScale(recordedZoomLevel); //Force Zoom!
 
-        //segblockActor->SetPropertyKeys(imageViewer->GetImageActor()->GetPropertyKeys());//try duplicate props
+		//try to duplicate display extent so correct segblock slice is shown.
+		int displayExtent[6];
+		imageViewer->GetImageActor()->GetDisplayExtent(displayExtent);
+		segblockActor->SetDisplayExtent(displayExtent);
 
-        //Redraw crosshair if necessary
-        redrawCrossHair();
+		//segblockActor->SetPropertyKeys(imageViewer->GetImageActor()->GetPropertyKeys());//try duplicate props
 
-        emit sliceChanged(slice);
+		//Redraw crosshair if necessary
+		redrawCrossHair();
+
+		emit sliceChanged(slice);
 	}
 
-    //workaround bug where changing slice causes zoom to reset to something unexpected
-    resetZoom();
+
 }
 
 void ViewManager::resetZoom()
@@ -639,6 +649,7 @@ bool ViewManager::setCrosshairAlpha(double alpha)
 	redrawCrossHair();
 	return true;
 }
+
 
 
 
