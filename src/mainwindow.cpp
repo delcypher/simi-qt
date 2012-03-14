@@ -150,8 +150,10 @@ void MainWindow::on_actionOpen_Image_triggered()
 			//When the user changes slice we may need to disable/enabled the segmentation widgets
 			connect(viewManager,SIGNAL(sliceChanged(int)), this, SLOT(tryEnableSegmentationWidgets()));
 
-			//connect redraw volume rendering when segmentation is done by default
-			ui->automaticVolumeRender->setCheckState(Qt::Checked);
+			/*When segmentation is done force redraw for volumeRenderManager
+			* Note if we do 3D segmentation it seems to update itself... not sure why
+			*/
+			connect(segmenter,SIGNAL(segmentationDone(int)),volumeRenderManager,SLOT(render3D()));
 
 
 			//set window title
@@ -781,22 +783,6 @@ void MainWindow::on_actionResetView_triggered()
 	}
 }
 
-void MainWindow::on_automaticVolumeRender_toggled(bool checked)
-{
-    if(checked)
-    {
-        //connect redraw volume rendering when segmentation is done
-        qDebug() << "Enabling automatic volume rendering when segmentation completes";
-        connect(segmenter,SIGNAL(segmentationDone(int)),volumeRenderManager,SLOT(render3D()));
-    }
-    else
-    {
-        //disconnect redraw volume rendering when segmentation is done
-        qDebug() << "disabling automatic volume rendering when segmentation completes";
-        disconnect(segmenter,SIGNAL(segmentationDone(int)),volumeRenderManager,SLOT(render3D()));
-    }
-
-}
 
 void MainWindow::enableSegmentationWidgets()
 {

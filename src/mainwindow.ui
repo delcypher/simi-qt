@@ -355,13 +355,6 @@
           </property>
          </widget>
         </item>
-        <item>
-         <widget class="QCheckBox" name="automaticVolumeRender">
-          <property name="text">
-           <string>Automatic rendering</string>
-          </property>
-         </widget>
-        </item>
        </layout>
       </item>
      </layout>
@@ -384,7 +377,7 @@
       <rect>
        <x>20</x>
        <y>60</y>
-       <width>331</width>
+       <width>360</width>
        <height>29</height>
       </rect>
      </property>

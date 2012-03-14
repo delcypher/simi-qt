@@ -92,8 +92,6 @@ class MainWindow : public QMainWindow
 
 	void on_actionResetView_triggered();
 
-    void on_automaticVolumeRender_toggled(bool checked);
-
 protected:
 	  void closeEvent(QCloseEvent* close);
 
