@@ -7,9 +7,9 @@ ImagePairManager::ImagePairManager()
 	reader = vtkStructuredPointsReader::New();
 	readerSegBlock = vtkStructuredPointsReader::New();
 
-	//set other pointers to NULL
-	original = NULL;
-	segblock =  NULL;
+	//Create our VtkStructured points to hold our image data. We will populate it later.
+	original = vtkStructuredPoints::New();
+	segblock = vtkStructuredPoints::New();
 }
 
 
@@ -33,50 +33,7 @@ bool ImagePairManager::loadImage(QFileInfo image)
 	}
 
 	//setup original image
-	original = reader->GetOutput();
-
-	//determine the image dimensions in terms of voxels
-	int dimensions[3];
-	original->GetDimensions(dimensions);
-	xDim = dimensions[0];
-	yDim = dimensions[1];
-	zDim = dimensions[2];
-
-	//determine extents
-	int extent[6];
-	original->GetExtent(extent);
-	extentZMin = extent[4];
-	extentZMax = extent[5];
-
-	//determine spacing
-	double spacing[3];
-	original->GetSpacing(spacing);
-	qDebug() << "Image opened with widths x:" << xDim << ", y:" << yDim << ", z:" << zDim ;
-	qDebug() << "Spacing: " << spacing[0] << "," << spacing[1] << "," << spacing[2];
-
-
-	//now setup block/segmentation image
-	segblock = vtkStructuredPoints::New();
-	segblock->SetExtent(original->GetExtent());
-	segblock->SetSpacing(original->GetSpacing());
-	segblock->SetNumberOfScalarComponents(1);
-	segblock->SetOrigin(original->GetOrigin());
-	segblock->SetScalarTypeToChar();
-	segblock->AllocateScalars();
-
-	//Make sure everything is consistent as we have changed the dimensions.
-	segblock->Update();
-	//Initialise segblock
-	//setSimBlockVoxelsTo(BACKGROUND);
-
-	segblockInitTime = segblock->GetMTime(); //Record modification time which we'll use later to check if segblock has been modified.
-
-	qDebug() << "segblock now occupies :" << segblock->GetActualMemorySize() << "KB";
-
-	//should probably initialise now...
-    debugDump();
-
-	return true;
+	return loadImageFromSource(reader->GetOutput());
 }
 
 
@@ -274,6 +231,54 @@ void ImagePairManager::debugDump()
 
 
     }
+}
+
+bool ImagePairManager::loadImageFromSource(vtkStructuredPoints *src)
+{
+	//setup original image from a source
+	original->DeepCopy(src);
+
+	//determine the image dimensions in terms of voxels
+	int dimensions[3];
+	original->GetDimensions(dimensions);
+	xDim = dimensions[0];
+	yDim = dimensions[1];
+	zDim = dimensions[2];
+
+	//determine extents
+	int extent[6];
+	original->GetExtent(extent);
+	extentZMin = extent[4];
+	extentZMax = extent[5];
+
+	//determine spacing
+	double spacing[3];
+	original->GetSpacing(spacing);
+	qDebug() << "Image opened with widths x:" << xDim << ", y:" << yDim << ", z:" << zDim ;
+	qDebug() << "Spacing: " << spacing[0] << "," << spacing[1] << "," << spacing[2];
+
+
+	//now setup block/segmentation image
+	segblock->SetExtent(original->GetExtent());
+	segblock->SetSpacing(original->GetSpacing());
+	segblock->SetNumberOfScalarComponents(1);
+	segblock->SetOrigin(original->GetOrigin());
+	segblock->SetScalarTypeToChar();
+	segblock->AllocateScalars();
+
+	//Make sure everything is consistent as we have changed the dimensions.
+	segblock->Update();
+	//Initialise segblock
+	//setSimBlockVoxelsTo(BACKGROUND);
+
+	segblockInitTime = segblock->GetMTime(); //Record modification time which we'll use later to check if segblock has been modified.
+
+	qDebug() << "segblock now occupies :" << segblock->GetActualMemorySize() << "KB";
+
+	//should probably initialise now...
+	debugDump();
+
+	return true;
 }
 
 

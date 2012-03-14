@@ -19,6 +19,7 @@ class ImagePairManager : public QObject
 		ImagePairManager();
 		~ImagePairManager();
 		bool loadImage(QFileInfo image);
+		bool loadImageFromSource(vtkStructuredPoints* src);
 		
 
 
