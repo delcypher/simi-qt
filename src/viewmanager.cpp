@@ -570,11 +570,6 @@ void ViewManager::redrawCrossHair()
 
 }
 
-void ViewManager::reBuildPipeline()
-{
-	imageViewer->GetRenderer()->RemoveActor(segblockActor);
-    addSegblock();
-}
 
 void ViewManager::panning(bool enabled)
 {
