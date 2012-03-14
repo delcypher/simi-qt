@@ -1,2 +1,2 @@
-#include "segmneter_tester.h"
+#include "segmenter_tester.h"
 QTEST_MAIN(SegmenterTester)
