@@ -2,10 +2,10 @@
 #include <QtTest/QtTest>
 #include "segmenter.h"
 
-class SegmneterTester : public QObject
+class SegmenterTester : public QObject
 {
-	/*Q_OBJECT
-	private:
+	Q_OBJECT
+	/*private:
 		SeedPointManager* seedPointManager;
 
 	private slots:

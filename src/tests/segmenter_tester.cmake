@@ -4,7 +4,7 @@
 QT4_WRAP_CPP(SPM_TEST_HEADERS_MOC "../segmenter.h" segmenter_tester.h)
 
 #Set the name of the unit test
-SET(UNIT_TEST_NAME "segmneter_tester")
+SET(UNIT_TEST_NAME "segmenter_tester")
 
 ADD_EXECUTABLE(${UNIT_TEST_NAME}
 		${SPM_TEST_HEADERS_MOC}

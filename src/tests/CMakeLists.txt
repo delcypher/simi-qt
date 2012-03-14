@@ -33,6 +33,9 @@ INCLUDE("seedpointmanager_tester.cmake")
 
 INCLUDE("drawmanager_tester.cmake")
 
+###Segmenter unit test
+INCLUDE("segmenter_tester.cmake")
+
 ###END OF UNIT TESTS
 
 #Add custom target "all_tests" that will build everthing in UNIT_TESTS
