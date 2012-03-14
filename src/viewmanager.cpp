@@ -104,7 +104,7 @@ originalY(0)
     connections->Connect(qvtkWidget->GetInteractor(),
                 vtkCommand::MouseWheelForwardEvent,
                 this,
-                SLOT(mouseWheelForward(vtkObject*,ulong,void*,void*,vtkCommand*)),
+                SLOT(vtkEventHandler(vtkObject*,ulong,void*,void*,vtkCommand*)),
                 NULL,
                 1.0);
 
@@ -112,24 +112,17 @@ originalY(0)
     connections->Connect(qvtkWidget->GetInteractor(),
                 vtkCommand::MouseWheelBackwardEvent,
                 this,
-                SLOT(mouseWheelBackward(vtkObject*,ulong,void*,void*,vtkCommand*)),
+                SLOT(vtkEventHandler(vtkObject*,ulong,void*,void*,vtkCommand*)),
                 NULL,
                 1.0
                 );
 
-    //setup connection for simple left click
-    connections->Connect(qvtkWidget->GetInteractor(),
-			vtkCommand::LeftButtonPressEvent,
-			this,
-			SLOT(mouseLeftClick(vtkObject*,ulong,void*,void*,vtkCommand*)),
-			NULL,
-			1.0);
 
-    //setup connections for mouse dragging
+    //setup connections for mouse dragging and left click
     connections->Connect(qvtkWidget->GetInteractor(),
 		vtkCommand::LeftButtonPressEvent,
 		this,
-		SLOT(dragHandler(vtkObject*,ulong,void*,void*,vtkCommand*)),
+        SLOT(vtkEventHandler(vtkObject*,ulong,void*,void*,vtkCommand*)),
 		NULL,
 		2.0);
 
@@ -137,14 +130,14 @@ originalY(0)
     connections->Connect(qvtkWidget->GetInteractor(),
 		vtkCommand::MouseMoveEvent,
 		this,
-		SLOT(dragHandler(vtkObject*,ulong,void*,void*,vtkCommand*)),
+        SLOT(vtkEventHandler(vtkObject*,ulong,void*,void*,vtkCommand*)),
 		NULL,
 		2.0);
 
     connections->Connect(qvtkWidget->GetInteractor(),
 		vtkCommand::LeftButtonReleaseEvent,
 		this,
-		SLOT(dragHandler(vtkObject*,ulong,void*,void*,vtkCommand*)),
+        SLOT(vtkEventHandler(vtkObject*,ulong,void*,void*,vtkCommand*)),
 		NULL,
 		2.0);
 
@@ -152,7 +145,7 @@ originalY(0)
     connections->Connect(qvtkWidget->GetInteractor(),
 			vtkCommand::EnterEvent,
 			this,
-			SLOT(enterLeaveHandler(vtkObject*,ulong)),
+            SLOT(vtkEventHandler(vtkObject*,ulong,void*,void*,vtkCommand*)),
 			NULL,
 			1.0
 			);
@@ -160,7 +153,7 @@ originalY(0)
     connections->Connect(qvtkWidget->GetInteractor(),
 			vtkCommand::LeaveEvent,
 			this,
-			SLOT(enterLeaveHandler(vtkObject*,ulong)),
+            SLOT(vtkEventHandler(vtkObject*,ulong,void*,void*,vtkCommand*)),
 			NULL,
 			1.0
 			);
@@ -217,22 +210,6 @@ vtkRenderer *ViewManager::getRenderer()
 
 }
 
-void ViewManager::mouseWheelForward(vtkObject *caller, unsigned long vtkEvent, void *clientData, void *callData, vtkCommand *command)
-{
-	ChangeSlice( getCurrentSlice() +1);
-
-    //Prevent vtkInteractorStyle from intercepting the event
-    command->AbortFlagOn();
-}
-
-void ViewManager::mouseWheelBackward(vtkObject *caller, unsigned long vtkEvent, void *clientData, void *callData, vtkCommand *command)
-{
-
-    ChangeSlice( getCurrentSlice() -1);
-
-    //Prevent vtkInteractorStyle from intercepting the event
-    command->AbortFlagOn();
-}
 
 
 void ViewManager::ChangeSlice(int slice)
@@ -395,37 +372,7 @@ bool ViewManager::setSegmentationAlpha(double alpha)
 }
 
 
-void ViewManager::mouseLeftClick(vtkObject *caller, unsigned long vtkEvent, void *clientData, void *callData, vtkCommand *command)
-{
-	vtkRenderWindowInteractor* iren = vtkRenderWindowInteractor::SafeDownCast(caller);
-
-	// Get the location of the click (in window coordinates)
-	int* pos = iren->GetEventPosition();
-
-	qDebug() << "ViewManager::mouseLeftClick() : Window position is:" << pos[0] << pos[1];
-
-	vtkSmartPointer<vtkCellPicker> picker = vtkSmartPointer<vtkCellPicker>::New();
-
-	// Pick from this location.
-	picker->Pick(pos[0], pos[1], 0, imageViewer->GetRenderer());
-
-	if(picker->GetCellId() != -1)
-	{
-		qDebug() << "ViewManager::mouseLeftClick() : IJK:" << picker->GetCellIJK()[0] << "," << picker->GetCellIJK()[1] << "," << picker->GetCellIJK()[2] << " intensity:" <<
-		getLastMouseIntensity();
-		;
-
-
-		emit viewLeftClicked(picker->GetCellIJK()[0], picker->GetCellIJK()[1], picker->GetCellIJK()[2]);
-	}
-	else
-		qDebug() << "ViewManager::mouseLeftClick() : Out of range!";
-
-	//make sure vtkinteractorstyle doesn't catch event
-	command->AbortFlagOn();
-}
-
-void ViewManager::dragHandler(vtkObject *caller, unsigned long vtkEvent, void *clientData, void *callData, vtkCommand *command)
+void ViewManager::vtkEventHandler(vtkObject *caller, unsigned long vtkEvent, void *clientData, void *callData, vtkCommand *command)
 {
     bool inImage=true; //Tells us if mouse is over the image
 
@@ -452,6 +399,7 @@ void ViewManager::dragHandler(vtkObject *caller, unsigned long vtkEvent, void *c
         //This is VERY dirty we should work out the cast at run time!
         mouseIntensity = *(static_cast<short*>(imagePairManager->original->GetScalarPointer(mouseX, mouseY, mouseZ)));
 
+
         //Inform other classes that the mouse has moved.
         emit mouseHasMoved();
     }
@@ -460,9 +408,22 @@ void ViewManager::dragHandler(vtkObject *caller, unsigned long vtkEvent, void *c
 
 	switch(vtkEvent)
 	{
+        case vtkCommand::MouseWheelForwardEvent :
+            ChangeSlice( getCurrentSlice() +1);
+
+        break;
+
+        case vtkCommand::MouseWheelBackwardEvent :
+            ChangeSlice( getCurrentSlice() -1);
+
+        break;
+
 		case vtkCommand::LeftButtonPressEvent :
 			dragOn = true;
 			//qDebug() << "Drag start";
+
+            //inform other classes that the view has been left clicked
+            emit viewLeftClicked(mouseX, mouseY, mouseZ);
 
             if(inImage)
                 emit dragEvent(picker->GetCellIJK()[0],picker->GetCellIJK()[1], picker->GetCellIJK()[2]);
@@ -519,10 +480,24 @@ void ViewManager::dragHandler(vtkObject *caller, unsigned long vtkEvent, void *c
 
 		break;
 
+        case vtkCommand::EnterEvent :
+            mouseOverWidget=true;
+            emit mouseIsOverWidget();
+        break;
+
+        case vtkCommand::LeaveEvent :
+            mouseOverWidget=false;
+            dragOn=false; //disable dragging so that when cursor goes back over widget we don't continue to drag
+            emit mouseLeavesWidget();
+        break;
+
 		default:
 			qWarning() << "ViewManager::dragHandler() unrecognised mouse event received.";
 
 	}
+
+    //make sure vtkinteractorstyle doesn't catch event
+    command->AbortFlagOn();
 }
 
 void ViewManager::update()
@@ -533,27 +508,6 @@ void ViewManager::update()
 
 }
 
-void ViewManager::enterLeaveHandler(vtkObject *caller, unsigned long vtkEvent)
-{
-
-	switch(vtkEvent)
-	{
-		case vtkCommand::EnterEvent :
-			//qDebug() << "enterLeaveHandler() : Enter";
-			mouseOverWidget=true;
-			emit mouseIsOverWidget();
-			break;
-		case vtkCommand::LeaveEvent :
-			//qDebug() << "enterLeaveHandler() : Leave";
-			mouseOverWidget=false;
-			dragOn=false; //disable dragging so that when cursor goes back over widget we don't continue to drag
-			emit mouseLeavesWidget();
-			break;
-		default:
-			qWarning() << "Unexpected event received in ViewManager::enterLeaveHandler()";
-
-    }
-}
 
 void ViewManager::redrawCrossHair()
 {

@@ -50,11 +50,7 @@ class ViewManager : public QObject
 		bool setCrosshairAlpha(double alpha);
 
 	private slots:
-		void mouseLeftClick(vtkObject* caller, unsigned long vtkEvent, void* clientData, void* callData, vtkCommand* command);
-		void mouseWheelForward(vtkObject* caller, unsigned long vtkEvent, void* clientData, void* callData, vtkCommand* command);
-		void mouseWheelBackward(vtkObject* caller, unsigned long vtkEvent, void* clientData, void* callData, vtkCommand* command);
-		void dragHandler(vtkObject* caller, unsigned long vtkEvent, void* clientData, void* callData, vtkCommand* command);
-		void enterLeaveHandler(vtkObject* caller, unsigned long vtkEvent);
+        void vtkEventHandler(vtkObject* caller, unsigned long vtkEvent, void* clientData, void* callData, vtkCommand* command);
 
         void redrawCrossHair();
 
