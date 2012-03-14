@@ -65,6 +65,7 @@ class ViewManager : public QObject
 
 	private:
 		void addSegblock();
+		void addCrosshair();
 
 
 		vtkSmartPointer<vtkImageViewer2> imageViewer;

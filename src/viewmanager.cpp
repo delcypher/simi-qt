@@ -25,6 +25,7 @@ panEnabled(false),
 originalX(0),
 originalY(0)
 {
+    //Setup pointers to widgets and the imagePairManager
     this->imagePairManager = imagePairManager;
     this->qvtkWidget = qvtkWidget;
     this->blockingAlphaSpinBox=blockingAlphaSpinBox;
@@ -50,45 +51,11 @@ originalY(0)
     //setup segblock image
     addSegblock();
 
-
-    //setup crosshiar
-
-    //Calculate half the length of the crosshair lines
-    crossHairXlength = imagePairManager->getXDim()*imagePairManager->getXSpacing()/2.0;
-    crossHairYlength = imagePairManager->getYDim()*imagePairManager->getYSpacing()/2.0;
+    //setup crosshair
+    addCrosshair();
 
 
-    hcrosshairSource = vtkLineSource::New();
-    hcrosshairSource->SetPoint1(-256,0,1000);
-    hcrosshairSource->SetPoint2(256,0,1000);
-    hcrosshairSource->Update();
 
-    hcrosshairMapper = vtkPolyDataMapper::New();
-    hcrosshairMapper->SetInput(hcrosshairSource->GetOutput());
-
-    hcrosshairActor = vtkActor::New();
-    hcrosshairActor->SetMapper(hcrosshairMapper);
-    hcrosshairActor->GetProperty()->SetOpacity(0.0); //hide by default
-    hcrosshairActor->GetProperty()->SetLineWidth(2.0);
-    hcrosshairActor->GetProperty()->SetColor(1.0,1.0,0.0);
-
-    vcrosshairSource = vtkLineSource::New();
-    vcrosshairSource->SetPoint1(0,-256.0,1000);
-    vcrosshairSource->SetPoint2(0,256.0,1000);
-    vcrosshairSource->Update();
-
-    vcrosshairMapper = vtkPolyDataMapper::New();
-    vcrosshairMapper->SetInput(vcrosshairSource->GetOutput());
-
-
-    vcrosshairActor = vtkActor::New();
-    vcrosshairActor->SetMapper(vcrosshairMapper);
-    vcrosshairActor->GetProperty()->SetOpacity(0.0); //hide by default
-    vcrosshairActor->GetProperty()->SetLineWidth(2.0);
-    vcrosshairActor->GetProperty()->SetColor(1.0,1.0,0.0);
-
-    imageViewer->GetRenderer()->AddActor(hcrosshairActor);
-    imageViewer->GetRenderer()->AddActor(vcrosshairActor);
 
     //If the seed point is changed by the user we should redraw the crosshair
     connect(seedPointManager, SIGNAL(seedPointChanged(int,int,int)),
@@ -638,6 +605,46 @@ bool ViewManager::setCrosshairAlpha(double alpha)
 	crossHairAlpha=alpha;
 	redrawCrossHair();
 	return true;
+}
+
+void ViewManager::addCrosshair()
+{
+	//Calculate half the length of the crosshair lines
+	crossHairXlength = imagePairManager->getXDim()*imagePairManager->getXSpacing()/2.0;
+	crossHairYlength = imagePairManager->getYDim()*imagePairManager->getYSpacing()/2.0;
+
+
+	hcrosshairSource = vtkLineSource::New();
+	hcrosshairSource->SetPoint1(-256,0,1000);
+	hcrosshairSource->SetPoint2(256,0,1000);
+	hcrosshairSource->Update();
+
+	hcrosshairMapper = vtkPolyDataMapper::New();
+	hcrosshairMapper->SetInput(hcrosshairSource->GetOutput());
+
+	hcrosshairActor = vtkActor::New();
+	hcrosshairActor->SetMapper(hcrosshairMapper);
+	hcrosshairActor->GetProperty()->SetOpacity(0.0); //hide by default
+	hcrosshairActor->GetProperty()->SetLineWidth(2.0);
+	hcrosshairActor->GetProperty()->SetColor(1.0,1.0,0.0);
+
+	vcrosshairSource = vtkLineSource::New();
+	vcrosshairSource->SetPoint1(0,-256.0,1000);
+	vcrosshairSource->SetPoint2(0,256.0,1000);
+	vcrosshairSource->Update();
+
+	vcrosshairMapper = vtkPolyDataMapper::New();
+	vcrosshairMapper->SetInput(vcrosshairSource->GetOutput());
+
+
+	vcrosshairActor = vtkActor::New();
+	vcrosshairActor->SetMapper(vcrosshairMapper);
+	vcrosshairActor->GetProperty()->SetOpacity(0.0); //hide by default
+	vcrosshairActor->GetProperty()->SetLineWidth(2.0);
+	vcrosshairActor->GetProperty()->SetColor(1.0,1.0,0.0);
+
+	imageViewer->GetRenderer()->AddActor(hcrosshairActor);
+	imageViewer->GetRenderer()->AddActor(vcrosshairActor);
 }
 
 
