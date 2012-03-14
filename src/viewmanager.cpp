@@ -151,16 +151,26 @@ ViewManager::~ViewManager()
 
 }
 
-void ViewManager::setConstrast(double minIntensity, double maxIntensity)
+bool ViewManager::setConstrast(double minIntensity, double maxIntensity)
 {
-    if(maxIntensity >= minIntensity)
-    {
-        imageViewer->SetColorLevel( (minIntensity + maxIntensity)/2.0 );
-        imageViewer->SetColorWindow(maxIntensity - minIntensity);
+	if(minIntensity < imagePairManager->getMinimumIntensity() || maxIntensity > imagePairManager->getMaximumIntensity())
+	{
+		qWarning() << "ViewManager::setConstrast() : Invalid parameters passed";
+		return false;
+	}
 
-        //update
-        imageViewer->GetRenderWindow()->Render();
-    }
+	if(maxIntensity >= minIntensity)
+	{
+		imageViewer->SetColorLevel( (minIntensity + maxIntensity)/2.0 );
+		imageViewer->SetColorWindow(maxIntensity - minIntensity);
+
+		//update
+		imageViewer->GetRenderWindow()->Render();
+		return true;
+	}
+	else
+		return false;
+
 }
 
 int ViewManager::getCurrentSlice()
@@ -172,7 +182,7 @@ int ViewManager::getCurrentSlice()
 
 
 
-void ViewManager::setSlice(int slice)
+bool ViewManager::setSlice(int slice)
 {
 
 
@@ -204,7 +214,10 @@ void ViewManager::setSlice(int slice)
 		update();
 
 		emit sliceChanged(slice);
+		return true;
 	}
+	else
+		return false;
 
 
 }
