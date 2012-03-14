@@ -62,10 +62,12 @@ VolumeRenderManager::~VolumeRenderManager()
 void VolumeRenderManager::render3D()
 {
 	qDebug() << "This is renderManager function" ;
-	//qDebug() << "Currently, the viewport is " << renderer->GetCenter()[0] << " " << renderer->GetCenter()[1] << " " << renderer->GetCenter()[2];
+
 
 	renderWindow->Render();
 	qvtk3Ddisplayer->update();
+
+
 
 }
 

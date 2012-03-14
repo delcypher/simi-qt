@@ -664,8 +664,8 @@ void MainWindow::on_do3Drender_clicked()
 {
 	qDebug() << "3D draw button is clicked" ;
 	//setup volumeRenderManager
-
-	volumeRenderManager->render3D();
+	if(imagePairManager != NULL)
+		volumeRenderManager->render3D();
 }
 
 void MainWindow::on_actionClear_Segmentation_on_All_Slices_triggered()
