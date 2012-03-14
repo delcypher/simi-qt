@@ -56,18 +56,14 @@ VolumeRenderManager::VolumeRenderManager(ImagePairManager* imagePairManager, QVT
 
 VolumeRenderManager::~VolumeRenderManager()
 {
-
+	//Destructor
 }
 
 void VolumeRenderManager::render3D()
 {
-	qDebug() << "This is renderManager function" ;
-
-
+	//render
 	renderWindow->Render();
 	qvtk3Ddisplayer->update();
-
-
 
 }
 
