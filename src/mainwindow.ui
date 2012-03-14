@@ -19,7 +19,7 @@
      <rect>
       <x>430</x>
       <y>10</y>
-      <width>361</width>
+      <width>381</width>
       <height>131</height>
      </rect>
     </property>
@@ -95,14 +95,14 @@
      <rect>
       <x>430</x>
       <y>160</y>
-      <width>361</width>
+      <width>381</width>
       <height>211</height>
      </rect>
     </property>
     <property name="title">
      <string>Segmentation</string>
     </property>
-    <widget class="QWidget" name="layoutWidget">
+    <widget class="QWidget" name="layoutWidget2">
      <property name="geometry">
       <rect>
        <x>20</x>
@@ -250,14 +250,14 @@
      <rect>
       <x>430</x>
       <y>370</y>
-      <width>361</width>
+      <width>381</width>
       <height>131</height>
      </rect>
     </property>
     <property name="title">
      <string>Drawing</string>
     </property>
-    <widget class="QWidget" name="layoutWidget">
+    <widget class="QWidget" name="layoutWidget3">
      <property name="geometry">
       <rect>
        <x>20</x>
@@ -295,7 +295,7 @@
       </item>
      </layout>
     </widget>
-    <widget class="QWidget" name="layoutWidget">
+    <widget class="QWidget" name="layoutWidget4">
      <property name="geometry">
       <rect>
        <x>20</x>
@@ -365,14 +365,14 @@
      <rect>
       <x>430</x>
       <y>510</y>
-      <width>361</width>
+      <width>381</width>
       <height>96</height>
      </rect>
     </property>
     <property name="title">
      <string>Morphology</string>
     </property>
-    <widget class="QWidget" name="layoutWidget">
+    <widget class="QWidget" name="layoutWidget5">
      <property name="geometry">
       <rect>
        <x>20</x>
@@ -412,7 +412,7 @@
       </item>
      </layout>
     </widget>
-    <widget class="QWidget" name="layoutWidget">
+    <widget class="QWidget" name="layoutWidget6">
      <property name="geometry">
       <rect>
        <x>20</x>
@@ -461,7 +461,7 @@
     <property name="frameShadow">
      <enum>QFrame::Raised</enum>
     </property>
-    <widget class="QVTKWidget" name="qvtk3Ddisplayer">
+    <widget class="QVTKWidget" name="qvtk3Ddisplayer" native="true">
      <property name="geometry">
       <rect>
        <x>10</x>
@@ -472,7 +472,7 @@
      </property>
     </widget>
    </widget>
-   <widget class="QWidget" name="layoutWidget">
+   <widget class="QWidget" name="layoutWidget7">
     <property name="geometry">
      <rect>
       <x>0</x>
@@ -490,7 +490,7 @@
        <property name="frameShadow">
         <enum>QFrame::Raised</enum>
        </property>
-       <widget class="QVTKWidget" name="qvtkWidget">
+       <widget class="QVTKWidget" name="qvtkWidget" native="true">
         <property name="geometry">
          <rect>
           <x>10</x>
@@ -500,7 +500,7 @@
          </rect>
         </property>
        </widget>
-       <widget class="QWidget" name="layoutWidget">
+       <widget class="QWidget" name="layoutWidget8">
         <property name="geometry">
          <rect>
           <x>10</x>
@@ -547,7 +547,7 @@
      <x>0</x>
      <y>0</y>
      <width>876</width>
-     <height>19</height>
+     <height>20</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
