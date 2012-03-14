@@ -257,6 +257,12 @@ bool ImagePairManager::loadImageFromSource(vtkStructuredPoints *src)
 	qDebug() << "Image opened with widths x:" << xDim << ", y:" << yDim << ", z:" << zDim ;
 	qDebug() << "Spacing: " << spacing[0] << "," << spacing[1] << "," << spacing[2];
 
+	/* Workaround:
+	*  We do not know when we load an image where it thinks its (0,0,0) voxel should be (i.e. the origin property of the VtkStructuredPoints)
+	*  could be different to what we expect. So we force it so that when start the (0,0,0) point in the world co-ordinate system will be at
+	*  the centre of the image in the x and y planes (I don't know about the Z).
+	*/
+	original->SetOrigin( -(xDim/2.0)*spacing[0], -(yDim/2.0)*spacing[1],0 );
 
 	//now setup block/segmentation image
 	segblock->SetExtent(original->GetExtent());
