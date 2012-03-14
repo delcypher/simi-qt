@@ -96,7 +96,7 @@
       <x>430</x>
       <y>160</y>
       <width>361</width>
-      <height>201</height>
+      <height>211</height>
      </rect>
     </property>
     <property name="title">
@@ -384,7 +384,7 @@
       <rect>
        <x>20</x>
        <y>60</y>
-       <width>360</width>
+       <width>331</width>
        <height>29</height>
       </rect>
      </property>
@@ -554,7 +554,7 @@
      <x>0</x>
      <y>0</y>
      <width>876</width>
-     <height>25</height>
+     <height>19</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
