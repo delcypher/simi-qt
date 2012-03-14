@@ -144,12 +144,10 @@ void MainWindow::on_actionOpen_Image_triggered()
 			ui->actionLoad_Segmentation->setEnabled(true);
 			ui->actionSave_Segmentation->setEnabled(true);
 
-			//The segmentation widgets are disabled whilst segmenting, enable them when done
-			connect(segmenter, SIGNAL(segmentationDone(int)), this, SLOT(tryEnableSegmentationWidgets()));
-
 			//At start up no seed point will be set so disable segmentation widgets
-			//ui->segmentationGroupBox_2->setEnabled(false);
 			disableSegmentationWidgets();
+
+			//When the user changes slice we may need to disable/enabled the segmentation widgets
 			connect(viewManager,SIGNAL(sliceChanged(int)), this, SLOT(tryEnableSegmentationWidgets()));
 
 			//connect redraw volume rendering when segmentation is done by default
@@ -466,6 +464,7 @@ void MainWindow::on_doSegmentation2D_clicked()
                 }
 
                 segmenter->doSegmentation2D(pos_x, pos_y, pos_z, ui->minSegIntensitySlider->value(), ui->maxSegIntensitySlider->value());
+		enableSegmentationWidgets();
 	}
 }
 
@@ -530,6 +529,9 @@ void MainWindow::on_doSegmentation3D_clicked()
 
                 segmenter->doSegmentation3D(pos_x, pos_y, pos_z, ui->minSegIntensitySlider->value(), ui->maxSegIntensitySlider->value(), ui->minZSliceSpinBox->value(), ui->maxZSliceSpinBox->value());
                 hideWaitDialog();
+
+		//reenable segmentation widgets
+		enableSegmentationWidgets();
 
                 //remove cancel button and connection for other dialogs
                 progressDialog->setCancelButtonText(QString());
