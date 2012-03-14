@@ -25,7 +25,6 @@ class ViewManager : public QObject
 		~ViewManager();
 		void setConstrast(double minIntensity, double maxIntensity);
 		int getCurrentSlice();
-        vtkRenderer* getRenderer();
 
 		int getLastMousePosX() { return mouseX;}
 		int getLastMousePosY() { return mouseY;}
