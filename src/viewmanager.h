@@ -32,7 +32,8 @@ class ViewManager : public QObject
 		int getLastMouseIntensity() { return mouseIntensity;}
 		bool mouseIsOverWidget() { return mouseOverWidget;}
 
-		void panning(bool enabled);
+                void enablePanning(bool enabled);
+
 
 	
 	public slots:
