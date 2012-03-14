@@ -96,12 +96,18 @@ class Segmenter : public QObject
                       */
                 void doErode(int pos_z);
 
+                //! Checks whether 3D segmentation is running.
                 bool isWorking();
 
         signals:
+                //! Signals that the segmentation algorithm has finished running.
+                      /*!
+                         \param sliceNumber third dimension (z axis).
+                      */
                 void segmentationDone(int sliceNumber);
 
         public slots:
+                //! Slot for stopping 3D segmentation.
                 bool cancel3D();
 
         private:
