@@ -171,14 +171,14 @@ void MainWindow::on_actionOpen_Image_triggered()
 void MainWindow::on_actionSlice_up_triggered()
 {
     if(viewManager!=0)
-        viewManager->ChangeSlice( viewManager->getCurrentSlice() +1);
+	viewManager->setSlice( viewManager->getCurrentSlice() +1);
 }
 
 
 void MainWindow::on_actionSlice_down_triggered()
 {
     if(viewManager!=0)
-        viewManager->ChangeSlice( viewManager->getCurrentSlice() -1);
+	viewManager->setSlice( viewManager->getCurrentSlice() -1);
 }
 
 
@@ -251,7 +251,7 @@ void MainWindow::on_maxIntensitySlider_valueChanged(int value)
 void MainWindow::on_sliceSlider_valueChanged(int value)
 {
 	if(viewManager!=0)
-        viewManager->ChangeSlice(value);
+	viewManager->setSlice(value);
 }
 
 void MainWindow::on_actionHandTool_triggered()

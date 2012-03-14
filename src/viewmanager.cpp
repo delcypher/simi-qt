@@ -205,7 +205,7 @@ int ViewManager::getCurrentSlice()
 
 
 
-void ViewManager::ChangeSlice(int slice)
+void ViewManager::setSlice(int slice)
 {
 
 
@@ -402,12 +402,12 @@ void ViewManager::vtkEventHandler(vtkObject *caller, unsigned long vtkEvent, voi
 	switch(vtkEvent)
 	{
         case vtkCommand::MouseWheelForwardEvent :
-            ChangeSlice( getCurrentSlice() +1);
+	    setSlice( getCurrentSlice() +1);
 
         break;
 
         case vtkCommand::MouseWheelBackwardEvent :
-            ChangeSlice( getCurrentSlice() -1);
+	    setSlice( getCurrentSlice() -1);
 
         break;
 

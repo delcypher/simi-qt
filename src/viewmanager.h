@@ -36,7 +36,7 @@ class ViewManager : public QObject
 
 	
 	public slots:
-		void ChangeSlice(int slice);
+		void setSlice(int slice);
 		void update();
 		void debugDump();
 		void buildLookUpTable();
