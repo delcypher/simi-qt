@@ -31,6 +31,7 @@ INCLUDE("cmake/lcov.cmake")
 INCLUDE("ui_tester.cmake")
 INCLUDE("seedpointmanager_tester.cmake")
 
+INCLUDE("drawmanager_tester.cmake")
 
 ###END OF UNIT TESTS
 

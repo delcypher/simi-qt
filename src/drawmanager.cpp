@@ -17,8 +17,6 @@ DrawManager::~DrawManager()
 
 void DrawManager::draw(int xVoxel, int yVoxel, int zVoxel)
 {
-	qDebug() << "DrawManager::draw(" << xVoxel << "," << yVoxel << "," << zVoxel << ")";
-
 	// Set draw mode and call draw algorithm function
 	int mode = DrawManager::DRAW;
 	drawAlgorithm(xVoxel, yVoxel, zVoxel, mode);
@@ -30,8 +28,6 @@ void DrawManager::draw(int xVoxel, int yVoxel, int zVoxel)
 
 void DrawManager::erase(int xVoxel, int yVoxel, int zVoxel)
 {
-	qDebug() << "DrawManager::erase(" << xVoxel << "," << yVoxel << "," << zVoxel << ")";
-
 	// Set draw mode and call draw algorithm function
 	int mode = DrawManager::ERASE;
 	drawAlgorithm(xVoxel, yVoxel, zVoxel, mode);
