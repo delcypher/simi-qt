@@ -74,6 +74,8 @@ class MainWindow : public QMainWindow
 	bool on_actionSave_Segmentation_triggered();
 
         void tryEnableSegmentationWidgets();
+	void enableSegmentationWidgets();
+	void disableSegmentationWidgets();
 
 	void on_do3Drender_clicked();
 

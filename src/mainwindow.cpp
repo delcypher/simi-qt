@@ -148,7 +148,8 @@ void MainWindow::on_actionOpen_Image_triggered()
 			connect(segmenter, SIGNAL(segmentationDone(int)), this, SLOT(tryEnableSegmentationWidgets()));
 
 			//At start up no seed point will be set so disable segmentation widgets
-			ui->segmentationGroupBox_2->setEnabled(false);
+			//ui->segmentationGroupBox_2->setEnabled(false);
+			disableSegmentationWidgets();
 			connect(viewManager,SIGNAL(sliceChanged(int)), this, SLOT(tryEnableSegmentationWidgets()));
 
 			//connect redraw volume rendering when segmentation is done by default
@@ -455,7 +456,7 @@ void MainWindow::on_doSegmentation2D_clicked()
 	if(segmenter!=0)
 	{
                 //disable segmentation widgets whilst segmenting
-                ui->segmentationGroupBox_2->setEnabled(false);
+		disableSegmentationWidgets();
                 int pos_z = viewManager->getCurrentSlice();
                 int pos_x, pos_y;
 
@@ -504,7 +505,7 @@ void MainWindow::on_doSegmentation3D_clicked()
         if(segmenter!=0)
         {
                 //disable segmentation widgets whilst segmenting
-                ui->segmentationGroupBox_2->setEnabled(false);
+		disableSegmentationWidgets();
 
                 //segmentation parameters
                 int pos_z = viewManager->getCurrentSlice();
@@ -607,12 +608,12 @@ void MainWindow::tryEnableSegmentationWidgets()
     if(seedPointManager!=0 && viewManager!=0 && seedPointManager->getSeedPoint(viewManager->getCurrentSlice(),dummy,dummy))
     {
         qDebug() << "Enable segmentation widgets!";
-        ui->segmentationGroupBox_2->setEnabled(true);
+	enableSegmentationWidgets();
     }
     else
     {
         qDebug() << "Cannot enable segmentation widgets!";
-        ui->segmentationGroupBox_2->setEnabled(false);
+	disableSegmentationWidgets();
     }
 }
 
@@ -793,4 +794,16 @@ void MainWindow::on_automaticVolumeRender_toggled(bool checked)
         disconnect(segmenter,SIGNAL(segmentationDone(int)),volumeRenderManager,SLOT(render3D()));
     }
 
+}
+
+void MainWindow::enableSegmentationWidgets()
+{
+	ui->doSegmentation2D->setEnabled(true);
+	ui->doSegmentation3D->setEnabled(true);
+}
+
+void MainWindow::disableSegmentationWidgets()
+{
+	ui->doSegmentation2D->setEnabled(false);
+	ui->doSegmentation3D->setEnabled(false);
 }
