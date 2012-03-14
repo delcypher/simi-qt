@@ -1,3 +1,6 @@
+#ifndef VIEWMANAGER_H
+#define VIEWMANAGER_H
+
 #include <QObject>
 #include <vtkStructuredPoints.h>
 #include <vtkImageData.h>
@@ -115,3 +118,5 @@ class ViewManager : public QObject
 
 
 };
+
+#endif

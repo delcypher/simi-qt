@@ -1,3 +1,6 @@
+#ifndef SEGMENTER_H
+#define SEGMENTER_H
+
 /*! \file segmenter.h */
 
 //!  Segmenter.
@@ -134,3 +137,5 @@ class Segmenter : public QObject
                 bool segmentation_running;
 
 };
+
+#endif
