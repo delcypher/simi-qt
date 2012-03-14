@@ -531,7 +531,7 @@ void ViewManager::redrawCrossHair()
 }
 
 
-void ViewManager::panning(bool enabled)
+void ViewManager::enablePanning(bool enabled)
 {
     panEnabled=enabled;
 }

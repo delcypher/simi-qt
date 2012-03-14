@@ -21,7 +21,7 @@ class ViewManager : public QObject
 {
 	Q_OBJECT
 	public:
-	  ViewManager(ImagePairManager* imagePairManager, SeedPointManager* seedPointManager, QVTKWidget* vtkWidget, QDoubleSpinBox* blockingAlphaSpinBox, QDoubleSpinBox* segmentationAlphaSpinBox, QDoubleSpinBox* crosshairAlphaSpinBox);
+		ViewManager(ImagePairManager* imagePairManager, SeedPointManager* seedPointManager, QVTKWidget* vtkWidget, QDoubleSpinBox* blockingAlphaSpinBox, QDoubleSpinBox* segmentationAlphaSpinBox, QDoubleSpinBox* crosshairAlphaSpinBox);
 		~ViewManager();
 		void setConstrast(double minIntensity, double maxIntensity);
 		int getCurrentSlice();
@@ -32,7 +32,7 @@ class ViewManager : public QObject
 		int getLastMouseIntensity() { return mouseIntensity;}
 		bool mouseIsOverWidget() { return mouseOverWidget;}
 
-        void panning(bool enabled);
+		void panning(bool enabled);
 
 	
 	public slots:
@@ -50,9 +50,8 @@ class ViewManager : public QObject
 		bool setCrosshairAlpha(double alpha);
 
 	private slots:
-        void vtkEventHandler(vtkObject* caller, unsigned long vtkEvent, void* clientData, void* callData, vtkCommand* command);
-
-        void redrawCrossHair();
+		void vtkEventHandler(vtkObject* caller, unsigned long vtkEvent, void* clientData, void* callData, vtkCommand* command);
+		void redrawCrossHair();
 
 
 	signals:
@@ -76,13 +75,13 @@ class ViewManager : public QObject
 		vtkSmartPointer<vtkImageActor> segblockActor;
 		vtkSmartPointer<vtkLookupTable> lut;
 
-        vtkSmartPointer<vtkLineSource> hcrosshairSource;
-        vtkSmartPointer<vtkPolyDataMapper> hcrosshairMapper;
-        vtkSmartPointer<vtkActor> hcrosshairActor;
+		vtkSmartPointer<vtkLineSource> hcrosshairSource;
+		vtkSmartPointer<vtkPolyDataMapper> hcrosshairMapper;
+		vtkSmartPointer<vtkActor> hcrosshairActor;
 
-        vtkSmartPointer<vtkLineSource> vcrosshairSource;
-        vtkSmartPointer<vtkPolyDataMapper> vcrosshairMapper;
-        vtkSmartPointer<vtkActor> vcrosshairActor;
+		vtkSmartPointer<vtkLineSource> vcrosshairSource;
+		vtkSmartPointer<vtkPolyDataMapper> vcrosshairMapper;
+		vtkSmartPointer<vtkActor> vcrosshairActor;
 
 		double minScale; //for Zoom
 		double maxScale; //for zoom
@@ -110,12 +109,10 @@ class ViewManager : public QObject
 		QDoubleSpinBox* crosshairAlphaSpinBox;
 		double crossHairAlpha;
 
-        //for panning
-        bool panEnabled;
-        int originalX;
-        int originalY;
-
-
+		//for panning
+		bool panEnabled;
+		int originalX;
+		int originalY;
 
 };
 

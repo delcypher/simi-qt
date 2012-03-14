@@ -281,7 +281,7 @@ void MainWindow::on_actionHandTool_triggered()
 		);
 
     //enable panning
-    viewManager->panning(true);
+    viewManager->enablePanning(true);
 
 }
 
@@ -305,7 +305,7 @@ void MainWindow::on_actionPenTool_triggered()
 		);
 
     //disable panning
-    viewManager->panning(false);
+    viewManager->enablePanning(false);
 
     //enable connection
     connect(viewManager,
@@ -342,7 +342,7 @@ void MainWindow::on_actionCrosshairTool_triggered()
 		);
 
     //disable panning
-    viewManager->panning(false);
+    viewManager->enablePanning(false);
 
 
     //enable connection
@@ -373,7 +373,7 @@ void MainWindow::on_actionEraseTool_triggered()
 		);
 
     //disable panning
-    viewManager->panning(false);
+    viewManager->enablePanning(false);
 
     //enable connection
     connect(viewManager,
@@ -413,7 +413,7 @@ void MainWindow::toolbarSetup()
 
     //set default action
     ui->actionHandTool->setChecked(true);
-    viewManager->panning(true);
+    viewManager->enablePanning(true);
 }
 
 void MainWindow::segmentationControlSetup()
