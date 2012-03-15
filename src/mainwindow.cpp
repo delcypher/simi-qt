@@ -526,7 +526,7 @@ void MainWindow::on_doSegmentation3D_clicked()
 
                 //Modify the dialog to have a cancel button
                 showWaitDialog();
-                progressDialog->setCancelButtonText(QString("Cancel"));
+                progressDialog->setCancelButtonText(QString("Stop"));
                 connect(progressDialog,SIGNAL(canceled()), segmenter, SLOT(cancel3D()));
 
                 segmenter->doSegmentation3D(pos_x, pos_y, pos_z, ui->minSegIntensitySlider->value(), ui->maxSegIntensitySlider->value(), ui->minZSliceSpinBox->value(), ui->maxZSliceSpinBox->value());
