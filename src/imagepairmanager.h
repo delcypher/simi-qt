@@ -40,6 +40,7 @@ class ImagePairManager : public QObject
         *  \param image is the VtkStructuredPoints file to load
         *  \sa original
         *  \sa segblock
+        *  \return True if successful.
         */
         bool loadImage(QFileInfo image);
 
@@ -52,6 +53,7 @@ class ImagePairManager : public QObject
         *  \param src is a pointer to an existing VtkStructuredPoints object to do a deep copy from
         *  \sa original
         *  \sa segblock
+        *  \return True if successful.
         */
         bool loadImageFromSource(vtkStructuredPoints* src);
 		
