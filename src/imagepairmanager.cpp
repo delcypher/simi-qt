@@ -175,6 +175,7 @@ bool ImagePairManager::saveSegblock(QString path)
 	//Pass in the file name and path
 	const char* filename = path.toAscii();
 	segblockWriter->SetFileName(filename);
+	segblockWriter->SetFileTypeToBinary();
 
 	//Write out file
 	int writeResult;
