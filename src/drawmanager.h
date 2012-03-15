@@ -54,7 +54,7 @@ class DrawManager : public QObject
         QComboBox* drawType;
 		QSpinBox* minZSlice;
 		QSpinBox* maxZSlice;
-		QCheckBox* segmentation;
+		QCheckBox* segReadOnly;
 
 		void drawAlgorithm(int &xVoxel, int &yVoxel, int &zVoxel, int &mode); // helper function for draw and erase function
 

@@ -2,6 +2,7 @@
 #include <QtTest/QtTest>
 #include <QSpinBox>
 #include <QComboBox>
+#include <QCheckBox>
 #include "drawmanager.h"
 #include "imagepairmanager.h"
 #include "vtkStructuredPoints.h"
@@ -15,16 +16,24 @@ class DrawManagerTester : public QObject
 		ImagePairManager* imagePairManager;
 		QSpinBox* drawSize;
 		QComboBox* drawType;
+		QSpinBox* minZSlice;
+		QSpinBox* maxZSlice;
+		QCheckBox* segReadOnly;
 		vtkStructuredPoints* dummyImage;
 
 	private slots:
 		void initTestCase()
 		{
-			//Setup dummy drawSize and drawType UI
+			//Setup dummy UI components
 			drawSize = new QSpinBox();
 			drawSize->setRange(1, 20);
 			drawType = new QComboBox();
 			drawType->addItem("Dummy Type");
+			minZSlice = new QSpinBox();
+			minZSlice->setRange(0, 100);
+			maxZSlice = new QSpinBox();
+			maxZSlice->setRange(0, 100);
+			segReadOnly = new QCheckBox();
 
 			//Create a dummy VTK structure point image and load it to ImagePairManager
 			imagePairManager = new ImagePairManager();
@@ -33,7 +42,7 @@ class DrawManagerTester : public QObject
 			imagePairManager->loadImageFromSource(dummyImage);
 
 			//Initialise DrawManager
-			drawManager = new DrawManager(imagePairManager, drawSize, drawType);
+			drawManager = new DrawManager(imagePairManager, drawSize, drawType, minZSlice, maxZSlice, segReadOnly);
 		}
 
 		void testBrushSize()
