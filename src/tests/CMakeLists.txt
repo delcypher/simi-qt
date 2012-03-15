@@ -32,6 +32,7 @@ INCLUDE("ui_tester.cmake")
 INCLUDE("seedpointmanager_tester.cmake")
 
 INCLUDE("drawmanager_tester.cmake")
+INCLUDE("imagepairmanager_tester.cmake")
 
 ###Segmenter unit test
 INCLUDE("segmenter_tester.cmake")
