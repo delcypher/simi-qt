@@ -10,7 +10,7 @@ MACRO(SQ_SET_CACHE varname value type string_description)
 	ENDIF()
 ENDMACRO(SQ_SET_CACHE)
 
-SQ_SET_CACHE(SQ_BUILD_TYPE "Debug" STRING "Build type for the simi-qt component")
+SQ_SET_CACHE(SQ_BUILD_TYPE "Release" STRING "Build type for the simi-qt component")
 # Set the possible values of build type for cmake-gui
 set_property(CACHE SQ_BUILD_TYPE PROPERTY STRINGS "Debug" "Release" "MinSizeRel" "RelWithDebInfo")
 
