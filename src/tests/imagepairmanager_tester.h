@@ -207,7 +207,7 @@ class ImagePairManagerTester : public QObject
 
 	void save()
 	{
-		QVERIFY(imagePairManager->saveSegblock( QString("test") ));
+		QVERIFY(imagePairManager->saveSegblock( QString("test.vtk") ));
 	}
 
 	void load()

@@ -173,14 +173,14 @@ bool ImagePairManager::saveSegblock(QString path)
 	segblockWriter->SetInput(segblock);
 
 	//Pass in the file name and path
-	const char* filename = path.toAscii() + ".vtk";
+	const char* filename = path.toAscii();
 	segblockWriter->SetFileName(filename);
 
 	//Write out file
 	int writeResult;
 	writeResult = segblockWriter->Write();
 
-	qDebug() << "ImagePairManager::saveSegblock(" << filename << ")";
+	qDebug() << "ImagePairManager::saveSegblock(" << path << ")";
 
     segblockInitTime = segblock->GetMTime(); //update the init time
 	return writeResult;
