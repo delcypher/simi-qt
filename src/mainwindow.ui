@@ -251,7 +251,7 @@
       <x>430</x>
       <y>370</y>
       <width>381</width>
-      <height>131</height>
+      <height>151</height>
      </rect>
     </property>
     <property name="title">
@@ -363,6 +363,19 @@
        </layout>
       </item>
      </layout>
+    </widget>
+    <widget class="QCheckBox" name="segReadOnly">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>130</y>
+       <width>171</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Segmentation Read-Only</string>
+     </property>
     </widget>
    </widget>
    <widget class="QGroupBox" name="morphologyGroupBox">
@@ -544,19 +557,6 @@
       </widget>
      </item>
     </layout>
-   </widget>
-   <widget class="QCheckBox" name="segReadOnly">
-    <property name="geometry">
-     <rect>
-      <x>450</x>
-      <y>500</y>
-      <width>171</width>
-      <height>19</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Segmentation Read-Only</string>
-    </property>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">

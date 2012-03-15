@@ -89,9 +89,9 @@ void DrawManager::drawAlgorithm(int &xVoxel, int &yVoxel, int &zVoxel, int &mode
 							else
 							{
 								*voxel = blockType;
+								qDebug() << "DrawManager::drawAlgorithm->DRAWN_AT(" << xVoxel + x << "," << yVoxel + y << ") for all slices";
 							}
 						}
-						qDebug() << "DrawManager::drawAlgorithm->DRAWN_AT(" << xVoxel + x << "," << yVoxel + y << ") for all slices";
 					}
 					else if (drawType->currentText() == "Blocking (Z Slices Range)")
 					{
@@ -105,9 +105,9 @@ void DrawManager::drawAlgorithm(int &xVoxel, int &yVoxel, int &zVoxel, int &mode
 							else
 							{
 								*voxel = blockType;
+								qDebug() << "DrawManager::drawAlgorithm->DRAWN_AT(" << xVoxel + x << "," << yVoxel + y << ") for the provided Z Slices range";
 							}
 						}
-						qDebug() << "DrawManager::drawAlgorithm->DRAWN_AT(" << xVoxel + x << "," << yVoxel + y << ") for all slices";
 					}
 					else
 					{
@@ -119,9 +119,8 @@ void DrawManager::drawAlgorithm(int &xVoxel, int &yVoxel, int &zVoxel, int &mode
 						else
 						{
 							*voxel = blockType;
+							qDebug() << "DrawManager::drawAlgorithm->DRAWN_AT(" << xVoxel + x << "," << yVoxel + y << ") for single slices";
 						}
-
-						qDebug() << "DrawManager::drawAlgorithm->DRAWN_AT(" << xVoxel + x << "," << yVoxel + y << ") for single slices";
 					}
 				}
 			}
@@ -145,9 +144,15 @@ void DrawManager::drawAlgorithm(int &xVoxel, int &yVoxel, int &zVoxel, int &mode
 				else
 				{
 					unsigned char* voxel = static_cast<unsigned char*>(imagePairManager->segblock->GetScalarPointer(xVoxel + x, yVoxel + y, zVoxel));
-					*voxel = blockType;
-
-					qDebug() << "DrawManager::drawAlgorithm->ERASE_AT(" << xVoxel + x << "," << yVoxel + y << ")";
+					if (segmentation->checkState() == 2 && *voxel == ImagePairManager::SEGMENTATION)
+					{
+						qDebug() << "DrawManager::drawAlgorithm->CANNOT_DRAWN_ON_SEGMENTATION(" << xVoxel + x << "," << yVoxel + y << ")";
+					}
+					else
+					{
+						*voxel = blockType;
+						qDebug() << "DrawManager::drawAlgorithm->ERASE_AT(" << xVoxel + x << "," << yVoxel + y << ")";
+					}
 				}
 			}
 		}
