@@ -97,6 +97,7 @@ class MainWindow : public QMainWindow
 		DrawManager* drawManager;
 		Segmenter* segmenter;
 		VolumeRenderManager* volumeRenderManager;
+
 		QFileInfo imageInfo;
 		QDir workPath; //Directory used file open dialogs
 		Ui::MainWindow* ui; //handle to user interface

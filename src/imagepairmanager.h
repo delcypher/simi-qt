@@ -146,7 +146,7 @@ class ImagePairManager : public QObject
 
         /*! Save the blocking/segmentation image (segblock) to file named by path.
         *  This also resets ImagePairManager::segblockModified() to false.
-        *  \param The filepath to save the image to
+        *  \param path is the filepath to save the image to
         *  \return True if successful otherwise false.
         *  \sa segblock
         */
@@ -155,7 +155,7 @@ class ImagePairManager : public QObject
         /*! Load the blocking/segmentation image to file named by path. This will overwrite
         *   any data currently stored in blocking/segmentation (segblock).
         *
-        *  \param The filepath to save the image to
+        *  \param path is the filepath to save the image to
         *  \return True if successful otherwise false.
         *  \sa segblock
         */

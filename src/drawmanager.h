@@ -27,6 +27,7 @@ class DrawManager : public QObject
 		~DrawManager();
 	
 	signals:
+        /*! Emitted when drawing is complete */
         void drawingDone(); //emitted to indicate drawing is done
 
 	public slots:
