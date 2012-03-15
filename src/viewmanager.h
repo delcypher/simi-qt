@@ -29,7 +29,7 @@ class ViewManager : public QObject
 	public:
 		/*! Constructor
 		* \param imagePairManager is an imagePairManager that has already had its image loaded. This will used as the source for the original image and segmentation/blocking image.
-		* \param seedPointManager
+		* \param seedPointManager is a seedPointManager. It is used draw the seed point crosshair into the QVTKWidget that is rendered into.
 		* \param vtkWidget is the QVTKWidget to be used to render into
 		* \param blockingAlphaSpinBox is the the Widget used to control the blocking Alpha. It is automatically configured by this constructor.
 		* \param segmentationAlphaSpinBox is the the Widget used to control the segmentation Alpha. It is automatically configured by this constructor.
