@@ -70,98 +70,7 @@ void MainWindow::on_actionOpen_Image_triggered()
 
 		if(!newImagePath.isEmpty())
 		{
-			imageInfo.setFile(newImagePath);
-
-			//Setup the ImagePairManager
-			if(imagePairManager!=0)
-				delete imagePairManager;
-
-			imagePairManager = new ImagePairManager();
-
-			if(!(imagePairManager->loadImage(imageInfo)))
-			{
-				qDebug() << "Failed to open" << imageInfo.absoluteFilePath();
-				return;
-			}
-
-			//setup SeedPointManager
-			if(seedPointManager!=0)
-				delete seedPointManager;
-			seedPointManager = new SeedPointManager(imagePairManager->getZDim());
-
-			//setup LayoutManager
-			if(viewManager!=0)
-				delete viewManager;
-			viewManager = new ViewManager(imagePairManager, seedPointManager, ui->qvtkWidget,ui->blockingAlphadoubleSpinBox, ui->segmentationAlphadoubleSpinBox, ui->crosshairAlphadoubleSpinBox);
-
-			//setup drawManager
-			if(drawManager!=0)
-				delete drawManager;
-			drawManager = new DrawManager(imagePairManager,ui->drawSizeSpinBox,ui->drawOnComboBox);
-
-			//setup segmenter
-			if(segmenter!=0)
-				delete segmenter;
-                        segmenter = new Segmenter(seedPointManager,imagePairManager,ui->kernelComboBox);
-
-			//setup volumeRenderManager
-			if(volumeRenderManager!=0)
-			  delete volumeRenderManager;
-			volumeRenderManager = new VolumeRenderManager(imagePairManager,ui->qvtk3Ddisplayer);
-
-			sliceControlSetup();
-			contrastControlSetup();
-			toolbarSetup();
-			segmentationControlSetup();
-
-			//setup statusbar update from viewmanager
-			connect(viewManager,SIGNAL(mouseHasMoved()), this, SLOT(updateStatusBar()));
-			connect(viewManager,SIGNAL(mouseEntersWidget()), this, SLOT(updateStatusBar()));
-			connect(viewManager,SIGNAL(mouseLeavesWidget()), this, SLOT(updateStatusBar()));
-
-			//setup seedPointLine view being told about the seed point being change
-			connect(seedPointManager,SIGNAL(seedPointChanged(int,int,int)), this, SLOT(seedPointChanged()));
-			connect(viewManager,SIGNAL(sliceChanged(int)), this,SLOT(seedPointChanged()));
-
-			//setup zoom control
-			connect(ui->actionZoom_in,SIGNAL(triggered()), viewManager,SLOT(zoomIn()));
-			connect(ui->actionZoom_out,SIGNAL(triggered()), viewManager,SLOT(zoomOut()));
-
-			//setup so on segmentation completion we redraw
-			connect(segmenter,SIGNAL(segmentationDone(int)), viewManager, SLOT(update()));
-
-			//setup on drawing complete we redraw
-			connect(drawManager,SIGNAL(drawingDone()),viewManager,SLOT(update()));
-
-			//Update the work path to the location of the new image
-			workPath.setPath(imageInfo.absolutePath());
-
-
-			//allow debug information to be shown from menu
-			connect(ui->actionDump_debug,SIGNAL(triggered()),viewManager,SLOT(debugDump()));
-
-			//allow load/save segblock menus now
-			ui->actionLoad_Segmentation->setEnabled(true);
-			ui->actionSave_Segmentation->setEnabled(true);
-
-			//At start up no seed point will be set so disable segmentation widgets
-			disableSegmentationWidgets();
-
-			//When the user changes slice we may need to disable/enabled the segmentation widgets
-			connect(viewManager,SIGNAL(sliceChanged(int)), this, SLOT(tryEnableSegmentationWidgets()));
-
-			/*When segmentation is done force redraw for volumeRenderManager
-			* Note if we do 3D segmentation it seems to update itself... not sure why
-			*/
-			connect(segmenter,SIGNAL(segmentationDone(int)),volumeRenderManager,SLOT(render3D()));
-
-
-			//set window title
-			QString newWindowTitle(PROGRAM_NAME);
-			newWindowTitle.append(" - ").append(imageInfo.fileName());
-			setWindowTitle(newWindowTitle);
-
-
+            loadOriginalImage(newImagePath);
 		}
 
 	}
@@ -762,7 +671,101 @@ void MainWindow::showWaitDialog()
 
 void MainWindow::hideWaitDialog()
 {
-	progressDialog->hide();
+    progressDialog->hide();
+}
+
+void MainWindow::loadOriginalImage(QString file)
+{
+    imageInfo.setFile(file);
+
+    //Setup the ImagePairManager
+    if(imagePairManager!=0)
+        delete imagePairManager;
+
+    imagePairManager = new ImagePairManager();
+
+    if(!(imagePairManager->loadImage(imageInfo)))
+    {
+        qDebug() << "Failed to open" << imageInfo.absoluteFilePath();
+        return;
+    }
+
+    //setup SeedPointManager
+    if(seedPointManager!=0)
+        delete seedPointManager;
+    seedPointManager = new SeedPointManager(imagePairManager->getZDim());
+
+    //setup LayoutManager
+    if(viewManager!=0)
+        delete viewManager;
+    viewManager = new ViewManager(imagePairManager, seedPointManager, ui->qvtkWidget,ui->blockingAlphadoubleSpinBox, ui->segmentationAlphadoubleSpinBox, ui->crosshairAlphadoubleSpinBox);
+
+    //setup drawManager
+    if(drawManager!=0)
+        delete drawManager;
+    drawManager = new DrawManager(imagePairManager,ui->drawSizeSpinBox,ui->drawOnComboBox);
+
+    //setup segmenter
+    if(segmenter!=0)
+        delete segmenter;
+    segmenter = new Segmenter(seedPointManager,imagePairManager,ui->kernelComboBox);
+
+    //setup volumeRenderManager
+    if(volumeRenderManager!=0)
+        delete volumeRenderManager;
+    volumeRenderManager = new VolumeRenderManager(imagePairManager,ui->qvtk3Ddisplayer);
+
+    sliceControlSetup();
+    contrastControlSetup();
+    toolbarSetup();
+    segmentationControlSetup();
+
+    //setup statusbar update from viewmanager
+    connect(viewManager,SIGNAL(mouseHasMoved()), this, SLOT(updateStatusBar()));
+    connect(viewManager,SIGNAL(mouseEntersWidget()), this, SLOT(updateStatusBar()));
+    connect(viewManager,SIGNAL(mouseLeavesWidget()), this, SLOT(updateStatusBar()));
+
+    //setup seedPointLine view being told about the seed point being change
+    connect(seedPointManager,SIGNAL(seedPointChanged(int,int,int)), this, SLOT(seedPointChanged()));
+    connect(viewManager,SIGNAL(sliceChanged(int)), this,SLOT(seedPointChanged()));
+
+    //setup zoom control
+    connect(ui->actionZoom_in,SIGNAL(triggered()), viewManager,SLOT(zoomIn()));
+    connect(ui->actionZoom_out,SIGNAL(triggered()), viewManager,SLOT(zoomOut()));
+
+    //setup so on segmentation completion we redraw
+    connect(segmenter,SIGNAL(segmentationDone(int)), viewManager, SLOT(update()));
+
+    //setup on drawing complete we redraw
+    connect(drawManager,SIGNAL(drawingDone()),viewManager,SLOT(update()));
+
+    //Update the work path to the location of the new image
+    workPath.setPath(imageInfo.absolutePath());
+
+
+    //allow debug information to be shown from menu
+    connect(ui->actionDump_debug,SIGNAL(triggered()),viewManager,SLOT(debugDump()));
+
+    //allow load/save segblock menus now
+    ui->actionLoad_Segmentation->setEnabled(true);
+    ui->actionSave_Segmentation->setEnabled(true);
+
+    //At start up no seed point will be set so disable segmentation widgets
+    disableSegmentationWidgets();
+
+    //When the user changes slice we may need to disable/enabled the segmentation widgets
+    connect(viewManager,SIGNAL(sliceChanged(int)), this, SLOT(tryEnableSegmentationWidgets()));
+
+    /*When segmentation is done force redraw for volumeRenderManager
+            * Note if we do 3D segmentation it seems to update itself... not sure why
+            */
+    connect(segmenter,SIGNAL(segmentationDone(int)),volumeRenderManager,SLOT(render3D()));
+
+
+    //set window title
+    QString newWindowTitle(PROGRAM_NAME);
+    newWindowTitle.append(" - ").append(imageInfo.fileName());
+    setWindowTitle(newWindowTitle);
 }
 
 void MainWindow::on_actionRotate_view_by_180_toggled(bool flip)

@@ -114,6 +114,9 @@ class MainWindow : public QMainWindow
 		void showWaitDialog();
 		void hideWaitDialog();
 
+        //load an image
+        void loadOriginalImage(QString file);
+
 
 		//Change the contrast based on what the widgets are currently set to
 		void changeContrast();
