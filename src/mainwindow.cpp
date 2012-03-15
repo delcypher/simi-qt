@@ -703,7 +703,7 @@ void MainWindow::loadOriginalImage(QString file)
     //setup drawManager
     if(drawManager!=0)
         delete drawManager;
-    drawManager = new DrawManager(imagePairManager,ui->drawSizeSpinBox,ui->drawOnComboBox);
+	drawManager = new DrawManager(imagePairManager,ui->drawSizeSpinBox,ui->drawOnComboBox, ui->minZSliceSpinBox, ui->maxZSliceSpinBox, ui->segReadOnly);
 
     //setup segmenter
     if(segmenter!=0)

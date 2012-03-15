@@ -283,6 +283,11 @@
         </item>
         <item>
          <property name="text">
+          <string>Blocking (Z Slices Range)</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
           <string>Blocking (All Slices)</string>
          </property>
         </item>
@@ -364,7 +369,7 @@
     <property name="geometry">
      <rect>
       <x>430</x>
-      <y>510</y>
+      <y>530</y>
       <width>381</width>
       <height>96</height>
      </rect>
@@ -461,7 +466,7 @@
     <property name="frameShadow">
      <enum>QFrame::Raised</enum>
     </property>
-    <widget class="QVTKWidget" name="qvtk3Ddisplayer" native="true">
+    <widget class="QVTKWidget" name="qvtk3Ddisplayer">
      <property name="geometry">
       <rect>
        <x>10</x>
@@ -490,7 +495,7 @@
        <property name="frameShadow">
         <enum>QFrame::Raised</enum>
        </property>
-       <widget class="QVTKWidget" name="qvtkWidget" native="true">
+       <widget class="QVTKWidget" name="qvtkWidget">
         <property name="geometry">
          <rect>
           <x>10</x>
@@ -540,6 +545,19 @@
      </item>
     </layout>
    </widget>
+   <widget class="QCheckBox" name="segReadOnly">
+    <property name="geometry">
+     <rect>
+      <x>450</x>
+      <y>500</y>
+      <width>171</width>
+      <height>19</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Segmentation Read-Only</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -547,7 +565,7 @@
      <x>0</x>
      <y>0</y>
      <width>876</width>
-     <height>20</height>
+     <height>19</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">

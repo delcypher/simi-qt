@@ -9,6 +9,7 @@
 #include "imagepairmanager.h"
 #include <QSpinBox>
 #include <QComboBox>
+#include <QCheckBox>
 
 /*!
   The class provides blocking and segmentation drawing and erasing tools.
@@ -21,7 +22,7 @@ class DrawManager : public QObject
 
 	public:
 		//! Class constructor.
-        DrawManager(ImagePairManager* imagePairManager, QSpinBox* drawSize, QComboBox* drawType);
+		DrawManager(ImagePairManager* imagePairManager, QSpinBox* drawSize, QComboBox* drawType, QSpinBox* minZSlice, QSpinBox* maxZSlice, QCheckBox* segmentation);
 
 		//! Class destructor.
 		~DrawManager();
@@ -51,6 +52,9 @@ class DrawManager : public QObject
         ImagePairManager* imagePairManager;
         QSpinBox* drawSize;
         QComboBox* drawType;
+		QSpinBox* minZSlice;
+		QSpinBox* maxZSlice;
+		QCheckBox* segmentation;
 
 		void drawAlgorithm(int &xVoxel, int &yVoxel, int &zVoxel, int &mode); // helper function for draw and erase function
 
