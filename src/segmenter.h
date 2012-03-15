@@ -22,6 +22,9 @@ struct Node
         Node(int x, int y, int z):pos_x(x), pos_y(y), pos_z(z){}
 };
 
+//forward declare class
+class SegmenterTester;
+
 /*!
   The class responsible for image processing algorithms.
   It contains 2D and 3D versions of the flood fill algorithms to segment regions.
@@ -142,6 +145,7 @@ class Segmenter : public QObject
 
                 bool segmentation_running;
 
+		friend class SegmenterTester;//! Friend class is unit test
 };
 
 #endif
