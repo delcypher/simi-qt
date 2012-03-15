@@ -31,6 +31,11 @@ SeedPointManager::~SeedPointManager()
 //Gets the seed point for slice "sliceNumber". Reports (-1,-1) if no seed Point is currently set
 bool SeedPointManager::getSeedPoint(int sliceNumber, int& x, int& y)
 {
+	if (sliceNumber > numberOfSlices || sliceNumber < 0)
+	{
+		return false;
+	}
+
 	x = seedPerSlice[sliceNumber][0];
 	y = seedPerSlice[sliceNumber][1];
 
@@ -48,6 +53,11 @@ bool SeedPointManager::getSeedPoint(int sliceNumber, int& x, int& y)
 //allows the seed point to manually set
 bool SeedPointManager::setSeedPoint(int x, int y, int sliceNumber)
 {
+	if (sliceNumber > numberOfSlices || sliceNumber < 0)
+	{
+		return false;
+	}
+
 	seedPerSlice[sliceNumber][0] = x;
 	seedPerSlice[sliceNumber][1] = y;
 
