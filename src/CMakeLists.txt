@@ -12,6 +12,12 @@ ENDIF(VTK_FOUND)
 FIND_PACKAGE(Qt4 REQUIRED QtCore QtGui QtTest)
 INCLUDE(${QT_USE_FILE})
 
+#See if we should disable qDebug messages
+IF(CMAKE_BUILD_TYPE STREQUAL Release)
+	MESSAGE(STATUS "Disabling QDebug messages")
+	ADD_DEFINITIONS(-DQT_NO_DEBUG_OUTPUT)
+ENDIF()
+
 #Try and retrieve build information if wanted
 IF(BUILD_WITH_VERSION_INFO)
 	#Attempt to detect version from git
