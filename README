@@ -2,97 +2,127 @@ SIMI-Qt (Structure Identification in Medical Imaging - Qt)
 By Tom Brzozowski, Dan Liew, Bill Papaefstratiou, My Pijika, Wasin Chaivaranont
 
 * Description
+	Simi-qt is a M.Sc. Computing Science group project that took place at Imperial College London in 2012.
+
+	The program is intended to be used for segmenting parts of medical images such as the "airways".
 ---
 
+* DEPENDENCIES
+	- VTK 5.8 with Qt support enabled
+	- Qt 4.7 or higher
+
+	Note older versions of these libraries may still work with the code but this has NOT been tested!
+
 * BUILDING
-1. Make sure cmake is installed
-2. Make sure the Qt development libraries and header files are installed.
-3. Prepare an simi-qt as an "out of source build" by running
+	1. Make sure cmake is installed
+	2. Make sure the Qt development libraries and header files are installed.
+	3. Prepare a simi-qt as an "out of source build" by running
 
-$ mkdir build-dir
-$ cd build-dir
-$ cmake-gui /path/to/simi-qt-source-root/
+	$ mkdir build-dir
+	$ cd build-dir
+	$ cmake-gui /path/to/simi-qt-source-root/
 
-Note you can use cmake-gui instead of ccmake if you prefer.
-4. Now select the options you want.
+	Note you can use cmake-gui instead of ccmake if you prefer.
+	4. Now select the options you want.
 
-DO_SUPERBUILD - 
-If you do not have the VTK library installed then the superbuild mode
-can build build it for project development
-	
-	Select from:
-	BUILD_VTK
+	DO_SUPERBUILD - 
+	If you do not have the VTK library installed that has Qt support compiled in then the superbuild mode
+	can build build it for project development
+		
+		Select from:
+		BUILD_VTK
 
-	You will be presented with options that will let you choose your source for
-	the libraries. Note this must be a git repository.
+		You will be presented with options (press configure first) that will let you choose your source for
+		the libraries. Note this must be a git repository.
 
-If you already have VTK and ITK installed on your system or you have already built them 
-using the superbuild then you should disable DO_SUPERBUILD and reconfigure.
+	If you already have VTK and ITK installed on your system or you have already built them 
+	using the superbuild then you should disable DO_SUPERBUILD and reconfigure.
 
-SQ_BUILD_TYPE - 
-This specifies what the build type should be for the project. Note this has no affect on how the VTK library is built.
+	SQ_BUILD_TYPE - 
+	This specifies what the build type should be for the project. Note this has no affect on how the VTK library is built.
+
+	BUILD_DOCUMENTATION -
+	If enabled will generate Doxygen documentation for this project. The destination for this documentation is set by the DOC_OUTPUT_DIR variable
+
+	BUILD_WITH_VERSION_INFO -
+	If enabled the current Git tag or refspec+branch will be hard coded into the program every time it is compiled. If the code is not a git repository
+	the you should disable this option.
+
+	5. Generate the makefile from within ccmake or cmake-gui
+	6. Run
+	$ make
+
+* DEVELOPMENT WITH QtCreator
+	Here's how to setup the project to work the QtCreator IDE
+
+	1. You need to ensure you have ITK and VTK installed or you have built them previously using "DO_SUPERBUILD".
+
+	2. Run the following commands (can use ccmake instead of cmake-gui but if you're using QtCreator you'll probably prefer cmake-gui)
+
+	$ cd build-dir/
+	$ cmake-gui /path/to/simi-qt-source-root/
+
+	2. Press "configure".
+	3. Select "Unix Makefiles" and press "finish".
+
+	4. If VTK is installed as a system library cmake should automatically find them. If you built them using "DO_SUPERBUILD" then modify VTK_DIR to point to where it was built.
+
+	5. Press "Configure again".
+	6. Now exit.
+
+	7. Launch QtCreator
+	8. Click on File > Open File or Project
+	9. Select /path/to/simi-qt-source-root/CMakeLists.txt
+	10. A "CMake Wizard" dialog will appear. Click "Run CMake".
+	11. Click finish.
+
+	You're done!
+
+* COVERAGE INFORMATION
+	Coverage information can be gathered for unit tests that have been exectued using lcov. Note this requires you to be using the GNU C++ compiler.
+
+	Steps
+	1. Change into the build directory
+	2. run
+	$ make help
+	... all (the default if no target is provided)
+	... clean
+	... depend
+	... edit_cache
+	... rebuild_cache
+	... test
+	... simi-qt
+	... all_tests
+	... coverage_clean
+	... coverage_gen
+	... drawmanager_tester
+	... imagepairmanager_tester
+	... seedpointmanager_tester
+	... segmenter_tester
+	... ui_tester
+	... docs
 
 
-5. Generate the makefile from within ccmake or cmake-gui
-6. Run
-$ make
+	3. All targets that have "_tester" as a suffix are unit tests. Build the ones you want and run them once.  If you want to build all tests at once run
+	$ make all_tests
 
-* Development with QtCreator
-Here's how to setup the project to work the QtCreator IDE
+	If you want to run all tests at once then run
+	$ make test
 
-1. You need to ensure you have ITK and VTK installed or you have built them previously using "DO_SUPERBUILD".
+	4. Run the following the generate the coverage information as a HTML document in "build-dir/coverage_html/"
+	$ make coverage_gen
 
-2. Run the following commands (can use ccmake instead of cmake-gui but if you're using QtCreator you'll probably prefer cmake-gui)
+	Note that everything in "build-dir/coverage_html" will be deleted prior to generating the coverage information as a HTML page.
 
-$ cd build-dir/
-$ cmake-gui /path/to/simi-qt-source-root/
+	5. To reset the execution counters run
+	$ make coverage_clean
 
-2. Press "configure".
-3. Select "Unix Makefiles" and press "finish".
+* DOCUMENTATION GENERATION
+	If the BUILD_DOCUMENTATION CMake cache variable is set then Doxygen documentation will be built everytime the program is compiled. The output directory
+	is set by the DOC_OUTPUT_DIR CMake cache variable. Look in "doc/Doxyfile.in" for the settings used to generate the documentation.
 
-4. If VTK is installed as a system library cmake should automatically find them. If you built them using "DO_SUPERBUILD" then modify VTK_DIR to point to where it was built.
+	If you need to generate the documentation manually run
 
-5. Press "Configure again".
-6. Now exit.
-
-7. Launch QtCreator
-8. Click on File > Open File or Project
-9. Select /path/to/simi-qt-source-root/CMakeLists.txt
-10. A "CMake Wizard" dialog will appear. Click "Run CMake".
-11. Click finish.
-
-You're done!
-
-COVERAGE INFORMATION
-Coverage information can be gathered for unit tests that have been exectued using lcov. Note this requires you to be using the GNU C++ compiler.
-
-Steps
-1. Change into the build directory
-2. run
-$ make help
-... all (the default if no target is provided)
-... clean
-... depend
-... edit_cache
-... rebuild_cache
-... test
-... simi-qt
-... all_tests
-... coverage_clean
-... coverage_gen
-... ui_tester
-
-3. All targets that have "_tester" as a suffix are unit tests. Build the ones you want and run them once.  If you want to build all tests at once run
-$ make all_tests
-
-If you want to run all tests at once then run
-$ make test
-
-4. Run the following the generate the coverage information as a HTML document in "build-dir/coverage_html/"
-$ make coverage_gen
-
-Note that everything in "build-dir/coverage_html" will be deleted prior to generating the coverage information as a HTML page.
-
-5. To reset the execution counters run
-$ make coverage_clean
+	$ cd build-dir
+	$ make docs
 
