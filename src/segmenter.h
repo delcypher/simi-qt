@@ -3,7 +3,7 @@
 
 /*! \file segmenter.h */
 
-//!  Segmenter.
+
 
 #include <QObject>
 #include <QComboBox>
@@ -25,6 +25,8 @@ struct Node
 
 //forward declare class
 class SegmenterTester;
+
+//!  Implements segmentation and morphological algorithms
 
 /*!
   The class responsible for image processing algorithms.

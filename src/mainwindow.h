@@ -26,6 +26,8 @@
 //Forward Declare UiTester
 class UiTester;
 
+//! The Main user interface window
+
 /*! This class provides the main user interface and creates the others classes and links them together appropriately.
 *
 */

@@ -1,8 +1,5 @@
 /*! \file seedpointmanager.h */
 
-//!  SeedPointManager.
-
-
 #ifndef SEEDPOINTMANAGER_H
 #define SEEDPOINTMANAGER_H
 
@@ -15,6 +12,8 @@ using std::vector;
 
 //forward declare
 class SeedPointManagerTester;
+
+//!  Manages the list of seed points for segmentation
 
 /*!
     SeedPointManager is the class responsible for managing the seed points of all slices of an image.

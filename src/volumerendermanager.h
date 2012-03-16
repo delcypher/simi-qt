@@ -17,7 +17,7 @@
 #include "vtkRenderWindowInteractor.h"
 #include "vtkImageMaskBits.h"
 
-
+//! Manages rendering a 3D volume from segmentation
 
 /*!
   This class is responsible for 3D rendering.

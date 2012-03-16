@@ -18,8 +18,10 @@
 #include <vtkActor.h>
 #include <vtkLineSource.h>
 
+//! Manages the display off and interaction with the images
+
 /*! This class is responsible for the drawing of the original (MRI/CT) image, the segmentation/block image and the cross hair.
-*
+*   It also handle various mouse events on the QVTKWidget that it renders into.
 *
 *
 */
