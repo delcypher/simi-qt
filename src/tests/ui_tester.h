@@ -2,7 +2,15 @@
 #include <QtTest/QtTest>
 #include <QtGui>
 #include "mainwindow.h"
+#include "vtkStructuredPoints.h"
+#include "vtkSmartPointer.h"
+#include "vtkStructuredPointsWriter.h"
+#include "vtkStructuredPointsReader.h"
+#include <vtkMath.h>
 
+/* Most of the tests in this unit test are pretty bad. You should write something better!
+*
+*/
 class UiTester: public QObject
 {
 	Q_OBJECT
@@ -99,7 +107,7 @@ class UiTester: public QObject
 
     void tryToCrash()
     {
-        //Image isn't loaded yet so see if we can crash it
+        //Image isn't loaded yet so see if we can crash it by just calling most of the methods...this is a BAD TEST
 		mw->on_actionSlice_up_triggered();
 		mw->on_actionSlice_down_triggered();
 
@@ -144,6 +152,93 @@ class UiTester: public QObject
 		mw->on_actionResetView_triggered();
 
 		//mw->on_actionOpen_Image_triggered();
+    }
+
+    void loadArtificialImage()
+    {
+        vtkSmartPointer<vtkStructuredPoints> img = vtkStructuredPoints::New();
+
+        img->SetDimensions(100,100,100);
+        img->SetSpacing(1.25,3.9,2.1);
+        img->SetScalarTypeToShort();
+        img->AllocateScalars();
+        img->Update();
+
+        //fill with random values
+        int extent[6];
+        for(int x=extent[0]; x <= extent[1]; x++)
+        {
+            for(int y=extent[2]; y<= extent[3]; y++)
+            {
+                for(int z=extent[4]; z<= extent[5]; z++)
+                {
+                    short* voxel = static_cast<short*>(img->GetScalarPointer(x,y,z));
+
+                    *voxel = vtkMath::Random(0.0,3500.0);
+                }
+            }
+        }
+
+        //save to file
+        vtkSmartPointer<vtkStructuredPointsWriter> writer = vtkStructuredPointsWriter::New();
+        writer->SetFileName("test.vtk");
+        writer->SetInput(img);
+        writer->SetFileTypeToBinary();
+        QVERIFY(writer->Write());
+
+        mw->loadOriginalImage("test.vtk");
+    }
+
+    void flipImage()
+    {
+        QTest::qSleep(200);
+        mw->ui->actionRotate_view_by_180->setChecked(true);
+        QTest::qSleep(200);
+        mw->ui->actionRotate_view_by_180->setChecked(false);
+    }
+
+    void moreActions()
+    {
+        //Lets see what happens when we call most of the methods
+		mw->on_actionSlice_up_triggered();
+		mw->on_actionSlice_down_triggered();
+
+
+		mw->on_minIntensitySlider_valueChanged(50);
+		mw->on_maxIntensitySlider_valueChanged(20);
+		mw->on_sliceSlider_valueChanged(2);
+		mw->updateStatusBar();
+		mw->seedPointChanged();
+		mw->on_actionClear_Segmentation_on_All_Slices_triggered();
+		mw->on_actionClear_Blocking_on_All_Slices_triggered();
+
+		//toolbar slots
+		mw->on_actionHandTool_triggered();
+		mw->on_actionPenTool_triggered();
+		mw->on_actionCrosshairTool_triggered();
+		mw->on_actionEraseTool_triggered();
+
+		mw->on_minSegIntensitySlider_valueChanged(20);
+		mw->on_maxSegIntensitySlider_valueChanged(50);
+
+		mw->on_doSegmentation2D_clicked();
+		mw->on_doSegmentation3D_clicked();
+
+		mw->on_actionClear_Drawing_triggered();
+		mw->on_actionClear_Segmentation_triggered();
+
+		mw->tryEnableSegmentationWidgets();
+		mw->enableSegmentationWidgets();
+		mw->disableSegmentationWidgets();
+
+		mw->on_do3Drender_clicked();
+		mw->on_doDilate2D_clicked();
+		mw->on_doErode2D_clicked();
+		mw->on_doClose2D_clicked();
+		mw->on_doOpen2D_clicked();
+
+		mw->on_actionRotate_view_by_180_toggled(true);
+		mw->on_actionResetView_triggered();
     }
 
 	void cleanupTestCase()
