@@ -1,10 +1,4 @@
-//!  VolumeRenderManager.
-/*!
-  This class is responsible for 3D rendering.
-  It receives StructuredPoint data from ImagePairManager and send output to qvtk3Ddisplayer.
-  Only segmentation StructuredPoint will be rendered and displayed as 3D object.
-*/
-
+/*! \file volumerendermanager.h  */
 #ifndef VOLUMERENDERMANAGER_H
 #define VOLUMERENDERMANAGER_H
 
@@ -25,7 +19,11 @@
 
 
 
-
+/*!
+  This class is responsible for 3D rendering.
+  It receives StructuredPoint data from ImagePairManager and send output to qvtk3Ddisplayer.
+  Only segmentation StructuredPoint will be rendered and displayed as 3D object.
+*/
 class VolumeRenderManager : public QObject
 {
 	Q_OBJECT
