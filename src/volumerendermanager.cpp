@@ -32,12 +32,6 @@ VolumeRenderManager::VolumeRenderManager(ImagePairManager* imagePairManager, QVT
 
 	double bounds[6];
 	imagePairManager->segblock->GetBounds(bounds);
-	for(int i = 0 ; i < 6 ; i++)
-	{
-		double range = bounds[i+1]-bounds[i];
-		bounds[i] = bounds[i] - 0.1*range ;
-		bounds[i+1] = bounds[i+1] + 0.1*range ;
-	}
 
 
 	surface->SetInputConnection(mask->GetOutputPort());
@@ -45,8 +39,8 @@ VolumeRenderManager::VolumeRenderManager(ImagePairManager* imagePairManager, QVT
 	surface->SetValue(0, 0.1);
 	renderer->SetBackground(0.0,0.0,0.0);
 	renderWindow->AddRenderer(renderer);
-
 	renderer->ResetCamera(bounds);
+
 
 	qvtk3Ddisplayer->SetRenderWindow(renderWindow);
 	mapper->SetInputConnection(surface->GetOutputPort());
