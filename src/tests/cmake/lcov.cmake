@@ -52,6 +52,8 @@ IF(CMAKE_COMPILER_IS_GNUCXX)
 					COMMAND ${LCOV_TOOL} -d "${LCOV_SCAN_DIR}" --remove "${COVERAGE_INFO_FILE}" 'vtk*.h' --output-file "${COVERAGE_INFO_FILE}"
 					#Remove Qt intermediate build files
 					COMMAND ${LCOV_TOOL} -d "${LCOV_SCAN_DIR}" --remove "${COVERAGE_INFO_FILE}" '${CMAKE_BINARY_DIR}/*' --output-file "${COVERAGE_INFO_FILE}"
+					#Remove unit tests
+					COMMAND ${LCOV_TOOL} -d "${LCOV_SCAN_DIR}" --remove "${COVERAGE_INFO_FILE}" 'src/tests/*' --output-file "${COVERAGE_INFO_FILE}"
 					COMMAND ${GENHTML_TOOL} -o "${COVERAGE_HTML_DIR}" --title "Unit tests " "${COVERAGE_INFO_FILE}"
 					)
 
