@@ -168,6 +168,10 @@ void MainWindow::on_actionHandTool_triggered()
 {
     qDebug() << "Hand tool activated";
 
+    //safety check
+    if(viewManager==0 || seedPointManager ==0 || drawManager==0)
+        return;
+
     //disable other connections
     //disable seedTool connection
     disconnect(viewManager,
@@ -199,6 +203,10 @@ void MainWindow::on_actionPenTool_triggered()
 {
     qDebug() << "Pen tool activated";
 
+    //safety check
+    if(viewManager==0 || seedPointManager ==0 || drawManager==0)
+        return;
+
     //disable other connections
     //disable seedTool connection
     disconnect(viewManager,
@@ -228,6 +236,10 @@ void MainWindow::on_actionPenTool_triggered()
 void MainWindow::on_actionCrosshairTool_triggered()
 {
     qDebug() << "Crosshair tool activated";
+
+    //safety check
+    if(viewManager==0 || seedPointManager ==0 || drawManager==0)
+        return;
 
     //disable other connections
     //disable seedTool connection
@@ -267,6 +279,10 @@ void MainWindow::on_actionCrosshairTool_triggered()
 void MainWindow::on_actionEraseTool_triggered()
 {
     qDebug() << "Erase tool activated";
+
+    //safety check
+    if(viewManager==0 || seedPointManager ==0 || drawManager==0)
+        return;
 
     //disable seedTool connection
     disconnect(viewManager,
@@ -397,17 +413,22 @@ void MainWindow::seedPointChanged()
 {
 	int x=0;
 	int y=0;
-    seedPointManager->getSeedPoint(viewManager->getCurrentSlice(),x,y);
 
-	QString seedPoint("(");
-	seedPoint += QString::number(x);
-	seedPoint +=",";
-	seedPoint += QString::number(y);
-	seedPoint +=")";
-	ui->seedPointLineEdit->setText(seedPoint);
+	//small safety check
+    if(seedPointManager!=0 && viewManager!=0)
+    {
+        seedPointManager->getSeedPoint(viewManager->getCurrentSlice(),x,y);
 
-	//enable the segmentation widgets
-	tryEnableSegmentationWidgets();
+        QString seedPoint("(");
+        seedPoint += QString::number(x);
+        seedPoint +=",";
+        seedPoint += QString::number(y);
+        seedPoint +=")";
+        ui->seedPointLineEdit->setText(seedPoint);
+
+        //enable the segmentation widgets
+        tryEnableSegmentationWidgets();
+	}
 }
 
 void MainWindow::on_doSegmentation3D_clicked()
@@ -586,11 +607,14 @@ void MainWindow::on_actionClear_Segmentation_on_All_Slices_triggered()
 {
 	qDebug() << "Clearing all simblock voxels!";
 
-	showWaitDialog();
-	imagePairManager->setAllSimBlockVoxels(ImagePairManager::SEGMENTATION, ImagePairManager::BACKGROUND);
-	viewManager->update();
-	volumeRenderManager->render3D();
-	hideWaitDialog();
+    if(imagePairManager!=0 && viewManager!=0 && volumeRenderManager!=0)
+    {
+        showWaitDialog();
+        imagePairManager->setAllSimBlockVoxels(ImagePairManager::SEGMENTATION, ImagePairManager::BACKGROUND);
+        viewManager->update();
+        volumeRenderManager->render3D();
+        hideWaitDialog();
+	}
 
 }
 
@@ -600,10 +624,13 @@ void MainWindow::on_actionClear_Blocking_on_All_Slices_triggered()
 
 	showWaitDialog();
 
-	imagePairManager->setAllSimBlockVoxels(ImagePairManager::BLOCKING, ImagePairManager::BACKGROUND);
-	viewManager->update();
-	volumeRenderManager->render3D();
-	hideWaitDialog();
+    if(imagePairManager!=0 && viewManager!=0 && volumeRenderManager!=0)
+    {
+        imagePairManager->setAllSimBlockVoxels(ImagePairManager::BLOCKING, ImagePairManager::BACKGROUND);
+        viewManager->update();
+        volumeRenderManager->render3D();
+        hideWaitDialog();
+	}
 
 
 
