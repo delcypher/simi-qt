@@ -52,6 +52,11 @@ By Tom Brzozowski, Dan Liew, Bill Papaefstratiou, My Pijika, Wasin Chaivaranont
 	6. Run
 	$ make
 
+* RUNNING
+	There is currently no install target. The built executable named 'simi-qt' will appear in
+	build-dir/src/
+
+
 * DEVELOPMENT WITH QtCreator
 	Here's how to setup the project to work the QtCreator IDE
 

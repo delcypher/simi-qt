@@ -1,6 +1,8 @@
 # This file handles the complexity of doing a "super build".
 #
-# The superbuild builds the libraries VTK and ITK and the simi-qt code
+# THIS MUST BE USED AS THE ROOT PROJECT WITH CMAKE!
+#
+# The superbuild builds the libraries VTK and the simi-qt code
 # all as external projects. It is provided to setup the development environment
 # so that the libraries are the correct versions and have the correct build options
 #
