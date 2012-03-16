@@ -1,6 +1,6 @@
 /*! \file drawmanager.h */
 
-//!  DrawManager.
+//!  Manages drawing into the blocking/segmentation image
 
 #ifndef DRAWMANAGER_H
 #define DRAWMANAGER_H

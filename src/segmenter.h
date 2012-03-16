@@ -3,7 +3,7 @@
 
 /*! \file segmenter.h */
 
-//!  Segmenter.
+
 
 #include <QObject>
 #include <QComboBox>
@@ -16,14 +16,17 @@ using std::list;
 //! Node used to represent pixels (2D) and voxels(3D).
 struct Node
 {
-        int pos_x;
-        int pos_y;
-        int pos_z;
+        int pos_x; //!< voxel x coordinate.
+        int pos_y; //!< voxel y coordinate.
+        int pos_z; //!< voxel z coordinate.
+        //! Struct constructor.
         Node(int x, int y, int z):pos_x(x), pos_y(y), pos_z(z){}
 };
 
 //forward declare class
 class SegmenterTester;
+
+//!  Implements segmentation and morphological algorithms
 
 /*!
   The class responsible for image processing algorithms.

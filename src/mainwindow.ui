@@ -262,7 +262,7 @@
       <rect>
        <x>20</x>
        <y>30</y>
-       <width>231</width>
+       <width>239</width>
        <height>29</height>
       </rect>
      </property>
@@ -369,7 +369,7 @@
       <rect>
        <x>20</x>
        <y>130</y>
-       <width>171</width>
+       <width>201</width>
        <height>19</height>
       </rect>
      </property>
@@ -395,7 +395,7 @@
       <rect>
        <x>20</x>
        <y>60</y>
-       <width>331</width>
+       <width>360</width>
        <height>29</height>
       </rect>
      </property>
@@ -565,7 +565,7 @@
      <x>0</x>
      <y>0</y>
      <width>876</width>
-     <height>19</height>
+     <height>25</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">

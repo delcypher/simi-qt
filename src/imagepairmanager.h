@@ -9,6 +9,7 @@
 #include "vtkStructuredPointsReader.h"
 #include "vtkStructuredPointsWriter.h"
 
+//! Manages the original image and the blocking/segmentation image
 
 /*! Responsible for loading original image and making it available along with its
 *   blocking/segmentation image.

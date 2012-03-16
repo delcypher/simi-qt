@@ -1,8 +1,5 @@
 /*! \file seedpointmanager.h */
 
-//!  SeedPointManager.
-
-
 #ifndef SEEDPOINTMANAGER_H
 #define SEEDPOINTMANAGER_H
 
@@ -12,6 +9,11 @@
 #include <vector>
 
 using std::vector;
+
+//forward declare
+class SeedPointManagerTester;
+
+//!  Manages the list of seed points for segmentation
 
 /*!
     SeedPointManager is the class responsible for managing the seed points of all slices of an image.
@@ -68,6 +70,8 @@ class SeedPointManager : public QObject
             If a slice has no seed point set, the coordinates of this seed point are set to (-1,-1).
         */
 		vector< vector<int> > seedPerSlice;
+
+	friend class SeedPointManagerTester;
 };
 
 #endif
