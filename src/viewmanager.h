@@ -100,6 +100,10 @@ class ViewManager : public QObject
         */
         double getPanScale() { return panScale;}
 
+        unsigned int getOrientation() { return orientation;}
+
+        bool setOrientation(unsigned int orientation);
+
 	
 	public slots:
 		/*! Change the slice show by the QVTKWidget that this class renders in to.
@@ -263,6 +267,9 @@ class ViewManager : public QObject
         double originalCamPos[3];
         double originalCamFocalPoint[3];
         double panScale;
+
+        //for orientation
+        unsigned int orientation;
 
 
 };

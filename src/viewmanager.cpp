@@ -48,6 +48,8 @@ panScale(1.0)
 	qvtkWidget->SetRenderWindow(imageViewer->GetRenderWindow());
 	imageViewer->SetupInteractor(qvtkWidget->GetRenderWindow()->GetInteractor());
 
+    //setup deafult orientation
+    imageViewer->SetSliceOrientation(vtkImageViewer2::SLICE_ORIENTATION_XY);
 
     //setup zoom control
     maxScale= ( imagePairManager->getYDim() )*( imagePairManager->getYSpacing() )/2.0;
@@ -579,6 +581,31 @@ bool ViewManager::setPanScale(double scale)
     }
     else
         return false;
+}
+
+bool ViewManager::setOrientation(unsigned int orientation)
+{
+    switch(orientation)
+    {
+        case vtkImageViewer2::SLICE_ORIENTATION_XY :
+            orientation=vtkImageViewer2::SLICE_ORIENTATION_XY;
+        break;
+
+        case vtkImageViewer2::SLICE_ORIENTATION_XZ :
+            orientation=vtkImageViewer2::SLICE_ORIENTATION_XZ;
+        break;
+
+        case vtkImageViewer2::SLICE_ORIENTATION_YZ :
+            orientation=vtkImageViewer2::SLICE_ORIENTATION_YZ;
+        break;
+
+        default :
+            qWarning() << "setOrientation() failed. Orientation not supported!";
+            return false;
+    }
+
+    imageViewer->SetSliceOrientation(orientation);
+    return true;
 }
 
 void ViewManager::addSegblock()

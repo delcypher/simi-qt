@@ -549,6 +549,7 @@ void MainWindow::on_actionXY_View_toggled(bool enable)
     {
         //Set orientation
         qDebug() << "Set XY";
+        viewManager->setOrientation(vtkImageViewer2::SLICE_ORIENTATION_XY);
     }
 }
 
@@ -557,6 +558,8 @@ void MainWindow::on_actionXZ_View_toggled(bool enable)
     if(enable && viewManager!=0)
     {
         //set orientation
+        qDebug() << "Set XZ";
+        viewManager->setOrientation(vtkImageViewer2::SLICE_ORIENTATION_XZ);
     }
 }
 
@@ -565,6 +568,8 @@ void MainWindow::on_actionYZ_View_toggled(bool enable)
     if(enable && viewManager!=0)
     {
         //set orientation
+        qDebug() << "Set YZ";
+        viewManager->setOrientation(vtkImageViewer2::SLICE_ORIENTATION_YZ);
     }
 }
 
@@ -748,7 +753,7 @@ void MainWindow::viewOrientationSetup()
     orientationActions->addAction(ui->actionYZ_View);
 
     //Set the default
-    //TODO
+    ui->actionXY_View->setChecked(true);
 
 }
 
