@@ -199,7 +199,7 @@ bool ViewManager::setSlice(int slice)
 {
 
 
-	if(slice >= imagePairManager->getZMin() && slice <= imagePairManager->getZMax())
+    if(slice >= imageViewer->GetSliceMin() && slice <= imageViewer->GetSliceMax())
 	{		
 		/* WORKAROUND:
 		*  We record the zoom level before changing slice so we can force that zoom level after calling
@@ -606,6 +606,16 @@ bool ViewManager::setOrientation(unsigned int orientation)
 
     imageViewer->SetSliceOrientation(orientation);
     return true;
+}
+
+int ViewManager::getSliceMin()
+{
+    return imageViewer->GetSliceMin();
+}
+
+int ViewManager::getSliceMax()
+{
+    return imageViewer->GetSliceMax();
 }
 
 void ViewManager::addSegblock()

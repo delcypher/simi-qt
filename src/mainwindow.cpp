@@ -316,11 +316,11 @@ void MainWindow::sliceControlSetup()
 {
 	if(imagePairManager!=0)
 	{
-		ui->sliceSlider->setRange(imagePairManager->getZMin(),imagePairManager->getZMax());
-		ui->sliceSpinBox->setRange(imagePairManager->getZMin(),imagePairManager->getZMax());
+        ui->sliceSlider->setRange(viewManager->getSliceMin(),viewManager->getSliceMax());
+        ui->sliceSpinBox->setRange(viewManager->getSliceMin(),viewManager->getSliceMax());
 
-		connect(viewManager,SIGNAL(sliceChanged(int)),ui->sliceSlider,SLOT(setValue(int)));
-
+        ui->sliceSlider->setValue(0);
+        ui->sliceSlider->setValue(0);
     }
 }
 
@@ -550,6 +550,7 @@ void MainWindow::on_actionXY_View_toggled(bool enable)
         //Set orientation
         qDebug() << "Set XY";
         viewManager->setOrientation(vtkImageViewer2::SLICE_ORIENTATION_XY);
+        sliceControlSetup(); //Adjust Widgets
     }
 }
 
@@ -560,6 +561,7 @@ void MainWindow::on_actionXZ_View_toggled(bool enable)
         //set orientation
         qDebug() << "Set XZ";
         viewManager->setOrientation(vtkImageViewer2::SLICE_ORIENTATION_XZ);
+        sliceControlSetup(); //Adjust Widgets
     }
 }
 
@@ -570,6 +572,7 @@ void MainWindow::on_actionYZ_View_toggled(bool enable)
         //set orientation
         qDebug() << "Set YZ";
         viewManager->setOrientation(vtkImageViewer2::SLICE_ORIENTATION_YZ);
+        sliceControlSetup(); //Adjust Widgets
     }
 }
 
@@ -828,6 +831,9 @@ void MainWindow::loadOriginalImage(QString file)
 
     //Update the work path to the location of the new image
     workPath.setPath(imageInfo.absolutePath());
+
+    //Setup when using scroll wheel to change slice, inform widgets
+    connect(viewManager,SIGNAL(sliceChanged(int)),ui->sliceSlider,SLOT(setValue(int)));
 
 
     //allow debug information to be shown from menu

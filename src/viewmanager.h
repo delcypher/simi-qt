@@ -104,6 +104,9 @@ class ViewManager : public QObject
 
         bool setOrientation(unsigned int orientation);
 
+        int getSliceMin();
+        int getSliceMax();
+
 	
 	public slots:
 		/*! Change the slice show by the QVTKWidget that this class renders in to.
