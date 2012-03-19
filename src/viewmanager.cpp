@@ -23,7 +23,8 @@ segmentationAlpha(0.5),
 crossHairAlpha(0.5),
 panEnabled(false),
 originalX(0),
-originalY(0)
+originalY(0),
+panSign(1)
 {
     //Setup pointers to widgets and the imagePairManager
     this->imagePairManager = imagePairManager;
@@ -439,11 +440,11 @@ void ViewManager::vtkEventHandler(vtkObject *caller, unsigned long vtkEvent, voi
                     double yOffset = 0.1*(originalY - pos[1])*(imagePairManager->getYSpacing());
 
                     qDebug() << "Pan Xoffset: " << xOffset << " Yoffset" << yOffset;
-                    cam->SetPosition(currentPos[0] + xOffset,
-                                    currentPos[1] +yOffset,
+                    cam->SetPosition(currentPos[0] + panSign*xOffset,
+                                    currentPos[1] +panSign*yOffset,
                                     currentPos[2]);
-                    cam->SetFocalPoint(currentFocalPoint[0] +xOffset,
-                                        currentFocalPoint[1] + yOffset,
+                    cam->SetFocalPoint(currentFocalPoint[0] + panSign*xOffset,
+                                        currentFocalPoint[1] + panSign*yOffset,
                                         currentFocalPoint[2]);
                     update();
                 }
@@ -574,9 +575,15 @@ void ViewManager::addSegblock()
 void ViewManager::flipView(bool flip)
 {
 	if(flip)
+    {
 		imageViewer->GetRenderer()->GetActiveCamera()->SetRoll(180.0);
-	else
+        panSign=-1;
+    }
+    else
+    {
 		imageViewer->GetRenderer()->GetActiveCamera()->SetRoll(0.0);
+        panSign=1;
+    }
 
 	update();
 

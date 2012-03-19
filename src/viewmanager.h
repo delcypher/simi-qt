@@ -237,6 +237,7 @@ class ViewManager : public QObject
 		bool panEnabled;
 		int originalX;
 		int originalY;
+        int panSign; //Used for flip/nonflip view (should be 1 or -1)
 
 };
 
