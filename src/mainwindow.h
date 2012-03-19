@@ -77,6 +77,10 @@ class MainWindow : public QMainWindow
 
         void on_actionInterpolate_Image_toggled(bool enable);
 
+        void on_actionXY_View_toggled(bool enable);
+        void on_actionXZ_View_toggled(bool enable);
+        void on_actionYZ_View_toggled(bool enable);
+
 		void tryEnableSegmentationWidgets();
 		void enableSegmentationWidgets();
 		void disableSegmentationWidgets();
@@ -117,6 +121,7 @@ class MainWindow : public QMainWindow
 		void segmentationControlSetup();
 		void showWaitDialog();
 		void hideWaitDialog();
+        void viewOrientationSetup();
 
         //load an image
         void loadOriginalImage(QString file);

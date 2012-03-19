@@ -543,6 +543,31 @@ void MainWindow::on_actionInterpolate_Image_toggled(bool enable)
     }
 }
 
+void MainWindow::on_actionXY_View_toggled(bool enable)
+{
+    if(enable && viewManager!=0)
+    {
+        //Set orientation
+        qDebug() << "Set XY";
+    }
+}
+
+void MainWindow::on_actionXZ_View_toggled(bool enable)
+{
+    if(enable && viewManager!=0)
+    {
+        //set orientation
+    }
+}
+
+void MainWindow::on_actionYZ_View_toggled(bool enable)
+{
+    if(enable && viewManager!=0)
+    {
+        //set orientation
+    }
+}
+
 void MainWindow::tryEnableSegmentationWidgets()
 {
     int dummy;
@@ -709,6 +734,24 @@ void MainWindow::hideWaitDialog()
     progressDialog->hide();
 }
 
+void MainWindow::viewOrientationSetup()
+{
+    //Enable disabled menu options
+    ui->actionXY_View->setEnabled(true);
+    ui->actionXZ_View->setEnabled(true);
+    ui->actionYZ_View->setEnabled(true);
+
+    QActionGroup* orientationActions = new QActionGroup(this);
+
+    orientationActions->addAction(ui->actionXY_View);
+    orientationActions->addAction(ui->actionXZ_View);
+    orientationActions->addAction(ui->actionYZ_View);
+
+    //Set the default
+    //TODO
+
+}
+
 void MainWindow::loadOriginalImage(QString file)
 {
     imageInfo.setFile(file);
@@ -754,6 +797,7 @@ void MainWindow::loadOriginalImage(QString file)
     contrastControlSetup();
     toolbarSetup();
     segmentationControlSetup();
+    viewOrientationSetup();
 
     //Set the default checked state for interpolation of original image
     ui->actionInterpolate_Image->setChecked(true);

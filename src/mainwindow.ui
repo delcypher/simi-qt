@@ -589,6 +589,10 @@
     <addaction name="separator"/>
     <addaction name="actionResetView"/>
     <addaction name="actionRotate_view_by_180"/>
+    <addaction name="separator"/>
+    <addaction name="actionXY_View"/>
+    <addaction name="actionYZ_View"/>
+    <addaction name="actionXZ_View"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
@@ -850,6 +854,39 @@
    </property>
    <property name="text">
     <string>Interpolate Image</string>
+   </property>
+  </action>
+  <action name="actionXY_View">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>XY View</string>
+   </property>
+  </action>
+  <action name="actionYZ_View">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>YZ View</string>
+   </property>
+  </action>
+  <action name="actionXZ_View">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>XZ View</string>
    </property>
   </action>
  </widget>
