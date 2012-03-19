@@ -157,6 +157,12 @@ class ViewManager : public QObject
 		*/
 		void resetPan();
 
+        /*! Enable/disable interpolation on original image. This has no affect on drawing segblock or the crosshair
+        *   for which no interpolation is done. The default is enabled.
+        *   \param enabled should be set to true for interpolation enabled, else set false.
+        */
+        void enableInterpolation(bool enabled);
+
 	signals:
 		/*! Emitted when the slice shown in the view by the QVTKWidget (that this class renders in to) changes.
 		*  \param slice is set to the slice that has been changed to.

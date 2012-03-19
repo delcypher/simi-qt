@@ -479,7 +479,7 @@
     <property name="frameShadow">
      <enum>QFrame::Raised</enum>
     </property>
-    <widget class="QVTKWidget" name="qvtk3Ddisplayer">
+    <widget class="QVTKWidget" name="qvtk3Ddisplayer" native="true">
      <property name="geometry">
       <rect>
        <x>10</x>
@@ -508,7 +508,7 @@
        <property name="frameShadow">
         <enum>QFrame::Raised</enum>
        </property>
-       <widget class="QVTKWidget" name="qvtkWidget">
+       <widget class="QVTKWidget" name="qvtkWidget" native="true">
         <property name="geometry">
          <rect>
           <x>10</x>
@@ -565,7 +565,7 @@
      <x>0</x>
      <y>0</y>
      <width>876</width>
-     <height>25</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -608,6 +608,8 @@
     <addaction name="separator"/>
     <addaction name="actionClear_Segmentation_on_All_Slices"/>
     <addaction name="actionClear_Blocking_on_All_Slices"/>
+    <addaction name="separator"/>
+    <addaction name="actionInterpolate_Image"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuSlice"/>
@@ -840,6 +842,14 @@
    </property>
    <property name="text">
     <string>Rotate view by 180</string>
+   </property>
+  </action>
+  <action name="actionInterpolate_Image">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Interpolate Image</string>
    </property>
   </action>
  </widget>

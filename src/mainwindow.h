@@ -75,6 +75,8 @@ class MainWindow : public QMainWindow
 		void on_actionLoad_Segmentation_triggered();
 		bool on_actionSave_Segmentation_triggered();
 
+        void on_actionInterpolate_Image_toggled(bool enable);
+
 		void tryEnableSegmentationWidgets();
 		void enableSegmentationWidgets();
 		void disableSegmentationWidgets();

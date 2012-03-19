@@ -48,6 +48,7 @@ panScale(1.0)
 	qvtkWidget->SetRenderWindow(imageViewer->GetRenderWindow());
 	imageViewer->SetupInteractor(qvtkWidget->GetRenderWindow()->GetInteractor());
 
+
     //setup zoom control
     maxScale= ( imagePairManager->getYDim() )*( imagePairManager->getYSpacing() )/2.0;
     minScale=1;
@@ -63,6 +64,7 @@ panScale(1.0)
     //setup crosshair
     addCrosshair();
 
+    enableInterpolation(true); //enable interpolation on original image by default
 
 
 
@@ -642,7 +644,24 @@ void ViewManager::resetPan()
 {
 	imageViewer->GetRenderer()->ResetCamera();
 	imageViewer->UpdateDisplayExtent();
-	imageViewer->GetRenderWindow()->Render();
+    imageViewer->GetRenderWindow()->Render();
+
+}
+
+void ViewManager::enableInterpolation(bool enabled)
+{
+    if(enabled)
+    {
+        imageViewer->GetImageActor()->InterpolateOn();
+        qDebug() << "Original image interpolation on.";
+    }
+    else
+    {
+        imageViewer->GetImageActor()->InterpolateOff();
+        qDebug() << "Original image interpolation off.";
+    }
+
+    update();
 
 }
 

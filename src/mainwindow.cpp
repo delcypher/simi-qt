@@ -535,6 +535,14 @@ bool MainWindow::on_actionSave_Segmentation_triggered()
     return false;
 }
 
+void MainWindow::on_actionInterpolate_Image_toggled(bool enable)
+{
+    if(imagePairManager!=0 && viewManager!=0)
+    {
+        viewManager->enableInterpolation(enable);
+    }
+}
+
 void MainWindow::tryEnableSegmentationWidgets()
 {
     int dummy;
@@ -747,6 +755,9 @@ void MainWindow::loadOriginalImage(QString file)
     toolbarSetup();
     segmentationControlSetup();
 
+    //Set the default checked state for interpolation of original image
+    ui->actionInterpolate_Image->setChecked(true);
+
     //setup statusbar update from viewmanager
     connect(viewManager,SIGNAL(mouseHasMoved()), this, SLOT(updateStatusBar()));
     connect(viewManager,SIGNAL(mouseEntersWidget()), this, SLOT(updateStatusBar()));
@@ -779,6 +790,7 @@ void MainWindow::loadOriginalImage(QString file)
 
     //At start up no seed point will be set so disable segmentation widgets
     disableSegmentationWidgets();
+
 
     //When the user changes slice we may need to disable/enabled the segmentation widgets
     connect(viewManager,SIGNAL(sliceChanged(int)), this, SLOT(tryEnableSegmentationWidgets()));
