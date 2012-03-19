@@ -24,8 +24,16 @@ crossHairAlpha(0.5),
 panEnabled(false),
 originalX(0),
 originalY(0),
-panSign(1)
+panSign(1),
+panScale(1.0)
 {
+    //Initialise the camera position+ focal point arrays
+    for(int i=0; i < 3; i++)
+    {
+        originalCamPos[i]=0;
+        originalCamFocalPoint[i]=0;
+    }
+
     //Setup pointers to widgets and the imagePairManager
     this->imagePairManager = imagePairManager;
     this->qvtkWidget = qvtkWidget;
@@ -407,6 +415,18 @@ void ViewManager::vtkEventHandler(vtkObject *caller, unsigned long vtkEvent, voi
                 //record click down position
                 originalX=pos[0];
                 originalY=pos[1];
+
+                //record the original camera position
+                double* opCam=imageViewer->GetRenderer()->GetActiveCamera()->GetPosition();
+                double* ofpCam=imageViewer->GetRenderer()->GetActiveCamera()->GetFocalPoint();
+
+                //copy into our variables ( can't use opCam or ofpCam because they change)
+                for(int i=0; i < 3; i++)
+                {
+                    originalCamPos[i]=opCam[i];
+                    originalCamFocalPoint[i]=ofpCam[i];
+                }
+
             }
 
 		break;
@@ -430,22 +450,19 @@ void ViewManager::vtkEventHandler(vtkObject *caller, unsigned long vtkEvent, voi
                 {
                     //Get current camera position
                     vtkCamera* cam = imageViewer->GetRenderer()->GetActiveCamera();
+                    int* widgetSize = imageViewer->GetRenderWindow()->GetSize();
 
-                    double currentPos[3];
-                    double currentFocalPoint[3];
-                    cam->GetPosition(currentPos);
-                    cam->GetFocalPoint(currentFocalPoint);
                     //Reposition the camera
-                    double xOffset = 0.1*(originalX - pos[0])*(imagePairManager->getXSpacing());
-                    double yOffset = 0.1*(originalY - pos[1])*(imagePairManager->getYSpacing());
+                    double xOffset = 2*panScale*((originalX - pos[0])/( (double) widgetSize[0]) )*(cam->GetParallelScale());
+                    double yOffset = 2*panScale*((originalY - pos[1])/( (double) widgetSize[1]) ) *(cam->GetParallelScale());
 
                     qDebug() << "Pan Xoffset: " << xOffset << " Yoffset" << yOffset;
-                    cam->SetPosition(currentPos[0] + panSign*xOffset,
-                                    currentPos[1] +panSign*yOffset,
-                                    currentPos[2]);
-                    cam->SetFocalPoint(currentFocalPoint[0] + panSign*xOffset,
-                                        currentFocalPoint[1] + panSign*yOffset,
-                                        currentFocalPoint[2]);
+                    cam->SetPosition(originalCamPos[0] + panSign*xOffset,
+                                    originalCamPos[1] +panSign*yOffset,
+                                    originalCamPos[2]);
+                    cam->SetFocalPoint(originalCamFocalPoint[0] + panSign*xOffset,
+                                        originalCamFocalPoint[1] + panSign*yOffset,
+                                        originalCamFocalPoint[2]);
                     update();
                 }
             }
@@ -548,6 +565,18 @@ void ViewManager::redrawCrossHair()
 void ViewManager::enablePanning(bool enabled)
 {
     panEnabled=enabled;
+}
+
+bool ViewManager::setPanScale(double scale)
+{
+    //these limits are sensible guesses
+    if(scale > 0.5 && scale < 3)
+    {
+        panScale = scale;
+        return true;
+    }
+    else
+        return false;
 }
 
 void ViewManager::addSegblock()

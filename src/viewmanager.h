@@ -84,6 +84,22 @@ class ViewManager : public QObject
 		*/
 		void enablePanning(bool enabled);
 
+        /*! Sets the scale used for panning. It is a scaling factor used for left-click pan behaviour.
+        *   If set to 1.0 , for every voxel dragged over by the mouse the camera will move by 1 voxel.
+        *   If this factor > 1.0 then the camera is moved by more voxels than the mouse does.
+        *   If this factor < 1.0 then the camera is moved by less voxels than the mouse does.
+        *   \param scale is the scaling factor
+        *   \return True if in acceptable range else returns false
+        */
+        bool setPanScale(double scale);
+
+        /*! Get the current pan scale.
+        *
+        *  \return The current pan scale.
+        *  \sa setPanScale()
+        */
+        double getPanScale() { return panScale;}
+
 	
 	public slots:
 		/*! Change the slice show by the QVTKWidget that this class renders in to.
@@ -238,6 +254,10 @@ class ViewManager : public QObject
 		int originalX;
 		int originalY;
         int panSign; //Used for flip/nonflip view (should be 1 or -1)
+        double originalCamPos[3];
+        double originalCamFocalPoint[3];
+        double panScale;
+
 
 };
 
