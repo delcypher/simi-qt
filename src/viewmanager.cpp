@@ -48,8 +48,8 @@ panScale(1.0)
 	qvtkWidget->SetRenderWindow(imageViewer->GetRenderWindow());
 	imageViewer->SetupInteractor(qvtkWidget->GetRenderWindow()->GetInteractor());
 
-    //setup deafult orientation
-    imageViewer->SetSliceOrientation(vtkImageViewer2::SLICE_ORIENTATION_XY);
+    //setup deafult
+    setOrientation(vtkImageViewer2::SLICE_ORIENTATION_XY);
 
     //setup zoom control
     maxScale= ( imagePairManager->getYDim() )*( imagePairManager->getYSpacing() )/2.0;
@@ -461,12 +461,40 @@ void ViewManager::vtkEventHandler(vtkObject *caller, unsigned long vtkEvent, voi
                     double yOffset = 2*panScale*((originalY - pos[1])/( (double) widgetSize[1]) ) *(cam->GetParallelScale());
 
                     qDebug() << "Pan Xoffset: " << xOffset << " Yoffset" << yOffset;
-                    cam->SetPosition(originalCamPos[0] + panSign*xOffset,
+
+                    switch(orientation)
+                    {
+                        case vtkImageViewer2::SLICE_ORIENTATION_XY:
+                                cam->SetPosition(originalCamPos[0] + panSign*xOffset,
                                     originalCamPos[1] +panSign*yOffset,
                                     originalCamPos[2]);
-                    cam->SetFocalPoint(originalCamFocalPoint[0] + panSign*xOffset,
+                                cam->SetFocalPoint(originalCamFocalPoint[0] + panSign*xOffset,
                                         originalCamFocalPoint[1] + panSign*yOffset,
                                         originalCamFocalPoint[2]);
+                                break;
+                        case vtkImageViewer2::SLICE_ORIENTATION_XZ:
+                                cam->SetPosition(originalCamPos[0] + panSign*xOffset,
+                                    originalCamPos[1] ,
+                                    originalCamPos[2] +panSign*yOffset);
+                                cam->SetFocalPoint(originalCamFocalPoint[0] + panSign*xOffset,
+                                        originalCamFocalPoint[1] ,
+                                        originalCamFocalPoint[2] + panSign*yOffset);
+                                break;
+
+                        case vtkImageViewer2::SLICE_ORIENTATION_YZ:
+                                cam->SetPosition(originalCamPos[0] ,
+                                    originalCamPos[1] + panSign*xOffset ,
+                                    originalCamPos[2] +panSign*yOffset);
+                                cam->SetFocalPoint(originalCamFocalPoint[0] ,
+                                        originalCamFocalPoint[1] + panSign*xOffset ,
+                                        originalCamFocalPoint[2] + panSign*yOffset);
+                                break;
+
+                        default:
+                            qWarning() << "Orientation not supported!";
+                    }
+
+
                     update();
                 }
             }
@@ -583,9 +611,9 @@ bool ViewManager::setPanScale(double scale)
         return false;
 }
 
-bool ViewManager::setOrientation(unsigned int orientation)
+bool ViewManager::setOrientation(unsigned int ort)
 {
-    switch(orientation)
+    switch(ort)
     {
         case vtkImageViewer2::SLICE_ORIENTATION_XY :
             orientation=vtkImageViewer2::SLICE_ORIENTATION_XY;
@@ -751,7 +779,4 @@ void ViewManager::addCrosshair()
 	imageViewer->GetRenderer()->AddActor(hcrosshairActor);
 	imageViewer->GetRenderer()->AddActor(vcrosshairActor);
 }
-
-
-
 

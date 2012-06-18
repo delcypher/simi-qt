@@ -102,7 +102,7 @@ class ViewManager : public QObject
 
         unsigned int getOrientation() { return orientation;}
 
-        bool setOrientation(unsigned int orientation);
+        bool setOrientation(unsigned int ort);
 
         int getSliceMin();
         int getSliceMax();
@@ -271,7 +271,6 @@ class ViewManager : public QObject
         double originalCamFocalPoint[3];
         double panScale;
 
-        //for orientation
         unsigned int orientation;
 
 
