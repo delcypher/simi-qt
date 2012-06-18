@@ -672,12 +672,12 @@ void ViewManager::flipView(bool flip)
 {
 	if(flip)
     {
-		imageViewer->GetRenderer()->GetActiveCamera()->SetRoll(180.0);
+		imageViewer->GetRenderer()->GetActiveCamera()->SetRoll( imageViewer->GetRenderer()->GetActiveCamera()->GetRoll() + 180.0);
         panSign=-1;
     }
     else
     {
-		imageViewer->GetRenderer()->GetActiveCamera()->SetRoll(0.0);
+		imageViewer->GetRenderer()->GetActiveCamera()->SetRoll( imageViewer->GetRenderer()->GetActiveCamera()->GetRoll() - 180.0);
         panSign=1;
     }
 
