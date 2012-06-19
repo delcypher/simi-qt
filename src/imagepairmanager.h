@@ -109,6 +109,13 @@ class ImagePairManager : public QObject
         */
 		double getYSpacing();
 
+		/*! \return The length of an individual voxel in the z direction in the
+        *   original or segblock image (they are identical).
+        *   \sa original
+        *   \sa segblock
+        */
+		double getZSpacing();
+
         /*!
         *  \return the minimum value of all the voxels in the original image.
         *  \sa original

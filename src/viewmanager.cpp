@@ -312,6 +312,8 @@ void ViewManager::debugDump()
     double clippingRange[2];
     qDebug() << "Camera cliping range:- near:" << clippingRange[0] << ", far:" << clippingRange[1];
 
+    qDebug() << "Camera parallel scale (for zoom):" << camera->GetParallelScale();
+
 
 
 }
@@ -638,6 +640,7 @@ bool ViewManager::setOrientation(unsigned int ort)
     }
 
     imageViewer->SetSliceOrientation(orientation);
+    applyCameraFixes();// correct camera positions if necessary
     return true;
 }
 
@@ -730,6 +733,7 @@ void ViewManager::zoomOut()
 void ViewManager::resetPan()
 {
 	imageViewer->GetRenderer()->ResetCamera();
+	applyCameraFixes();
 	imageViewer->UpdateDisplayExtent();
     imageViewer->GetRenderWindow()->Render();
 
@@ -799,6 +803,62 @@ void ViewManager::addCrosshair()
 	vcrosshairActor->GetProperty()->SetColor(1.0,1.0,0.0);
 
 	imageViewer->GetRenderer()->AddActor(hcrosshairActor);
-	imageViewer->GetRenderer()->AddActor(vcrosshairActor);
+    imageViewer->GetRenderer()->AddActor(vcrosshairActor);
+}
+
+void ViewManager::applyCameraFixes()
+{
+    vtkCamera* camera = imageViewer->GetRenderer()->GetActiveCamera();
+    if(camera==NULL) return;
+
+
+    switch(orientation)
+    {
+        case vtkImageViewer2::SLICE_ORIENTATION_XY:
+            /* Workaround:
+             * The camera is looking down the z-axis (0,0,-1) which I don't want so we make it so we are looking
+             * up the z-axis (0,0,1).
+             */
+            camera->SetPosition(0,0,imagePairManager->getZDim()*imagePairManager->getZSpacing()*-2.0);
+            camera->SetFocalPoint(0,0,imagePairManager->getZDim()*imagePairManager->getZSpacing()*2.0);
+        break;
+
+        case vtkImageViewer2::SLICE_ORIENTATION_XZ:
+            /* Workaround:
+             * The camera is incorrectly positioned along the z-axis initially so image cannot be seen.
+             * We are also looking up the positive y-axis (0,1,0) which I don't want so we make it so we are
+             * looking down the negative y-axis instead (0,-1,0)
+             */
+            camera->SetPosition(0,
+                                imagePairManager->getYDim()*imagePairManager->getYSpacing()*2.0,
+                                (imagePairManager->getZDim()*imagePairManager->getZSpacing())/2.0
+                                );
+            camera->SetFocalPoint(0,
+                                0,
+                                (imagePairManager->getZDim()*imagePairManager->getZSpacing())/2.0
+                                );
+        break;
+
+        case vtkImageViewer2::SLICE_ORIENTATION_YZ:
+            /* Workaround:
+             * The camera is incorrectly positioned along the z-axis initially so image
+             * cannot be seen. Fix this
+             */
+             camera->SetPosition(imagePairManager->getXDim()*imagePairManager->getXSpacing()*2.0,
+                                0,
+                                (imagePairManager->getZDim()*imagePairManager->getZSpacing())/2.0
+                                );
+             camera->SetFocalPoint(0,0,(imagePairManager->getZDim()*imagePairManager->getZSpacing())/2.0);
+        break;
+    }
+
+    /* Workaround:
+     * When we manually adjust the camera position the clipping planes appear (as far as I cant tell) to prevent
+     * the image from being displayed. We workaround this by setting an excessively large distance between clipping planes so that
+     * the entire image is guaranteed to be between the planes (assuming the previous code positioning the camrea is correct).
+     * The VtkImageViewer2 widget will later correct this clipping distance to something more sensible.
+     */
+
+    camera->SetClippingRange(0.1,camera->GetDistance());
 }
 

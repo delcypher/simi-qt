@@ -47,6 +47,13 @@ double ImagePairManager::getYSpacing()
     return spacing[1];
 }
 
+double ImagePairManager::getZSpacing()
+{
+    double spacing[3];
+    original->GetSpacing(spacing);
+    return spacing[2];
+}
+
 double ImagePairManager::getXSpacing()
 {
     double spacing[3];
