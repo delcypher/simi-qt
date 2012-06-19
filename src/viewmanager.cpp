@@ -307,6 +307,11 @@ void ViewManager::debugDump()
     camera->GetDirectionOfProjection(projectionVector);
     qDebug() << "Camera projection direction [from camera to focal point]:" << projectionVector[0] << "," << projectionVector[1] << "," << projectionVector[2];
 
+    qDebug() << "Camera roll:" << camera->GetRoll();
+
+    double clippingRange[2];
+    qDebug() << "Camera cliping range:- near:" << clippingRange[0] << ", far:" << clippingRange[1];
+
 
 
 }
