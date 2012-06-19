@@ -19,8 +19,6 @@
 #include "segmenter.h"
 #include "volumerendermanager.h"
 
-//Include Main page for Doxygen
-#include "doxygenmain.h"
 
 
 //Forward Declare UiTester
