@@ -550,6 +550,7 @@ void MainWindow::on_actionXY_View_toggled(bool enable)
         //Set orientation
         qDebug() << "Set XY";
         viewManager->setOrientation(vtkImageViewer2::SLICE_ORIENTATION_XY);
+        viewManager->flipView(ui->actionRotate_view_by_180->isChecked()); //make sure the checkbox behaviour remains consistent when switching orientation
         sliceControlSetup(); //Adjust Widgets
     }
 }
@@ -561,6 +562,7 @@ void MainWindow::on_actionXZ_View_toggled(bool enable)
         //set orientation
         qDebug() << "Set XZ";
         viewManager->setOrientation(vtkImageViewer2::SLICE_ORIENTATION_XZ);
+        viewManager->flipView(ui->actionRotate_view_by_180->isChecked()); //make sure the checkbox behaviour remains consistent when switching orientation
         sliceControlSetup(); //Adjust Widgets
     }
 }
@@ -572,6 +574,7 @@ void MainWindow::on_actionYZ_View_toggled(bool enable)
         //set orientation
         qDebug() << "Set YZ";
         viewManager->setOrientation(vtkImageViewer2::SLICE_ORIENTATION_YZ);
+        viewManager->flipView(ui->actionRotate_view_by_180->isChecked()); //make sure the checkbox behaviour remains consistent when switching orientation
         sliceControlSetup(); //Adjust Widgets
     }
 }

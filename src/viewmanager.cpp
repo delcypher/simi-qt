@@ -675,16 +675,33 @@ void ViewManager::addSegblock()
 
 void ViewManager::flipView(bool flip)
 {
+	double angle=0.0;
+
 	if(flip)
     {
-		imageViewer->GetRenderer()->GetActiveCamera()->SetRoll( imageViewer->GetRenderer()->GetActiveCamera()->GetRoll() + 180.0);
-        panSign=-1;
+		panSign=-1;
+		switch(orientation)
+		{
+            case vtkImageViewer2::SLICE_ORIENTATION_XY: angle=180.0; break;
+            case vtkImageViewer2::SLICE_ORIENTATION_XZ: angle=180.0; break;
+            case vtkImageViewer2::SLICE_ORIENTATION_YZ: angle=90.0; break;
+            default: qWarning() << "Orientation not supported!";
+		}
     }
     else
     {
-		imageViewer->GetRenderer()->GetActiveCamera()->SetRoll( imageViewer->GetRenderer()->GetActiveCamera()->GetRoll() - 180.0);
         panSign=1;
+        switch(orientation)
+		{
+            case vtkImageViewer2::SLICE_ORIENTATION_XY: angle=0.0; break;
+            case vtkImageViewer2::SLICE_ORIENTATION_XZ: angle=0.0; break;
+            case vtkImageViewer2::SLICE_ORIENTATION_YZ: angle=-90.0; break;
+            default: qWarning() << "Orientation not supported!";
+		}
+
     }
+
+    imageViewer->GetRenderer()->GetActiveCamera()->SetRoll(angle);
 
 	update();
 
