@@ -14,7 +14,7 @@ By Tom Brzozowski, Dan Liew, Bill Papaefstratiou, My Pijika, Wasin Chaivaranont
 	Note older versions of these libraries may still work with the code but this has NOT been tested!
 
 * BUILDING
-	1. Make sure cmake is installed
+	1. Make sure CMake is installed
 	2. Make sure the Qt development libraries and header files are installed.
 	3. Prepare a simi-qt as an "out of source build" by running
 
@@ -22,12 +22,12 @@ By Tom Brzozowski, Dan Liew, Bill Papaefstratiou, My Pijika, Wasin Chaivaranont
 	$ cd build-dir
 	$ cmake-gui /path/to/simi-qt-source-root/
 
-	Note you can use cmake-gui instead of ccmake if you prefer.
+	Note you can use ccmake instead of cmake-gui if you prefer.
 	4. Now select the options you want.
 
 	DO_SUPERBUILD - 
 	If you do not have the VTK library installed that has Qt support compiled in then the superbuild mode
-	can build build it for project development
+	can build it for project development
 		
 		Select from:
 		BUILD_VTK
@@ -35,18 +35,18 @@ By Tom Brzozowski, Dan Liew, Bill Papaefstratiou, My Pijika, Wasin Chaivaranont
 		You will be presented with options (press configure first) that will let you choose your source for
 		the libraries. Note this must be a git repository.
 
-	If you already have VTK and ITK installed on your system or you have already built them 
+	If you already have VTK installed on your system or you have already built it 
 	using the superbuild then you should disable DO_SUPERBUILD and reconfigure.
 
 	SQ_BUILD_TYPE - 
-	This specifies what the build type should be for the project. Note this has no affect on how the VTK library is built.
+	This specifies what the build type (Usually Release or Debug) should be for the project. Note this has no affect on how the VTK library is built.
 
 	BUILD_DOCUMENTATION -
-	If enabled will generate Doxygen documentation for this project. The destination for this documentation is set by the DOC_OUTPUT_DIR variable
+	If enabled will Doxygen documentation for this project will be generated. The destination for this documentation is set by the DOC_OUTPUT_DIR variable
 
 	BUILD_WITH_VERSION_INFO -
-	If enabled the current Git tag or refspec+branch will be hard coded into the program every time it is compiled. If the code is not a git repository
-	the you should disable this option.
+	If enabled, the current Git tag or refspec+branch will be hard coded into the program every time it is compiled. If the code is not in a git repository
+	then you should disable this option.
 
 	5. Generate the makefile from within ccmake or cmake-gui
 	6. Run
@@ -60,7 +60,7 @@ By Tom Brzozowski, Dan Liew, Bill Papaefstratiou, My Pijika, Wasin Chaivaranont
 * DEVELOPMENT WITH QtCreator
 	Here's how to setup the project to work the QtCreator IDE
 
-	1. You need to ensure you have ITK and VTK installed or you have built them previously using "DO_SUPERBUILD".
+	1. You need to ensure you have VTK installed or you have built them previously using "DO_SUPERBUILD".
 
 	2. Run the following commands (can use ccmake instead of cmake-gui but if you're using QtCreator you'll probably prefer cmake-gui)
 
