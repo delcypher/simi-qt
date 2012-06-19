@@ -31,8 +31,9 @@ SeedPointManager::~SeedPointManager()
 //Gets the seed point for slice "sliceNumber". Reports (-1,-1) if no seed Point is currently set
 bool SeedPointManager::getSeedPoint(int sliceNumber, int& x, int& y)
 {
-	if (sliceNumber > numberOfSlices || sliceNumber < 0)
+	if (sliceNumber >= numberOfSlices || sliceNumber < 0)
 	{
+		qWarning() << "SeedPointManager::getSeedPoint() : Invalid slice number:" << sliceNumber << " requested!";
 		return false;
 	}
 
