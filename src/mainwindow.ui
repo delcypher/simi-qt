@@ -565,7 +565,7 @@
      <x>0</x>
      <y>0</y>
      <width>876</width>
-     <height>21</height>
+     <height>20</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -866,6 +866,9 @@
    <property name="text">
     <string>XY View</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+1</string>
+   </property>
   </action>
   <action name="actionYZ_View">
    <property name="checkable">
@@ -877,6 +880,9 @@
    <property name="text">
     <string>YZ View</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+2</string>
+   </property>
   </action>
   <action name="actionXZ_View">
    <property name="checkable">
@@ -887,6 +893,9 @@
    </property>
    <property name="text">
     <string>XZ View</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+3</string>
    </property>
   </action>
  </widget>
