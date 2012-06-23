@@ -10,3 +10,10 @@ HAVE_DOT = YES
 CALL_GRAPH = YES
 
 CALLER_GRAPH = YES
+
+COLLABORATION_GRAPH = YES
+
+#This will allow collabration graphs to show the collaboration of private members
+EXTRACT_PRIVATE = YES
+#However we don't want to list all the private members so we hide them
+HIDE_UNDOC_MEMBERS = YES
