@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1024</width>
-    <height>768</height>
+    <width>1100</width>
+    <height>780</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -29,7 +29,7 @@
          <item>
           <layout class="QVBoxLayout" name="verticalLayout_2">
            <item>
-            <widget class="QVTKWidget" name="xyQvtkWidget">
+            <widget class="QVTKWidget" name="xyQvtkWidget" native="true">
              <property name="minimumSize">
               <size>
                <width>300</width>
@@ -106,7 +106,7 @@
          <item>
           <layout class="QVBoxLayout" name="verticalLayout_4">
            <item>
-            <widget class="QVTKWidget" name="yzQvtkWidget">
+            <widget class="QVTKWidget" name="yzQvtkWidget" native="true">
              <property name="minimumSize">
               <size>
                <width>300</width>
@@ -183,7 +183,7 @@
          <item>
           <layout class="QVBoxLayout" name="verticalLayout_3">
            <item>
-            <widget class="QVTKWidget" name="xzQvtkWidget">
+            <widget class="QVTKWidget" name="xzQvtkWidget" native="true">
              <property name="minimumSize">
               <size>
                <width>300</width>
@@ -260,7 +260,7 @@
          <item>
           <layout class="QVBoxLayout" name="verticalLayout_5">
            <item>
-            <widget class="QVTKWidget" name="render3DQvtkWidget">
+            <widget class="QVTKWidget" name="render3DQvtkWidget" native="true">
              <property name="minimumSize">
               <size>
                <width>300</width>
@@ -776,16 +776,14 @@
      </layout>
     </item>
    </layout>
-   <zorder></zorder>
-   <zorder></zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1024</width>
-     <height>20</height>
+     <width>1100</width>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -1112,12 +1110,12 @@
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>840</x>
-     <y>177</y>
+     <x>1023</x>
+     <y>77</y>
     </hint>
     <hint type="destinationlabel">
-     <x>895</x>
-     <y>179</y>
+     <x>1079</x>
+     <y>80</y>
     </hint>
    </hints>
   </connection>
@@ -1128,12 +1126,12 @@
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>895</x>
-     <y>179</y>
+     <x>1079</x>
+     <y>80</y>
     </hint>
     <hint type="destinationlabel">
-     <x>840</x>
-     <y>177</y>
+     <x>1023</x>
+     <y>77</y>
     </hint>
    </hints>
   </connection>
@@ -1144,12 +1142,12 @@
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>840</x>
-     <y>213</y>
+     <x>1023</x>
+     <y>107</y>
     </hint>
     <hint type="destinationlabel">
-     <x>895</x>
-     <y>215</y>
+     <x>1079</x>
+     <y>110</y>
     </hint>
    </hints>
   </connection>
@@ -1160,12 +1158,12 @@
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>895</x>
-     <y>215</y>
+     <x>1079</x>
+     <y>110</y>
     </hint>
     <hint type="destinationlabel">
-     <x>840</x>
-     <y>213</y>
+     <x>1023</x>
+     <y>107</y>
     </hint>
    </hints>
   </connection>
@@ -1176,12 +1174,12 @@
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>756</x>
-     <y>274</y>
+     <x>988</x>
+     <y>426</y>
     </hint>
     <hint type="destinationlabel">
-     <x>875</x>
-     <y>274</y>
+     <x>1079</x>
+     <y>429</y>
     </hint>
    </hints>
   </connection>
@@ -1192,12 +1190,12 @@
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>855</x>
-     <y>270</y>
+     <x>1079</x>
+     <y>429</y>
     </hint>
     <hint type="destinationlabel">
-     <x>778</x>
-     <y>272</y>
+     <x>988</x>
+     <y>426</y>
     </hint>
    </hints>
   </connection>
@@ -1208,12 +1206,12 @@
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>766</x>
-     <y>308</y>
+     <x>988</x>
+     <y>456</y>
     </hint>
     <hint type="destinationlabel">
-     <x>842</x>
-     <y>317</y>
+     <x>1079</x>
+     <y>459</y>
     </hint>
    </hints>
   </connection>
@@ -1224,12 +1222,108 @@
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>857</x>
-     <y>312</y>
+     <x>1079</x>
+     <y>459</y>
     </hint>
     <hint type="destinationlabel">
-     <x>761</x>
-     <y>312</y>
+     <x>988</x>
+     <y>456</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>xySliceSlider</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>xySliceSpinBox</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>261</x>
+     <y>338</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>333</x>
+     <y>339</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>xySliceSpinBox</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>xySliceSlider</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>332</x>
+     <y>345</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>271</x>
+     <y>331</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>yzSliceSlider</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>yzSliceSpinBox</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>604</x>
+     <y>333</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>661</x>
+     <y>337</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>yzSliceSpinBox</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>yzSliceSlider</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>664</x>
+     <y>341</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>601</x>
+     <y>329</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>xzSliceSlider</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>xzSlicespinBox</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>277</x>
+     <y>692</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>323</x>
+     <y>692</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>xzSlicespinBox</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>xzSliceSlider</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>338</x>
+     <y>701</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>272</x>
+     <y>692</y>
     </hint>
    </hints>
   </connection>
