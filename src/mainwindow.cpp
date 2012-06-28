@@ -314,7 +314,8 @@ void MainWindow::on_actionEraseTool_triggered()
 
 void MainWindow::sliceControlSetup()
 {
-	if(imagePairManager!=0)
+    /*
+    if(imagePairManager!=0)
 	{
         ui->sliceSlider->setRange(viewManager->getSliceMin(),viewManager->getSliceMax());
         ui->sliceSpinBox->setRange(viewManager->getSliceMin(),viewManager->getSliceMax());
@@ -322,6 +323,7 @@ void MainWindow::sliceControlSetup()
         ui->sliceSlider->setValue(0);
         ui->sliceSlider->setValue(0);
     }
+    */
 }
 
 void MainWindow::toolbarSetup()
@@ -424,7 +426,7 @@ void MainWindow::seedPointChanged()
         seedPoint +=",";
         seedPoint += QString::number(y);
         seedPoint +=")";
-        ui->seedPointLineEdit->setText(seedPoint);
+        ui->seedPointValueLabel->setText(seedPoint);
 
         //enable the segmentation widgets
         tryEnableSegmentationWidgets();
@@ -459,7 +461,7 @@ void MainWindow::on_doSegmentation3D_clicked()
                 progressDialog->setCancelButtonText(QString("Stop"));
                 connect(progressDialog,SIGNAL(canceled()), segmenter, SLOT(cancel3D()));
 
-                segmenter->doSegmentation3D(pos_x, pos_y, pos_z, ui->minSegIntensitySlider->value(), ui->maxSegIntensitySlider->value(), ui->minZSliceSpinBox->value(), ui->maxZSliceSpinBox->value());
+                //segmenter->doSegmentation3D(pos_x, pos_y, pos_z, ui->minSegIntensitySlider->value(), ui->maxSegIntensitySlider->value(), ui->minZSliceSpinBox->value(), ui->maxZSliceSpinBox->value());
                 hideWaitDialog();
 
 		//reenable segmentation widgets
@@ -751,18 +753,18 @@ void MainWindow::hideWaitDialog()
 void MainWindow::viewOrientationSetup()
 {
     //Enable disabled menu options
-    ui->actionXY_View->setEnabled(true);
-    ui->actionXZ_View->setEnabled(true);
-    ui->actionYZ_View->setEnabled(true);
+    //ui->actionXY_View->setEnabled(true);
+    //ui->actionXZ_View->setEnabled(true);
+    //ui->actionYZ_View->setEnabled(true);
 
     QActionGroup* orientationActions = new QActionGroup(this);
 
-    orientationActions->addAction(ui->actionXY_View);
-    orientationActions->addAction(ui->actionXZ_View);
-    orientationActions->addAction(ui->actionYZ_View);
+    //orientationActions->addAction(ui->actionXY_View);
+    //orientationActions->addAction(ui->actionXZ_View);
+    //orientationActions->addAction(ui->actionYZ_View);
 
     //Set the default
-    ui->actionXY_View->setChecked(true);
+    //ui->actionXY_View->setChecked(true);
 
 }
 
@@ -790,22 +792,22 @@ void MainWindow::loadOriginalImage(QString file)
     //setup LayoutManager
     if(viewManager!=0)
         delete viewManager;
-    viewManager = new ViewManager(imagePairManager, seedPointManager, ui->qvtkWidget,ui->blockingAlphadoubleSpinBox, ui->segmentationAlphadoubleSpinBox, ui->crosshairAlphadoubleSpinBox);
+    //viewManager = new ViewManager(imagePairManager, seedPointManager, ui->qvtkWidget,ui->blockingAlphadoubleSpinBox, ui->segmentationAlphadoubleSpinBox, ui->crosshairAlphadoubleSpinBox);
 
     //setup drawManager
     if(drawManager!=0)
         delete drawManager;
-	drawManager = new DrawManager(imagePairManager,ui->drawSizeSpinBox,ui->drawOnComboBox, ui->minZSliceSpinBox, ui->maxZSliceSpinBox, ui->segReadOnly);
+    //drawManager = new DrawManager(imagePairManager,ui->drawSizeSpinBox,ui->drawOnComboBox, ui->minZSliceSpinBox, ui->maxZSliceSpinBox, ui->segReadOnly);
 
     //setup segmenter
     if(segmenter!=0)
         delete segmenter;
-    segmenter = new Segmenter(seedPointManager,imagePairManager,ui->kernelComboBox);
+    //segmenter = new Segmenter(seedPointManager,imagePairManager,ui->kernelComboBox);
 
     //setup volumeRenderManager
     if(volumeRenderManager!=0)
         delete volumeRenderManager;
-    volumeRenderManager = new VolumeRenderManager(imagePairManager,ui->qvtk3Ddisplayer);
+    //volumeRenderManager = new VolumeRenderManager(imagePairManager,ui->qvtk3Ddisplayer);
 
     sliceControlSetup();
     contrastControlSetup();
@@ -839,7 +841,7 @@ void MainWindow::loadOriginalImage(QString file)
     workPath.setPath(imageInfo.absolutePath());
 
     //Setup when using scroll wheel to change slice, inform widgets
-    connect(viewManager,SIGNAL(sliceChanged(int)),ui->sliceSlider,SLOT(setValue(int)));
+    //connect(viewManager,SIGNAL(sliceChanged(int)),ui->sliceSlider,SLOT(setValue(int)));
 
 
     //allow debug information to be shown from menu
