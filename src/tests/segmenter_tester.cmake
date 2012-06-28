@@ -11,7 +11,6 @@ ADD_EXECUTABLE(${UNIT_TEST_NAME}
 		${TEST_HEADERS_MOC}
 		segmenter_tester.cpp
 		"../segmenter.cpp"
-		"../seedpointmanager.cpp"
 		"../imagepairmanager.cpp"
 		)
 

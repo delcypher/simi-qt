@@ -13,7 +13,6 @@
 #include <vtkRenderer.h>
 #include <vtkLookupTable.h>
 #include <QDoubleSpinBox>
-#include "seedpointmanager.h"
 #include <vtkPolyDataMapper.h>
 #include <vtkActor.h>
 #include <vtkLineSource.h>
@@ -37,7 +36,7 @@ class ViewManager : public QObject
 		* \param segmentationAlphaSpinBox is the the Widget used to control the segmentation Alpha. It is automatically configured by this constructor.
 		* \param crosshairAlphaSpinBox is the the Widget used to control the crosshair Alpha. It is automatically configured by this constructor.
 		*/
-		ViewManager(ImagePairManager* imagePairManager, SeedPointManager* seedPointManager, QVTKWidget* vtkWidget, QDoubleSpinBox* blockingAlphaSpinBox, QDoubleSpinBox* segmentationAlphaSpinBox, QDoubleSpinBox* crosshairAlphaSpinBox);
+        ViewManager(ImagePairManager* imagePairManager, QVTKWidget* vtkWidget, QDoubleSpinBox* blockingAlphaSpinBox, QDoubleSpinBox* segmentationAlphaSpinBox, QDoubleSpinBox* crosshairAlphaSpinBox);
 
 		//! Destructor
 		~ViewManager();
@@ -223,7 +222,6 @@ class ViewManager : public QObject
 		vtkSmartPointer<vtkImageViewer2> imageViewer;
 		vtkSmartPointer<vtkEventQtSlotConnect> connections;
 		ImagePairManager* imagePairManager;
-		SeedPointManager* seedPointManager;
 		QVTKWidget* qvtkWidget;
 		vtkSmartPointer<vtkImageActor> segblockActor;
 		vtkSmartPointer<vtkLookupTable> lut;

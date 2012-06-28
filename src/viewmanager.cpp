@@ -11,7 +11,7 @@
 #include <vtkProperty.h>
 
 
-ViewManager::ViewManager(ImagePairManager* imagePairManager, SeedPointManager* seedPointManager, QVTKWidget* qvtkWidget,  QDoubleSpinBox* blockingAlphaSpinBox, QDoubleSpinBox* segmentationAlphaSpinBox, QDoubleSpinBox* crosshairAlphaSpinBox) :
+ViewManager::ViewManager(ImagePairManager* imagePairManager, QVTKWidget* qvtkWidget,  QDoubleSpinBox* blockingAlphaSpinBox, QDoubleSpinBox* segmentationAlphaSpinBox, QDoubleSpinBox* crosshairAlphaSpinBox) :
 dragOn(false),
 mouseX(0),
 mouseY(0),
@@ -39,7 +39,6 @@ panScale(1.0)
     this->qvtkWidget = qvtkWidget;
     this->blockingAlphaSpinBox=blockingAlphaSpinBox;
     this->segmentationAlphaSpinBox=segmentationAlphaSpinBox;
-    this->seedPointManager=seedPointManager;
     this->crosshairAlphaSpinBox=crosshairAlphaSpinBox;
 
 	//setup original image
@@ -71,9 +70,9 @@ panScale(1.0)
 
 
     //If the seed point is changed by the user we should redraw the crosshair
-    connect(seedPointManager, SIGNAL(seedPointChanged(int,int,int)),
+    /* connect(seedPointManager, SIGNAL(seedPointChanged(int,int,int)),
             this,
-            SLOT(redrawCrossHair()));
+            SLOT(redrawCrossHair())); */
 
 
 
@@ -544,7 +543,8 @@ void ViewManager::redrawCrossHair()
     //check if we show display the crosshair
     int seedX=0;
     int seedY=0;
-    if(!seedPointManager->getSeedPoint(getCurrentSlice(),seedX,seedY))
+    //if(!seedPointManager->getSeedPoint(getCurrentSlice(),seedX,seedY))
+    if(true)
     {
         //We shouldn't show the crosshair
         hcrosshairActor->GetProperty()->SetOpacity(0.0);

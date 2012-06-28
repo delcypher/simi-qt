@@ -13,7 +13,6 @@
 #include "ui_mainwindow.h"
 
 #include "imagepairmanager.h"
-#include "seedpointmanager.h"
 #include "viewmanager.h"
 #include "drawmanager.h"
 #include "segmenter.h"
@@ -101,7 +100,6 @@ class MainWindow : public QMainWindow
 	private:		
 		//helper classes
 		ImagePairManager* imagePairManager;
-		SeedPointManager* seedPointManager;
 		ViewManager* viewManager;
 		DrawManager* drawManager;
 		Segmenter* segmenter;

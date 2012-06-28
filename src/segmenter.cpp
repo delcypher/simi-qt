@@ -3,7 +3,7 @@
 #include <QApplication>
 
 
-Segmenter::Segmenter(SeedPointManager* seedPointManager, ImagePairManager* imagePairManager, QComboBox* kernelType)
+Segmenter::Segmenter(ImagePairManager* imagePairManager, QComboBox* kernelType)
 {
         this->imagePairManager = imagePairManager;
         this->kernelType = kernelType;

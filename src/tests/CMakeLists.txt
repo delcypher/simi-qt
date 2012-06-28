@@ -29,7 +29,6 @@ INCLUDE("cmake/lcov.cmake")
 
 ###User Interface unit test
 INCLUDE("ui_tester.cmake")
-INCLUDE("seedpointmanager_tester.cmake")
 
 INCLUDE("drawmanager_tester.cmake")
 INCLUDE("imagepairmanager_tester.cmake")

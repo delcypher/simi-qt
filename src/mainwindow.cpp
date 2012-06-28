@@ -16,7 +16,6 @@ MainWindow::MainWindow() : imageInfo(""), workPath(QDir::home())
 	ui = new Ui::MainWindow;
 	ui->setupUi(this); //set up user interface
 
-	seedPointManager=0;
 	imagePairManager=0;
 	viewManager=0;
 	drawManager=0;
@@ -37,9 +36,6 @@ MainWindow::~MainWindow()
 
 	if(imagePairManager!=0)
         delete imagePairManager;
-
-    if(seedPointManager!=0)
-        delete seedPointManager;
 
 	if(viewManager!=0)
         delete viewManager;
@@ -169,16 +165,17 @@ void MainWindow::on_actionHandTool_triggered()
     qDebug() << "Hand tool activated";
 
     //safety check
-    if(viewManager==0 || seedPointManager ==0 || drawManager==0)
+    if(viewManager==0 || drawManager==0)
         return;
 
     //disable other connections
     //disable seedTool connection
-    disconnect(viewManager,
+   /* disconnect(viewManager,
 		SIGNAL(viewLeftClicked(int,int,int)),
         seedPointManager,
 		SLOT(setSeedPoint(int,int,int))
-		);
+        );
+   */
 
     //disable penTool connection
     disconnect(viewManager,
@@ -204,16 +201,16 @@ void MainWindow::on_actionPenTool_triggered()
     qDebug() << "Pen tool activated";
 
     //safety check
-    if(viewManager==0 || seedPointManager ==0 || drawManager==0)
+    if(viewManager==0 || drawManager==0)
         return;
 
     //disable other connections
     //disable seedTool connection
-    disconnect(viewManager,
+    /* disconnect(viewManager,
 		SIGNAL(viewLeftClicked(int,int,int)),
         seedPointManager,
 		SLOT(setSeedPoint(int,int,int))
-		);
+        ); */
 
     //disable eraseTool connection
     disconnect(viewManager,
@@ -238,16 +235,16 @@ void MainWindow::on_actionCrosshairTool_triggered()
     qDebug() << "Crosshair tool activated";
 
     //safety check
-    if(viewManager==0 || seedPointManager ==0 || drawManager==0)
+    if(viewManager==0  || drawManager==0)
         return;
 
     //disable other connections
     //disable seedTool connection
-    disconnect(viewManager,
+   /* disconnect(viewManager,
 		SIGNAL(viewLeftClicked(int,int,int)),
         seedPointManager,
 		SLOT(setSeedPoint(int,int,int))
-		);
+        ); */
 
     //disable penTool connection
     disconnect(viewManager,
@@ -268,11 +265,11 @@ void MainWindow::on_actionCrosshairTool_triggered()
 
 
     //enable connection
-    connect(viewManager,
+    /* connect(viewManager,
 		SIGNAL(viewLeftClicked(int,int,int)),
         seedPointManager,
 		SLOT(setSeedPoint(int,int,int))
-		);
+        ); */
 
 }
 
@@ -281,15 +278,15 @@ void MainWindow::on_actionEraseTool_triggered()
     qDebug() << "Erase tool activated";
 
     //safety check
-    if(viewManager==0 || seedPointManager ==0 || drawManager==0)
+    if(viewManager==0 ||  drawManager==0)
         return;
 
     //disable seedTool connection
-    disconnect(viewManager,
+    /* disconnect(viewManager,
 		SIGNAL(viewLeftClicked(int,int,int)),
         seedPointManager,
 		SLOT(setSeedPoint(int,int,int))
-		);
+        ); */
 
     //disable penTool connection
     disconnect(viewManager,
@@ -387,10 +384,7 @@ void MainWindow::on_doSegmentation2D_clicked()
                 int pos_z = viewManager->getCurrentSlice();
                 int pos_x, pos_y;
 
-                if(!seedPointManager->getSeedPoint(pos_z,pos_x,pos_y))
-                {
-                    qWarning() << "Can't do segmentation. The seed point isn't set!";
-                }
+
 
                 segmenter->doSegmentation2D(pos_x, pos_y, pos_z, ui->minSegIntensitySlider->value(), ui->maxSegIntensitySlider->value());
 		enableSegmentationWidgets();
@@ -417,9 +411,9 @@ void MainWindow::seedPointChanged()
 	int y=0;
 
 	//small safety check
-    if(seedPointManager!=0 && viewManager!=0)
+    if( viewManager!=0)
     {
-        seedPointManager->getSeedPoint(viewManager->getCurrentSlice(),x,y);
+        //seedPointManager->getSeedPoint(viewManager->getCurrentSlice(),x,y);
 
         QString seedPoint("(");
         seedPoint += QString::number(x);
@@ -444,11 +438,6 @@ void MainWindow::on_doSegmentation3D_clicked()
                 int pos_z = viewManager->getCurrentSlice();
                 int pos_x, pos_y;
 
-                if(!seedPointManager->getSeedPoint(pos_z,pos_x,pos_y))
-                {
-                    qWarning() << "Can't do segmentation. The seed point isn't set!";
-                    return;
-                }
 
                 if(segmenter->isWorking())
                 {
@@ -588,7 +577,7 @@ void MainWindow::tryEnableSegmentationWidgets()
 {
     int dummy;
 
-    if(seedPointManager!=0 && viewManager!=0 && seedPointManager->getSeedPoint(viewManager->getCurrentSlice(),dummy,dummy))
+    if( viewManager!=0)
     {
         qDebug() << "Enable segmentation widgets!";
 	enableSegmentationWidgets();
@@ -784,11 +773,6 @@ void MainWindow::loadOriginalImage(QString file)
         return;
     }
 
-    //setup SeedPointManager
-    if(seedPointManager!=0)
-        delete seedPointManager;
-    seedPointManager = new SeedPointManager(imagePairManager->getZDim());
-
     //setup LayoutManager
     if(viewManager!=0)
         delete viewManager;
@@ -824,8 +808,8 @@ void MainWindow::loadOriginalImage(QString file)
     connect(viewManager,SIGNAL(mouseLeavesWidget()), this, SLOT(updateStatusBar()));
 
     //setup seedPointLine view being told about the seed point being change
-    connect(seedPointManager,SIGNAL(seedPointChanged(int,int,int)), this, SLOT(seedPointChanged()));
-    connect(viewManager,SIGNAL(sliceChanged(int)), this,SLOT(seedPointChanged()));
+    //connect(seedPointManager,SIGNAL(seedPointChanged(int,int,int)), this, SLOT(seedPointChanged()));
+    //connect(viewManager,SIGNAL(sliceChanged(int)), this,SLOT(seedPointChanged()));
 
     //setup zoom control
     connect(ui->actionZoom_in,SIGNAL(triggered()), viewManager,SLOT(zoomIn()));

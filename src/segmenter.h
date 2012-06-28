@@ -7,7 +7,6 @@
 
 #include <QObject>
 #include <QComboBox>
-#include "seedpointmanager.h"
 #include "imagepairmanager.h"
 #include <list>
 
@@ -39,7 +38,7 @@ class Segmenter : public QObject
 
         public:
                 //! Class constructor.
-                Segmenter(SeedPointManager* seedPointManager, ImagePairManager* imagePairManager, QComboBox* kernelType);
+                Segmenter(ImagePairManager* imagePairManager, QComboBox* kernelType);
 
                 //! Class destructor.
                 ~Segmenter();
