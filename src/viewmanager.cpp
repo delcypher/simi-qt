@@ -11,7 +11,7 @@
 #include <vtkProperty.h>
 
 
-ViewManager::ViewManager(ImagePairManager* imagePairManager, QVTKWidget* qvtkWidget,  QDoubleSpinBox* blockingAlphaSpinBox, QDoubleSpinBox* segmentationAlphaSpinBox, QDoubleSpinBox* crosshairAlphaSpinBox) :
+ViewManager::ViewManager(ImagePairManager* imagePairManager, QVTKWidget* qvtkWidget, QSpinBox* sliceSpinBox, QSlider* sliceSlider, QDoubleSpinBox* blockingAlphaSpinBox, QDoubleSpinBox* segmentationAlphaSpinBox, QDoubleSpinBox* crosshairAlphaSpinBox) :
 dragOn(false),
 mouseX(0),
 mouseY(0),
@@ -40,6 +40,8 @@ panScale(1.0)
     this->blockingAlphaSpinBox=blockingAlphaSpinBox;
     this->segmentationAlphaSpinBox=segmentationAlphaSpinBox;
     this->crosshairAlphaSpinBox=crosshairAlphaSpinBox;
+    this->sliceSlider = sliceSlider;
+    this->sliceSpinBox = sliceSpinBox;
 
 	//setup original image
 	imageViewer = vtkImageViewer2::New();
@@ -155,7 +157,12 @@ panScale(1.0)
     crosshairAlphaSpinBox->setValue(crossHairAlpha);
     connect(crosshairAlphaSpinBox, SIGNAL(valueChanged(double)), this, SLOT(setCrosshairAlpha(double)));
 
+    //assume sliceSlider and sliceSpinBox already connected together
+    //connect so that the user can change slice
+    connect(sliceSpinBox,SIGNAL(valueChanged(int)),this,SLOT(setSlice(int)));
 
+    //if the slice is changed by interaction with this view inform the other widgets
+    connect(this,SIGNAL(sliceChanged(int)),sliceSpinBox,SLOT(setValue(int)));
 }
 
 ViewManager::~ViewManager()
@@ -226,6 +233,7 @@ bool ViewManager::setSlice(int slice)
 		update();
 
 		emit sliceChanged(slice);
+        emit requestActive();// Request that this view be made active
 		return true;
 	}
 	else
@@ -416,6 +424,7 @@ void ViewManager::vtkEventHandler(vtkObject *caller, unsigned long vtkEvent, voi
 
             //inform other classes that the view has been left clicked
             emit viewLeftClicked(mouseX, mouseY, mouseZ);
+            emit requestActive();// Request that this view be made active
 
             if(inImage)
                 emit dragEvent(picker->GetCellIJK()[0],picker->GetCellIJK()[1], picker->GetCellIJK()[2]);
@@ -641,6 +650,11 @@ bool ViewManager::setOrientation(unsigned int ort)
 
     imageViewer->SetSliceOrientation(orientation);
     applyCameraFixes();// correct camera positions if necessary
+
+    //the widgets need to be told the valid range
+    sliceSpinBox->setRange(getSliceMin(),getSliceMax());
+    sliceSlider->setRange(getSliceMin(),getSliceMax());
+
     return true;
 }
 
@@ -717,6 +731,8 @@ void ViewManager::zoomIn()
 
 	imageViewer->GetRenderer()->GetActiveCamera()->SetParallelScale( maxScale - currentStep*(maxScale - minScale)/( static_cast<double>(zoomSteps))  );
 	imageViewer->GetRenderWindow()->Render();
+
+    emit requestActive();// Request that this view be made active
 }
 
 void ViewManager::zoomOut()
@@ -728,6 +744,8 @@ void ViewManager::zoomOut()
 
 	imageViewer->GetRenderer()->GetActiveCamera()->SetParallelScale( maxScale - currentStep*(maxScale - minScale)/( static_cast<double>(zoomSteps))  );
 	imageViewer->GetRenderWindow()->Render();
+
+    emit requestActive();// Request that this view be made active
 }
 
 void ViewManager::resetPan()

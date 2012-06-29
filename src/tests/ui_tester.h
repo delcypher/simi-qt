@@ -121,10 +121,10 @@ class UiTester: public QObject
 		mw->on_actionClear_Blocking_on_All_Slices_triggered();
 
 		//toolbar slots
-		mw->on_actionHandTool_triggered();
-		mw->on_actionPenTool_triggered();
-		mw->on_actionCrosshairTool_triggered();
-		mw->on_actionEraseTool_triggered();
+		mw->on_actionHandTool_toggled();
+		mw->on_actionPenTool_toggled();
+		mw->on_actionCrosshairTool_toggled();
+		mw->on_actionEraseTool_toggled();
 
 		mw->on_minSegIntensitySlider_valueChanged(20);
 		mw->on_maxSegIntensitySlider_valueChanged(50);
@@ -213,10 +213,10 @@ class UiTester: public QObject
 		mw->on_actionClear_Blocking_on_All_Slices_triggered();
 
 		//toolbar slots
-		mw->on_actionHandTool_triggered();
-		mw->on_actionPenTool_triggered();
-		mw->on_actionCrosshairTool_triggered();
-		mw->on_actionEraseTool_triggered();
+		mw->on_actionHandTool_toggled();
+		mw->on_actionPenTool_toggled();
+		mw->on_actionCrosshairTool_toggled();
+		mw->on_actionEraseTool_toggled();
 
 		mw->on_minSegIntensitySlider_valueChanged(20);
 		mw->on_maxSegIntensitySlider_valueChanged(50);

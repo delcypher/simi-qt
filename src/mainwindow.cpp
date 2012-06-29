@@ -17,7 +17,10 @@ MainWindow::MainWindow() : imageInfo(""), workPath(QDir::home())
 	ui->setupUi(this); //set up user interface
 
 	imagePairManager=0;
-	viewManager=0;
+    xyView=0;
+    xzView=0;
+    yzView=0;
+    multiViewManager=0;
 	drawManager=0;
 	segmenter=0;
 	volumeRenderManager=0;
@@ -34,20 +37,7 @@ MainWindow::~MainWindow()
 {
 	delete ui;
 
-	if(imagePairManager!=0)
-        delete imagePairManager;
-
-	if(viewManager!=0)
-        delete viewManager;
-
-	if(drawManager!=0)
-        delete drawManager;
-
-	if(segmenter!=0)
-	delete segmenter;
-
-	if(volumeRenderManager!=0)
-	delete volumeRenderManager;
+    cleanUp();
 }
 
 void MainWindow::on_actionOpen_Image_triggered()
@@ -76,15 +66,21 @@ void MainWindow::on_actionOpen_Image_triggered()
 
 void MainWindow::on_actionSlice_up_triggered()
 {
-    if(viewManager!=0)
-	viewManager->setSlice( viewManager->getCurrentSlice() +1);
+    if(multiViewManager!=0 && multiViewManager->getActiveViewPointer() !=0)
+    {
+        ViewManager* av = multiViewManager->getActiveViewPointer();
+        av->setSlice( av->getCurrentSlice() +1);
+    }
 }
 
 
 void MainWindow::on_actionSlice_down_triggered()
 {
-    if(viewManager!=0)
-	viewManager->setSlice( viewManager->getCurrentSlice() -1);
+    if(multiViewManager!=0 && multiViewManager->getActiveViewPointer() !=0)
+    {
+        ViewManager* av = multiViewManager->getActiveViewPointer();
+        av->setSlice( av->getCurrentSlice() -1);
+    }
 }
 
 
@@ -127,9 +123,11 @@ void MainWindow::contrastControlSetup()
 
 void MainWindow::changeContrast()
 {
-    if(viewManager!=0)
+    if(xyView!=0 && xzView !=0 && yzView!=0)
     {
-        viewManager->setConstrast(static_cast<double>(ui->minIntensitySlider->value()), static_cast<double>(ui->maxIntensitySlider->value()));
+        xyView->setConstrast(static_cast<double>(ui->minIntensitySlider->value()), static_cast<double>(ui->maxIntensitySlider->value()));
+        xzView->setConstrast(static_cast<double>(ui->minIntensitySlider->value()), static_cast<double>(ui->maxIntensitySlider->value()));
+        yzView->setConstrast(static_cast<double>(ui->minIntensitySlider->value()), static_cast<double>(ui->maxIntensitySlider->value()));
     }
 }
 
@@ -154,63 +152,38 @@ void MainWindow::on_maxIntensitySlider_valueChanged(int value)
 }
 
 
-void MainWindow::on_sliceSlider_valueChanged(int value)
+void MainWindow::on_actionHandTool_toggled(bool t)
 {
-	if(viewManager!=0)
-	viewManager->setSlice(value);
+    if(multiViewManager==0)
+        return;
+
+    if(t)
+    {
+        qDebug() << "Hand tool enabled";
+        multiViewManager->enablePanning(true);
+    }
+    else
+    {
+        qDebug() << "Hand tool disabled";
+        multiViewManager->enablePanning(false);
+    }
 }
 
-void MainWindow::on_actionHandTool_triggered()
+void MainWindow::on_actionPenTool_toggled(bool t)
 {
-    qDebug() << "Hand tool activated";
-
+    qDebug() << "Pen tool activated";
+    /*
     //safety check
     if(viewManager==0 || drawManager==0)
         return;
 
     //disable other connections
     //disable seedTool connection
-   /* disconnect(viewManager,
+     disconnect(viewManager,
 		SIGNAL(viewLeftClicked(int,int,int)),
         seedPointManager,
 		SLOT(setSeedPoint(int,int,int))
         );
-   */
-
-    //disable penTool connection
-    disconnect(viewManager,
-		SIGNAL(dragEvent(int,int,int)),
-		drawManager,
-		SLOT(draw(int,int,int))
-		);
-
-    //disable eraseTool connection
-    disconnect(viewManager,
-		SIGNAL(dragEvent(int,int,int)),
-		drawManager,
-		SLOT(erase(int,int,int))
-		);
-
-    //enable panning
-    viewManager->enablePanning(true);
-
-}
-
-void MainWindow::on_actionPenTool_triggered()
-{
-    qDebug() << "Pen tool activated";
-
-    //safety check
-    if(viewManager==0 || drawManager==0)
-        return;
-
-    //disable other connections
-    //disable seedTool connection
-    /* disconnect(viewManager,
-		SIGNAL(viewLeftClicked(int,int,int)),
-        seedPointManager,
-		SLOT(setSeedPoint(int,int,int))
-        ); */
 
     //disable eraseTool connection
     disconnect(viewManager,
@@ -227,24 +200,41 @@ void MainWindow::on_actionPenTool_triggered()
 		SIGNAL(dragEvent(int,int,int)),
 		drawManager,
 		SLOT(draw(int,int,int))
-		);
+        ); */
 }
 
-void MainWindow::on_actionCrosshairTool_triggered()
+void MainWindow::on_actionCrosshairTool_toggled(bool t)
 {
-    qDebug() << "Crosshair tool activated";
+    if(multiViewManager==0)
+        return;
 
+    if(t)
+    {
+        qDebug() << "Crosshair tool enabled";
+        connect(xyView,SIGNAL(viewLeftClicked(int,int,int)),multiViewManager,SLOT(setSeedPoint(int,int,int)));
+        connect(xzView,SIGNAL(viewLeftClicked(int,int,int)),multiViewManager,SLOT(setSeedPoint(int,int,int)));
+        connect(yzView,SIGNAL(viewLeftClicked(int,int,int)),multiViewManager,SLOT(setSeedPoint(int,int,int)));
+    }
+    else
+    {
+        qDebug() << "Crosshair tool disabled";
+        disconnect(xyView,SIGNAL(viewLeftClicked(int,int,int)),multiViewManager,SLOT(setSeedPoint(int,int,int)));
+        disconnect(xzView,SIGNAL(viewLeftClicked(int,int,int)),multiViewManager,SLOT(setSeedPoint(int,int,int)));
+        disconnect(yzView,SIGNAL(viewLeftClicked(int,int,int)),multiViewManager,SLOT(setSeedPoint(int,int,int)));
+    }
+
+    /*
     //safety check
     if(viewManager==0  || drawManager==0)
         return;
 
     //disable other connections
     //disable seedTool connection
-   /* disconnect(viewManager,
+    disconnect(viewManager,
 		SIGNAL(viewLeftClicked(int,int,int)),
         seedPointManager,
 		SLOT(setSeedPoint(int,int,int))
-        ); */
+        );
 
     //disable penTool connection
     disconnect(viewManager,
@@ -265,7 +255,7 @@ void MainWindow::on_actionCrosshairTool_triggered()
 
 
     //enable connection
-    /* connect(viewManager,
+     connect(viewManager,
 		SIGNAL(viewLeftClicked(int,int,int)),
         seedPointManager,
 		SLOT(setSeedPoint(int,int,int))
@@ -273,20 +263,20 @@ void MainWindow::on_actionCrosshairTool_triggered()
 
 }
 
-void MainWindow::on_actionEraseTool_triggered()
+void MainWindow::on_actionEraseTool_toggled(bool t)
 {
     qDebug() << "Erase tool activated";
-
+    /*
     //safety check
     if(viewManager==0 ||  drawManager==0)
         return;
 
     //disable seedTool connection
-    /* disconnect(viewManager,
+     disconnect(viewManager,
 		SIGNAL(viewLeftClicked(int,int,int)),
         seedPointManager,
 		SLOT(setSeedPoint(int,int,int))
-        ); */
+        );
 
     //disable penTool connection
     disconnect(viewManager,
@@ -303,7 +293,7 @@ void MainWindow::on_actionEraseTool_triggered()
 		SIGNAL(dragEvent(int,int,int)),
 		drawManager,
 		SLOT(erase(int,int,int))
-		);
+        ); */
 
 
 
@@ -338,7 +328,7 @@ void MainWindow::toolbarSetup()
 
     //set default action
     ui->actionHandTool->setChecked(true);
-    viewManager->enablePanning(true);
+    //viewManager->enablePanning(true);
 }
 
 void MainWindow::segmentationControlSetup()
@@ -381,7 +371,7 @@ void MainWindow::on_doSegmentation2D_clicked()
 	{
                 //disable segmentation widgets whilst segmenting
 		disableSegmentationWidgets();
-                int pos_z = viewManager->getCurrentSlice();
+                int pos_z = 0;// viewManager->getCurrentSlice();
                 int pos_x, pos_y;
 
 
@@ -393,11 +383,13 @@ void MainWindow::on_doSegmentation2D_clicked()
 
 void MainWindow::updateStatusBar()
 {
-	if(viewManager!=0 && viewManager->mouseIsOverWidget())
+    ViewManager* av;
+    if(multiViewManager!=0 && (av = multiViewManager->getActiveViewPointer()) &&
+        av->mouseIsOverWidget())
 	{
 		QString message("");
 		QTextStream messageStream(&message);
-		messageStream << "X:" << viewManager->getLastMousePosX() << " Y:"<< viewManager->getLastMousePosY() << " Z:" << viewManager->getLastMousePosZ() << " Intensity:" << viewManager->getLastMouseIntensity();
+        messageStream << "X:" << av->getLastMousePosX() << " Y:"<< av->getLastMousePosY() << " Z:" << av->getLastMousePosZ() << " Intensity:" << av->getLastMouseIntensity();
 
 		ui->statusbar->showMessage(*(messageStream.string()),0);
 	}
@@ -409,11 +401,12 @@ void MainWindow::seedPointChanged()
 {
 	int x=0;
 	int y=0;
+    int z=0;
 
 	//small safety check
-    if( viewManager!=0)
+    if( multiViewManager !=0)
     {
-        //seedPointManager->getSeedPoint(viewManager->getCurrentSlice(),x,y);
+        multiViewManager->getSeedPoint(x,y,z);
 
         QString seedPoint("(");
         seedPoint += QString::number(x);
@@ -422,7 +415,7 @@ void MainWindow::seedPointChanged()
         seedPoint +=")";
         ui->seedPointValueLabel->setText(seedPoint);
 
-        //enable the segmentation widgets
+        //enable the segmentation widgets (TODO : REMove)
         tryEnableSegmentationWidgets();
 	}
 }
@@ -435,7 +428,7 @@ void MainWindow::on_doSegmentation3D_clicked()
 		disableSegmentationWidgets();
 
                 //segmentation parameters
-                int pos_z = viewManager->getCurrentSlice();
+                int pos_z = 0;// viewManager->getCurrentSlice();
                 int pos_x, pos_y;
 
 
@@ -466,27 +459,29 @@ void MainWindow::on_doSegmentation3D_clicked()
 
 void MainWindow::on_actionClear_Drawing_triggered()
 {
+    /* TODO FIX!
     if(imagePairManager!=0 && viewManager!=0)
     {
         imagePairManager->setAll(viewManager->getCurrentSlice(), ImagePairManager::BLOCKING, ImagePairManager::BACKGROUND);
         viewManager->update();
-    }
+    } */
 }
 
 void MainWindow::on_actionClear_Segmentation_triggered()
 {
+    /* TODO FIX!
     if(imagePairManager!=0 && viewManager!=0)
     {
         imagePairManager->setAll(viewManager->getCurrentSlice(), ImagePairManager::SEGMENTATION, ImagePairManager::BACKGROUND);
 	volumeRenderManager->render3D();
         viewManager->update();
-    }
+    } */
 }
 
 void MainWindow::on_actionLoad_Segmentation_triggered()
 {
 
-    if(imagePairManager==0)
+    if(imagePairManager==0 || multiViewManager==0)
         return;
 
     //Check if we need to save our current segblock first
@@ -501,7 +496,7 @@ void MainWindow::on_actionLoad_Segmentation_triggered()
 
 
     imagePairManager->loadSegblock(loadFile);
-    viewManager->update(); //update
+    multiViewManager->update(); //update
 }
 
 bool MainWindow::on_actionSave_Segmentation_triggered()
@@ -528,65 +523,17 @@ bool MainWindow::on_actionSave_Segmentation_triggered()
 
 void MainWindow::on_actionInterpolate_Image_toggled(bool enable)
 {
-    if(imagePairManager!=0 && viewManager!=0)
+    if(imagePairManager!=0 && multiViewManager!=0)
     {
-        viewManager->enableInterpolation(enable);
+        multiViewManager->enableInterpolation(enable);
     }
 }
 
-void MainWindow::on_actionXY_View_toggled(bool enable)
-{
-    if(enable && viewManager!=0)
-    {
-        //Set orientation
-        qDebug() << "Set XY";
-        viewManager->setOrientation(vtkImageViewer2::SLICE_ORIENTATION_XY);
-        viewManager->flipView(ui->actionRotate_view_by_180->isChecked()); //make sure the checkbox behaviour remains consistent when switching orientation
-        viewManager->setSlice(0);
-        sliceControlSetup(); //Adjust Widgets
-    }
-}
-
-void MainWindow::on_actionXZ_View_toggled(bool enable)
-{
-    if(enable && viewManager!=0)
-    {
-        //set orientation
-        qDebug() << "Set XZ";
-        viewManager->setOrientation(vtkImageViewer2::SLICE_ORIENTATION_XZ);
-        viewManager->flipView(ui->actionRotate_view_by_180->isChecked()); //make sure the checkbox behaviour remains consistent when switching orientation
-        viewManager->setSlice(0);
-        sliceControlSetup(); //Adjust Widgets
-    }
-}
-
-void MainWindow::on_actionYZ_View_toggled(bool enable)
-{
-    if(enable && viewManager!=0)
-    {
-        //set orientation
-        qDebug() << "Set YZ";
-        viewManager->setOrientation(vtkImageViewer2::SLICE_ORIENTATION_YZ);
-        viewManager->flipView(ui->actionRotate_view_by_180->isChecked()); //make sure the checkbox behaviour remains consistent when switching orientation
-        viewManager->setSlice(0);
-        sliceControlSetup(); //Adjust Widgets
-    }
-}
 
 void MainWindow::tryEnableSegmentationWidgets()
 {
     int dummy;
-
-    if( viewManager!=0)
-    {
-        qDebug() << "Enable segmentation widgets!";
-	enableSegmentationWidgets();
-    }
-    else
-    {
-        qDebug() << "Cannot enable segmentation widgets!";
-	disableSegmentationWidgets();
-    }
+    //TODO REmove function!
 }
 
 
@@ -632,24 +579,15 @@ bool MainWindow::okToContinue()
 
 
 
-
-void MainWindow::on_do3Drender_clicked()
-{
-	qDebug() << "3D draw button is clicked" ;
-	//setup volumeRenderManager
-	if(imagePairManager != NULL)
-		volumeRenderManager->render3D();
-}
-
 void MainWindow::on_actionClear_Segmentation_on_All_Slices_triggered()
 {
 	qDebug() << "Clearing all simblock voxels!";
 
-    if(imagePairManager!=0 && viewManager!=0 && volumeRenderManager!=0)
+    if(imagePairManager!=0 && multiViewManager!=0 && volumeRenderManager!=0)
     {
         showWaitDialog();
         imagePairManager->setAllSimBlockVoxels(ImagePairManager::SEGMENTATION, ImagePairManager::BACKGROUND);
-        viewManager->update();
+        multiViewManager->update();
         volumeRenderManager->render3D();
         hideWaitDialog();
 	}
@@ -662,10 +600,10 @@ void MainWindow::on_actionClear_Blocking_on_All_Slices_triggered()
 
 	showWaitDialog();
 
-    if(imagePairManager!=0 && viewManager!=0 && volumeRenderManager!=0)
+    if(imagePairManager!=0 && multiViewManager!=0 && volumeRenderManager!=0)
     {
         imagePairManager->setAllSimBlockVoxels(ImagePairManager::BLOCKING, ImagePairManager::BACKGROUND);
-        viewManager->update();
+        multiViewManager->update();
         volumeRenderManager->render3D();
         hideWaitDialog();
 	}
@@ -676,38 +614,42 @@ void MainWindow::on_actionClear_Blocking_on_All_Slices_triggered()
 
 void MainWindow::on_doDilate2D_clicked()
 {
+        /*
         if(segmenter!=0)
         {
                 int pos_z = viewManager->getCurrentSlice();
                 segmenter->doDilate(pos_z);
-        }
+        } */
 }
 
 void MainWindow::on_doErode2D_clicked()
 {
+        /*
         if(segmenter!=0)
         {
                 int pos_z = viewManager->getCurrentSlice();
                 segmenter->doErode(pos_z);
-        }
+        } */
 }
 
 void MainWindow::on_doClose2D_clicked()
 {
+        /*
         if(segmenter!=0)
         {
                 int pos_z = viewManager->getCurrentSlice();
                 segmenter->doMorphClose(pos_z);
-        }
+        } */
 }
 
 void MainWindow::on_doOpen2D_clicked()
 {
+       /*
         if(segmenter!=0)
         {
                 int pos_z = viewManager->getCurrentSlice();
                 segmenter->doMorphOpen(pos_z);
-        }
+        } */
 }
 
 void MainWindow::showWaitDialog()
@@ -757,13 +699,39 @@ void MainWindow::viewOrientationSetup()
 
 }
 
+void MainWindow::cleanUp()
+{
+    if(imagePairManager!=0)
+        delete imagePairManager;
+
+    if(xyView!=0)
+        delete xyView;
+
+    if(xzView!=0)
+        delete xzView;
+
+    if(yzView!=0)
+        delete yzView;
+
+    if(multiViewManager!=0)
+        delete multiViewManager;
+
+    if(drawManager!=0)
+        delete drawManager;
+
+    if(segmenter!=0)
+        delete segmenter;
+
+    if(volumeRenderManager!=0)
+        delete volumeRenderManager;
+}
+
 void MainWindow::loadOriginalImage(QString file)
 {
     imageInfo.setFile(file);
 
-    //Setup the ImagePairManager
-    if(imagePairManager!=0)
-        delete imagePairManager;
+    //if we had an image open previously clean up!
+    cleanUp();
 
     imagePairManager = new ImagePairManager();
 
@@ -773,10 +741,47 @@ void MainWindow::loadOriginalImage(QString file)
         return;
     }
 
-    //setup LayoutManager
-    if(viewManager!=0)
-        delete viewManager;
-    //viewManager = new ViewManager(imagePairManager, seedPointManager, ui->qvtkWidget,ui->blockingAlphadoubleSpinBox, ui->segmentationAlphadoubleSpinBox, ui->crosshairAlphadoubleSpinBox);
+
+
+    //setup xy view
+    xyView = new ViewManager(imagePairManager,
+                            ui->xyQvtkWidget,
+                            ui->xySliceSpinBox,
+                            ui->xySliceSlider,
+                            ui->blockingAlphadoubleSpinBox,
+                            ui->segmentationAlphadoubleSpinBox,
+                            ui->crosshairAlphadoubleSpinBox);
+    xyView->setOrientation(vtkImageViewer2::SLICE_ORIENTATION_XY);
+
+    //setup xz view
+    xzView = new ViewManager(imagePairManager,
+                            ui->xzQvtkWidget,
+                            ui->xzSliceSpinBox,
+                            ui->xzSliceSlider,
+                            ui->blockingAlphadoubleSpinBox,
+                            ui->segmentationAlphadoubleSpinBox,
+                            ui->crosshairAlphadoubleSpinBox);
+    xzView->setOrientation(vtkImageViewer2::SLICE_ORIENTATION_XZ);
+
+    //setup yzview
+    yzView = new ViewManager(imagePairManager,
+                            ui->yzQvtkWidget,
+                            ui->yzSliceSpinBox,
+                            ui->yzSliceSlider,
+                            ui->blockingAlphadoubleSpinBox,
+                            ui->segmentationAlphadoubleSpinBox,
+                            ui->crosshairAlphadoubleSpinBox);
+    yzView->setOrientation(vtkImageViewer2::SLICE_ORIENTATION_YZ);
+
+    //setup the multiview manager with XY as default view
+    multiViewManager = new MultiViewManager(xyView,
+                                            xzView,
+                                            yzView,
+                                            ui->xyActiveButton,
+                                            ui->xzActiveButton,
+                                            ui->yzActiveButton,
+                                            vtkImageViewer2::SLICE_ORIENTATION_XY);
+
 
     //setup drawManager
     if(drawManager!=0)
@@ -803,23 +808,23 @@ void MainWindow::loadOriginalImage(QString file)
     ui->actionInterpolate_Image->setChecked(true);
 
     //setup statusbar update from viewmanager
-    connect(viewManager,SIGNAL(mouseHasMoved()), this, SLOT(updateStatusBar()));
-    connect(viewManager,SIGNAL(mouseEntersWidget()), this, SLOT(updateStatusBar()));
-    connect(viewManager,SIGNAL(mouseLeavesWidget()), this, SLOT(updateStatusBar()));
+    //connect(viewManager,SIGNAL(mouseHasMoved()), this, SLOT(updateStatusBar()));
+    //connect(viewManager,SIGNAL(mouseEntersWidget()), this, SLOT(updateStatusBar()));
+    //connect(viewManager,SIGNAL(mouseLeavesWidget()), this, SLOT(updateStatusBar()));
 
     //setup seedPointLine view being told about the seed point being change
     //connect(seedPointManager,SIGNAL(seedPointChanged(int,int,int)), this, SLOT(seedPointChanged()));
     //connect(viewManager,SIGNAL(sliceChanged(int)), this,SLOT(seedPointChanged()));
 
     //setup zoom control
-    connect(ui->actionZoom_in,SIGNAL(triggered()), viewManager,SLOT(zoomIn()));
-    connect(ui->actionZoom_out,SIGNAL(triggered()), viewManager,SLOT(zoomOut()));
+    //connect(ui->actionZoom_in,SIGNAL(triggered()), viewManager,SLOT(zoomIn()));
+    //connect(ui->actionZoom_out,SIGNAL(triggered()), viewManager,SLOT(zoomOut()));
 
     //setup so on segmentation completion we redraw
-    connect(segmenter,SIGNAL(segmentationDone(int)), viewManager, SLOT(update()));
+    //connect(segmenter,SIGNAL(segmentationDone(int)), viewManager, SLOT(update()));
 
     //setup on drawing complete we redraw
-    connect(drawManager,SIGNAL(drawingDone()),viewManager,SLOT(update()));
+    //connect(drawManager,SIGNAL(drawingDone()),viewManager,SLOT(update()));
 
     //Update the work path to the location of the new image
     workPath.setPath(imageInfo.absolutePath());
@@ -829,7 +834,7 @@ void MainWindow::loadOriginalImage(QString file)
 
 
     //allow debug information to be shown from menu
-    connect(ui->actionDump_debug,SIGNAL(triggered()),viewManager,SLOT(debugDump()));
+    //connect(ui->actionDump_debug,SIGNAL(triggered()),viewManager,SLOT(debugDump()));
 
     //allow load/save segblock menus now
     ui->actionLoad_Segmentation->setEnabled(true);
@@ -840,7 +845,7 @@ void MainWindow::loadOriginalImage(QString file)
 
 
     //When the user changes slice we may need to disable/enabled the segmentation widgets
-    connect(viewManager,SIGNAL(sliceChanged(int)), this, SLOT(tryEnableSegmentationWidgets()));
+    //connect(viewManager,SIGNAL(sliceChanged(int)), this, SLOT(tryEnableSegmentationWidgets()));
 
     /*When segmentation is done force redraw for volumeRenderManager
             * Note if we do 3D segmentation it seems to update itself... not sure why
@@ -856,20 +861,22 @@ void MainWindow::loadOriginalImage(QString file)
 
 void MainWindow::on_actionRotate_view_by_180_toggled(bool flip)
 {
-	if(viewManager!=0 && volumeRenderManager!=0)
+    /* fix
+    if(viewManager!=0 && volumeRenderManager!=0)
 	{
 		viewManager->flipView(flip);
 		volumeRenderManager->flipView(flip);
-	}
+    } */
 }
 
 void MainWindow::on_actionResetView_triggered()
 {
-	if(viewManager!=0)
+    /*
+    if(viewManager!=0)
 	{
 		viewManager->resetPan();
 		viewManager->resetZoom();
-	}
+    } */
 }
 
 
@@ -883,4 +890,12 @@ void MainWindow::disableSegmentationWidgets()
 {
 	ui->doSegmentation2D->setEnabled(false);
 	ui->doSegmentation3D->setEnabled(false);
+}
+
+void MainWindow::on_render3DButton_clicked()
+{
+    qDebug() << "3D draw button is clicked" ;
+    //setup volumeRenderManager
+    if(imagePairManager != NULL)
+        volumeRenderManager->render3D();
 }

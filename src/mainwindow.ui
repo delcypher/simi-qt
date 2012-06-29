@@ -239,7 +239,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QSpinBox" name="xzSlicespinBox"/>
+              <widget class="QSpinBox" name="xzSliceSpinBox"/>
              </item>
             </layout>
            </item>
@@ -1298,7 +1298,7 @@
   <connection>
    <sender>xzSliceSlider</sender>
    <signal>valueChanged(int)</signal>
-   <receiver>xzSlicespinBox</receiver>
+   <receiver>xzSliceSpinBox</receiver>
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
@@ -1312,7 +1312,7 @@
    </hints>
   </connection>
   <connection>
-   <sender>xzSlicespinBox</sender>
+   <sender>xzSliceSpinBox</sender>
    <signal>valueChanged(int)</signal>
    <receiver>xzSliceSlider</receiver>
    <slot>setValue(int)</slot>

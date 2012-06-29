@@ -14,6 +14,7 @@
 
 #include "imagepairmanager.h"
 #include "viewmanager.h"
+#include "multiviewmanager.h"
 #include "drawmanager.h"
 #include "segmenter.h"
 #include "volumerendermanager.h"
@@ -50,17 +51,16 @@ class MainWindow : public QMainWindow
 
 		void on_minIntensitySlider_valueChanged(int value);
 		void on_maxIntensitySlider_valueChanged(int value);
-		void on_sliceSlider_valueChanged(int value);
 		void updateStatusBar();
 		void seedPointChanged();
 		void on_actionClear_Segmentation_on_All_Slices_triggered();
 		void on_actionClear_Blocking_on_All_Slices_triggered();
 
 		//toolbar slots
-		void on_actionHandTool_triggered();
-		void on_actionPenTool_triggered();
-		void on_actionCrosshairTool_triggered();
-		void on_actionEraseTool_triggered();
+        void on_actionHandTool_toggled(bool t);
+        void on_actionPenTool_toggled(bool t);
+        void on_actionCrosshairTool_toggled(bool t);
+        void on_actionEraseTool_toggled(bool t);
 
 		void on_minSegIntensitySlider_valueChanged(int value);
 		void on_maxSegIntensitySlider_valueChanged(int value);
@@ -76,15 +76,10 @@ class MainWindow : public QMainWindow
 
         void on_actionInterpolate_Image_toggled(bool enable);
 
-        void on_actionXY_View_toggled(bool enable);
-        void on_actionXZ_View_toggled(bool enable);
-        void on_actionYZ_View_toggled(bool enable);
-
 		void tryEnableSegmentationWidgets();
 		void enableSegmentationWidgets();
 		void disableSegmentationWidgets();
 
-		void on_do3Drender_clicked();
 		void on_doDilate2D_clicked();
 		void on_doErode2D_clicked();
 		void on_doClose2D_clicked();
@@ -93,14 +88,19 @@ class MainWindow : public QMainWindow
 		void on_actionRotate_view_by_180_toggled(bool flip);
 		void on_actionResetView_triggered();
 
-	protected:
+        void on_render3DButton_clicked();
+
+protected:
         //! Handle QCloseEvents so that we can prompt the user to save if necessary
 		void closeEvent(QCloseEvent* close);
 
 	private:		
 		//helper classes
 		ImagePairManager* imagePairManager;
-		ViewManager* viewManager;
+        ViewManager* xyView;
+        ViewManager* xzView;
+        ViewManager* yzView;
+        MultiViewManager* multiViewManager;
 		DrawManager* drawManager;
 		Segmenter* segmenter;
 		VolumeRenderManager* volumeRenderManager;
@@ -120,6 +120,8 @@ class MainWindow : public QMainWindow
 		void showWaitDialog();
 		void hideWaitDialog();
         void viewOrientationSetup();
+
+        void cleanUp();
 
         //load an image
         void loadOriginalImage(QString file);

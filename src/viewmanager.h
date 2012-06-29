@@ -13,6 +13,7 @@
 #include <vtkRenderer.h>
 #include <vtkLookupTable.h>
 #include <QDoubleSpinBox>
+#include <QSlider>
 #include <vtkPolyDataMapper.h>
 #include <vtkActor.h>
 #include <vtkLineSource.h>
@@ -32,11 +33,13 @@ class ViewManager : public QObject
 		* \param imagePairManager is an imagePairManager that has already had its image loaded. This will used as the source for the original image and segmentation/blocking image.
 		* \param seedPointManager is a seedPointManager. It is used draw the seed point crosshair into the QVTKWidget that is rendered into.
 		* \param vtkWidget is the QVTKWidget to be used to render into
+        * \param sliceSpinBox
+        * \param sliceSlider
 		* \param blockingAlphaSpinBox is the the Widget used to control the blocking Alpha. It is automatically configured by this constructor.
 		* \param segmentationAlphaSpinBox is the the Widget used to control the segmentation Alpha. It is automatically configured by this constructor.
 		* \param crosshairAlphaSpinBox is the the Widget used to control the crosshair Alpha. It is automatically configured by this constructor.
 		*/
-        ViewManager(ImagePairManager* imagePairManager, QVTKWidget* vtkWidget, QDoubleSpinBox* blockingAlphaSpinBox, QDoubleSpinBox* segmentationAlphaSpinBox, QDoubleSpinBox* crosshairAlphaSpinBox);
+        ViewManager(ImagePairManager* imagePairManager, QVTKWidget* vtkWidget, QSpinBox* sliceSpinBox, QSlider* sliceSlider, QDoubleSpinBox* blockingAlphaSpinBox, QDoubleSpinBox* segmentationAlphaSpinBox, QDoubleSpinBox* crosshairAlphaSpinBox);
 
 		//! Destructor
 		~ViewManager();
@@ -203,6 +206,9 @@ class ViewManager : public QObject
 		*/
 		void mouseLeavesWidget();
 
+        /*! Emitted when slice is changed, pan, zoom or left click are used */
+        void requestActive();
+
 	private slots:
 		//Rebuild the LUT. Necessary if we change one of the alphas
 		void buildLookUpTable();
@@ -271,6 +277,10 @@ class ViewManager : public QObject
         double panScale;
 
         unsigned int orientation;
+
+        //for slice control
+        QSpinBox* sliceSpinBox;
+        QSlider* sliceSlider;
 
 
 };
