@@ -49,9 +49,6 @@ panScale(1.0)
 	qvtkWidget->SetRenderWindow(imageViewer->GetRenderWindow());
 	imageViewer->SetupInteractor(qvtkWidget->GetRenderWindow()->GetInteractor());
 
-    //setup default (this does zoom default too)
-    setOrientation(vtkImageViewer2::SLICE_ORIENTATION_XY);
-
     //setup zoom control defaults
     minScale=1;
     zoomSteps=20;
@@ -66,7 +63,8 @@ panScale(1.0)
 
     enableInterpolation(true); //enable interpolation on original image by default
 
-
+    //setup default orientation (this does zoom default too)
+    setOrientation(vtkImageViewer2::SLICE_ORIENTATION_XY);
 
     //If the seed point is changed by the user we should redraw the crosshair
     /* connect(seedPointManager, SIGNAL(seedPointChanged(int,int,int)),
@@ -649,6 +647,10 @@ bool ViewManager::setOrientation(unsigned int ort)
     }
 
     imageViewer->SetSliceOrientation(orientation);
+
+    //set default slice
+    setSlice(getSliceMin());
+
     applyCameraFixes();// correct camera positions if necessary
 
     //Set the default zoom
