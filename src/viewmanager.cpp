@@ -483,20 +483,20 @@ void ViewManager::vtkEventHandler(vtkObject *caller, unsigned long vtkEvent, voi
                     switch(orientation)
                     {
                         case vtkImageViewer2::SLICE_ORIENTATION_XY:
-                                cam->SetPosition(originalCamPos[0] + panSign*xOffset,
+                                cam->SetPosition(originalCamPos[0] - panSign*xOffset,
                                     originalCamPos[1] +panSign*yOffset,
                                     originalCamPos[2]);
-                                cam->SetFocalPoint(originalCamFocalPoint[0] + panSign*xOffset,
+                                cam->SetFocalPoint(originalCamFocalPoint[0] - panSign*xOffset,
                                         originalCamFocalPoint[1] + panSign*yOffset,
                                         originalCamFocalPoint[2]);
                                 break;
                         case vtkImageViewer2::SLICE_ORIENTATION_XZ:
                                 cam->SetPosition(originalCamPos[0] + panSign*xOffset,
                                     originalCamPos[1] ,
-                                    originalCamPos[2] +panSign*yOffset);
+                                    originalCamPos[2] - panSign*yOffset);
                                 cam->SetFocalPoint(originalCamFocalPoint[0] + panSign*xOffset,
                                         originalCamFocalPoint[1] ,
-                                        originalCamFocalPoint[2] + panSign*yOffset);
+                                        originalCamFocalPoint[2] - panSign*yOffset);
                                 break;
 
                         case vtkImageViewer2::SLICE_ORIENTATION_YZ:
