@@ -299,19 +299,6 @@ void MainWindow::on_actionEraseTool_toggled(bool t)
 
 }
 
-void MainWindow::sliceControlSetup()
-{
-    /*
-    if(imagePairManager!=0)
-	{
-        ui->sliceSlider->setRange(viewManager->getSliceMin(),viewManager->getSliceMax());
-        ui->sliceSpinBox->setRange(viewManager->getSliceMin(),viewManager->getSliceMax());
-
-        ui->sliceSlider->setValue(0);
-        ui->sliceSlider->setValue(0);
-    }
-    */
-}
 
 void MainWindow::toolbarSetup()
 {
@@ -681,23 +668,6 @@ void MainWindow::hideWaitDialog()
     progressDialog->hide();
 }
 
-void MainWindow::viewOrientationSetup()
-{
-    //Enable disabled menu options
-    //ui->actionXY_View->setEnabled(true);
-    //ui->actionXZ_View->setEnabled(true);
-    //ui->actionYZ_View->setEnabled(true);
-
-    QActionGroup* orientationActions = new QActionGroup(this);
-
-    //orientationActions->addAction(ui->actionXY_View);
-    //orientationActions->addAction(ui->actionXZ_View);
-    //orientationActions->addAction(ui->actionYZ_View);
-
-    //Set the default
-    //ui->actionXY_View->setChecked(true);
-
-}
 
 void MainWindow::cleanUp()
 {
@@ -798,11 +768,9 @@ void MainWindow::loadOriginalImage(QString file)
         delete volumeRenderManager;
     //volumeRenderManager = new VolumeRenderManager(imagePairManager,ui->qvtk3Ddisplayer);
 
-    sliceControlSetup();
     contrastControlSetup();
     toolbarSetup();
     segmentationControlSetup();
-    viewOrientationSetup();
 
     //Set the default checked state for interpolation of original image
     ui->actionInterpolate_Image->setChecked(true);
@@ -817,8 +785,8 @@ void MainWindow::loadOriginalImage(QString file)
     //connect(viewManager,SIGNAL(sliceChanged(int)), this,SLOT(seedPointChanged()));
 
     //setup zoom control
-    //connect(ui->actionZoom_in,SIGNAL(triggered()), viewManager,SLOT(zoomIn()));
-    //connect(ui->actionZoom_out,SIGNAL(triggered()), viewManager,SLOT(zoomOut()));
+    //connect(ui->actionZoom_in,SIGNAL(triggered()), multiViewManager->getActiveViewPointer(),SLOT(zoomIn()));
+    //connect(ui->actionZoom_out,SIGNAL(triggered()),,SLOT(zoomOut()));
 
     //setup so on segmentation completion we redraw
     //connect(segmenter,SIGNAL(segmentationDone(int)), viewManager, SLOT(update()));
@@ -829,8 +797,6 @@ void MainWindow::loadOriginalImage(QString file)
     //Update the work path to the location of the new image
     workPath.setPath(imageInfo.absolutePath());
 
-    //Setup when using scroll wheel to change slice, inform widgets
-    //connect(viewManager,SIGNAL(sliceChanged(int)),ui->sliceSlider,SLOT(setValue(int)));
 
 
     //allow debug information to be shown from menu
@@ -896,6 +862,93 @@ void MainWindow::on_render3DButton_clicked()
 {
     qDebug() << "3D draw button is clicked" ;
     //setup volumeRenderManager
-    if(imagePairManager != NULL)
+    if(imagePairManager != NULL && volumeRenderManager!=NULL)
         volumeRenderManager->render3D();
+}
+
+void MainWindow::on_xySingleViewButton_toggled(bool checked)
+{
+    if(multiViewManager==0)
+        return;
+
+    if(checked)
+    {
+        qDebug() << "Showing XY single view";
+        ui->xzFrame->hide();
+        ui->yzFrame->hide();
+        ui->render3DFrame->hide();
+        multiViewManager->setXYActive();
+    }
+    else
+    {
+        qDebug() << "Showing multiview";
+        ui->xzFrame->show();
+        ui->yzFrame->show();
+        ui->render3DFrame->show();
+    }
+}
+
+void MainWindow::on_yzSingleViewButton_toggled(bool checked)
+{
+    if(multiViewManager==0)
+    return;
+
+    if(checked)
+    {
+        qDebug() << "Showing YZ single view";
+        ui->xyFrame->hide();
+        ui->xzFrame->hide();
+        ui->render3DFrame->hide();
+        multiViewManager->setYZActive();
+    }
+    else
+    {
+        qDebug() << "Showing multiview";
+        ui->xyFrame->show();
+        ui->xzFrame->show();
+        ui->render3DFrame->show();
+    }
+}
+
+void MainWindow::on_xzSingleViewButton_toggled(bool checked)
+{
+    if(multiViewManager==0)
+    return;
+
+    if(checked)
+    {
+        qDebug() << "Showing XZ single view";
+        ui->xyFrame->hide();
+        ui->yzFrame->hide();
+        ui->render3DFrame->hide();
+        multiViewManager->setXZActive();
+    }
+    else
+    {
+        qDebug() << "Showing multiview";
+        ui->xyFrame->show();
+        ui->yzFrame->show();
+        ui->render3DFrame->show();
+    }
+}
+
+void MainWindow::on_render3DSingleViewButton_toggled(bool checked)
+{
+    if(multiViewManager==0)
+    return;
+
+    if(checked)
+    {
+        qDebug() << "Showing 3D render view";
+        ui->xyFrame->hide();
+        ui->xzFrame->hide();
+        ui->yzFrame->hide();
+    }
+    else
+    {
+        qDebug() << "Showing multiview";
+        ui->xyFrame->show();
+        ui->xzFrame->show();
+        ui->yzFrame->show();
+    }
 }

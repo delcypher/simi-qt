@@ -90,6 +90,14 @@ class MainWindow : public QMainWindow
 
         void on_render3DButton_clicked();
 
+        void on_xySingleViewButton_toggled(bool checked);
+
+        void on_yzSingleViewButton_toggled(bool checked);
+
+        void on_xzSingleViewButton_toggled(bool checked);
+
+        void on_render3DSingleViewButton_toggled(bool checked);
+
 protected:
         //! Handle QCloseEvents so that we can prompt the user to save if necessary
 		void closeEvent(QCloseEvent* close);
@@ -114,12 +122,10 @@ protected:
 
 		//setup methods
 		void contrastControlSetup();
-		void sliceControlSetup();
 		void toolbarSetup();
 		void segmentationControlSetup();
 		void showWaitDialog();
 		void hideWaitDialog();
-        void viewOrientationSetup();
 
         void cleanUp();
 
