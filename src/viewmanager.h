@@ -18,6 +18,10 @@
 #include <vtkActor.h>
 #include <vtkLineSource.h>
 
+//Forward Declare MultiViewManager
+class MultiViewManager;
+
+
 //! Manages the display off and interaction with the images
 
 /*! This class is responsible for the drawing of the original (MRI/CT) image, the segmentation/block image and the cross hair.
@@ -225,6 +229,7 @@ class ViewManager : public QObject
 		void addSegblock();
 		void addCrosshair();
 		void applyCameraFixes();
+		void setManager(MultiViewManager* viewManager);
 
 
 		vtkSmartPointer<vtkImageViewer2> imageViewer;
@@ -257,6 +262,8 @@ class ViewManager : public QObject
 		int mouseIntensity;
 		bool mouseOverWidget;
 
+        MultiViewManager* myManager;
+
 		//for look up table
 		double blockingAlpha;
 		double segmentationAlpha;
@@ -284,6 +291,7 @@ class ViewManager : public QObject
         QSpinBox* sliceSpinBox;
         QSlider* sliceSlider;
 
+        friend class MultiViewManager;
 
 };
 

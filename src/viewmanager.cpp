@@ -9,6 +9,7 @@
 #include <vtkImageMapToColors.h>
 #include <vtkInteractorStyle.h>
 #include <vtkProperty.h>
+#include "multiviewmanager.h"
 
 
 ViewManager::ViewManager(ImagePairManager* imagePairManager, QVTKWidget* qvtkWidget, QSpinBox* sliceSpinBox, QSlider* sliceSlider, QDoubleSpinBox* blockingAlphaSpinBox, QDoubleSpinBox* segmentationAlphaSpinBox, QDoubleSpinBox* crosshairAlphaSpinBox, unsigned int defaultOrientation) :
@@ -42,6 +43,8 @@ panScale(1.0)
     this->crosshairAlphaSpinBox=crosshairAlphaSpinBox;
     this->sliceSlider = sliceSlider;
     this->sliceSpinBox = sliceSpinBox;
+
+    this->myManager=0;
 
 	//setup original image
 	imageViewer = vtkImageViewer2::New();
@@ -226,6 +229,32 @@ bool ViewManager::setSlice(int slice)
 		segblockActor->SetDisplayExtent(displayExtent);
 
 		//segblockActor->SetPropertyKeys(imageViewer->GetImageActor()->GetPropertyKeys());//try duplicate props
+
+        /* We allow changing the slice to move the crosshair */
+        if(myManager!=0)
+        {
+            int seedX,seedY,seedZ;
+            myManager->getSeedPoint(seedX,seedY,seedZ);
+
+            switch(orientation)
+            {
+                case vtkImageViewer2::SLICE_ORIENTATION_XY:
+                    seedZ=getCurrentSlice();
+                break;
+
+                case vtkImageViewer2::SLICE_ORIENTATION_XZ:
+                    seedY=getCurrentSlice();
+                break;
+
+                case vtkImageViewer2::SLICE_ORIENTATION_YZ:
+                    seedX=getCurrentSlice();
+            }
+
+            myManager->setSeedPoint(seedX,seedY,seedZ);
+
+        }
+
+
 
 		//Redraw crosshair if necessary
 		redrawCrossHair();
@@ -555,8 +584,10 @@ void ViewManager::redrawCrossHair()
     //check if we show display the crosshair
     int seedX=0;
     int seedY=0;
-    //if(!seedPointManager->getSeedPoint(getCurrentSlice(),seedX,seedY))
-    if(true)
+    int seedZ=0;
+
+    //check if the seed point is known
+    if(myManager==0 || !(myManager->getSeedPoint(seedX,seedY,seedZ)) )
     {
         //We shouldn't show the crosshair
         hcrosshairActor->GetProperty()->SetOpacity(0.0);
@@ -564,46 +595,45 @@ void ViewManager::redrawCrossHair()
     }
     else
     {
+        double zPosition;
+        vtkCamera* cam = imageViewer->GetRenderer()->GetActiveCamera();
+        double projectDirection[3];
+        cam->GetDirectionOfProjection(projectDirection);
 
-	double zPosition;
-	vtkCamera* cam = imageViewer->GetRenderer()->GetActiveCamera();
-	double projectDirection[3];
-	cam->GetDirectionOfProjection(projectDirection);
+        /* Use the Z-range of of the original image to tell help tell us where to place the line.
+        *  We need to direction of projection so that we always place the line infront of the original image
+        *  from the camera's perspective
+        */
+        double* imageActorRange;
+        imageActorRange = imageViewer->GetImageActor()->GetZRange();
 
-	/* Use the Z-range of of the original image to tell help tell us where to place the line.
-	*  We need to direction of projection so that we always place the line infront of the original image
-	*  from the camera's perspective
-	*/
-	double* imageActorRange;
-	imageActorRange = imageViewer->GetImageActor()->GetZRange();
+        if(projectDirection[2] < 0)
+        {
+            //camera is looking down the z-axis (decreasing z)
+            zPosition = imageActorRange[1] +1;
+        }
+        else
+        {
+            //camera is looking up the z-axis (increasing z)
+            zPosition = imageActorRange[1] -1;
+        }
 
-	if(projectDirection[2] < 0)
-	{
-		//camera is looking down the z-axis (decreasing z)
-		zPosition = imageActorRange[1] +1;
-	}
-	else
-	{
-		//camera is looking up the z-axis (increasing z)
-		zPosition = imageActorRange[1] -1;
-	}
+        qDebug() << "guess Z pos:" << zPosition;
 
-	qDebug() << "guess Z pos:" << zPosition;
-
-	hcrosshairActor->GetProperty()->SetOpacity(crossHairAlpha);
-	vcrosshairActor->GetProperty()->SetOpacity(crossHairAlpha);
+        hcrosshairActor->GetProperty()->SetOpacity(crossHairAlpha);
+        vcrosshairActor->GetProperty()->SetOpacity(crossHairAlpha);
         double Yoffset= imagePairManager->getYSpacing()*imagePairManager->getYDim()/2.0;
         double Yposition = seedY*imagePairManager->getYSpacing();
 
         double Xoffset = imagePairManager->getXSpacing()*imagePairManager->getXDim()/2.0;
         double Xposition = seedX*imagePairManager->getXSpacing();
 
-	hcrosshairSource->SetPoint1(-crossHairXlength, Yposition - Yoffset, zPosition);
-	hcrosshairSource->SetPoint2( crossHairXlength, Yposition -Yoffset , zPosition);
+        hcrosshairSource->SetPoint1(-crossHairXlength, Yposition - Yoffset, zPosition);
+        hcrosshairSource->SetPoint2( crossHairXlength, Yposition -Yoffset , zPosition);
         hcrosshairSource->Update();
 
-	vcrosshairSource->SetPoint1(Xposition - Xoffset, -crossHairYlength, zPosition);
-	vcrosshairSource->SetPoint2(Xposition - Xoffset,  crossHairYlength, zPosition);
+        vcrosshairSource->SetPoint1(Xposition - Xoffset, -crossHairYlength, zPosition);
+        vcrosshairSource->SetPoint2(Xposition - Xoffset,  crossHairYlength, zPosition);
         vcrosshairSource->Update();
 
         update();
@@ -899,3 +929,8 @@ void ViewManager::applyCameraFixes()
     camera->SetClippingRange(0.1,camera->GetDistance());
 }
 
+void ViewManager::setManager(MultiViewManager* viewManager)
+{
+    if(viewManager!=0)
+        this->myManager=viewManager;
+}

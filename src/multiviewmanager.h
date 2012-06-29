@@ -34,6 +34,7 @@ class MultiViewManager : public QObject
         void setXZActive();
         void setYZActive();
         bool setSeedPoint(int x, int y, int z);
+        void redrawCrosshair();
 
 
     private:

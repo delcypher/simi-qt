@@ -50,6 +50,10 @@ zSeed(-1)
 
     }
 
+    //Let the views have a pointer to us
+    xy->setManager(this);
+    xz->setManager(this);
+    yz->setManager(this);
 }
 
 unsigned int MultiViewManager::getActiveView()
@@ -95,7 +99,19 @@ bool MultiViewManager::setSeedPoint(int x, int y, int z)
     zSeed=z;
     emit seedPointChanged();
     qDebug() << "Seed point set to:(" << xSeed << "," << ySeed << "," << zSeed << ")";
+
+    redrawCrosshair();
+
     return true;
+}
+
+void MultiViewManager::redrawCrosshair()
+{
+    //make views redraw the crosshair
+    xyView->redrawCrossHair();
+    xzView->redrawCrossHair();
+    yzView->redrawCrossHair();
+
 }
 
 void MultiViewManager::update()
