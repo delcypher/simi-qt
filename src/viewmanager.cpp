@@ -600,44 +600,97 @@ void ViewManager::redrawCrossHair()
         double projectDirection[3];
         cam->GetDirectionOfProjection(projectDirection);
 
-        /* Use the Z-range of of the original image to tell help tell us where to place the line.
+
+
+        /* These co-ordinates are named in terms of a co-ordinate system attached to the camera (not the world co-ordinate system).
+         *
+         */
+        double zPrime=0.0;
+        double Xoffset=0.0;
+        double Xposition=0.0;
+        double Yoffset=0.0;
+        double Yposition=0.0;
+        /* Use the Z-range (camera co-ordinate system) of of the original image to tell help tell us where to place the line.
         *  We need to direction of projection so that we always place the line infront of the original image
         *  from the camera's perspective
         */
         double* imageActorRange;
-        imageActorRange = imageViewer->GetImageActor()->GetZRange();
-
-        if(projectDirection[2] < 0)
-        {
-            //camera is looking down the z-axis (decreasing z)
-            zPosition = imageActorRange[1] +1;
-        }
-        else
-        {
-            //camera is looking up the z-axis (increasing z)
-            zPosition = imageActorRange[1] -1;
-        }
-
-        qDebug() << "guess Z pos:" << zPosition;
 
         hcrosshairActor->GetProperty()->SetOpacity(crossHairAlpha);
         vcrosshairActor->GetProperty()->SetOpacity(crossHairAlpha);
-        double Yoffset= imagePairManager->getYSpacing()*imagePairManager->getYDim()/2.0;
-        double Yposition = seedY*imagePairManager->getYSpacing();
 
-        double Xoffset = imagePairManager->getXSpacing()*imagePairManager->getXDim()/2.0;
-        double Xposition = seedX*imagePairManager->getXSpacing();
+        switch(orientation)
+        {
+            case vtkImageViewer2::SLICE_ORIENTATION_XY:
+                imageActorRange = imageViewer->GetImageActor()->GetZRange();
 
-        hcrosshairSource->SetPoint1(-crossHairXlength, Yposition - Yoffset, zPosition);
-        hcrosshairSource->SetPoint2( crossHairXlength, Yposition -Yoffset , zPosition);
+                //position in front of camera.
+                zPrime = imageActorRange[1] + ( (projectDirection[2] < 0)?1:-1 );
+
+                Yoffset= imagePairManager->getYSpacing()*imagePairManager->getYDim()/2.0;
+                Yposition = seedY*imagePairManager->getYSpacing();
+
+                Xoffset = imagePairManager->getXSpacing()*imagePairManager->getXDim()/2.0;
+                Xposition = seedX*imagePairManager->getXSpacing();
+
+                hcrosshairSource->SetPoint1(-crossHairXlength, Yposition - Yoffset, zPrime);
+                hcrosshairSource->SetPoint2( crossHairXlength, Yposition -Yoffset , zPrime);
+                vcrosshairSource->SetPoint1(Xposition - Xoffset, -crossHairYlength, zPrime);
+                vcrosshairSource->SetPoint2(Xposition - Xoffset,  crossHairYlength, zPrime);
+
+            break;
+
+            case vtkImageViewer2::SLICE_ORIENTATION_XZ:
+
+                imageActorRange = imageViewer->GetImageActor()->GetYRange();
+                //position in front of camera
+                zPrime = imageActorRange[1] + ( ( projectDirection[1] < 0)?1:-1 );
+                //qDebug() << "Z cam guess:" << zPrime << "from " <<  imageActorRange[1];
+
+                Yposition= seedZ*imagePairManager->getZSpacing();
+                Yoffset=0;
+
+                Xposition = seedX*imagePairManager->getXSpacing();
+                Xoffset = imagePairManager->getXSpacing()*imagePairManager->getXDim()/2.0;
+
+
+                hcrosshairSource->SetPoint1(-crossHairXlength, zPrime ,Yposition - Yoffset);
+                hcrosshairSource->SetPoint2( crossHairXlength, zPrime ,Yposition -Yoffset);
+                vcrosshairSource->SetPoint1(Xposition - Xoffset, zPrime, 0);
+                vcrosshairSource->SetPoint2(Xposition - Xoffset, zPrime, 2*crossHairYlength);
+
+            break;
+
+            case vtkImageViewer2::SLICE_ORIENTATION_YZ:
+                imageActorRange = imageViewer->GetImageActor()->GetXRange();
+                //position in front of camera
+                zPrime = imageActorRange[1] + ( ( projectDirection[0] < 0)?1:-1 );
+
+                Xposition = seedZ*imagePairManager->getZSpacing();
+
+                Yposition = seedY*imagePairManager->getYSpacing();
+                Yoffset = imagePairManager->getYSpacing()*imagePairManager->getYDim()/2.0;
+
+                hcrosshairSource->SetPoint1(zPrime, -crossHairXlength ,Xposition);
+                hcrosshairSource->SetPoint2(zPrime, crossHairXlength,Xposition);
+
+                vcrosshairSource->SetPoint1(zPrime, Yposition - Yoffset , -crossHairYlength);
+                vcrosshairSource->SetPoint2(zPrime, Yposition - Yoffset , crossHairYlength);
+
+
+            break;
+
+            default:
+                qWarning() << "Orientation not supported when trying to draw crosshair";
+
+        }
+
+
         hcrosshairSource->Update();
-
-        vcrosshairSource->SetPoint1(Xposition - Xoffset, -crossHairYlength, zPosition);
-        vcrosshairSource->SetPoint2(Xposition - Xoffset,  crossHairYlength, zPosition);
         vcrosshairSource->Update();
 
         update();
-        qDebug() << "Redraw cross hair at " << seedX << "," << seedY << "," << getCurrentSlice();
+        qDebug() << "Redraw cross hair at " << seedX << "," << seedY << "," << seedZ;
     }
 
 }
