@@ -93,6 +93,7 @@ bool MultiViewManager::setSeedPoint(int x, int y, int z)
     xSeed=x;
     ySeed=y;
     zSeed=z;
+    emit seedPointChanged();
     qDebug() << "Seed point set to:(" << xSeed << "," << ySeed << "," << zSeed << ")";
     return true;
 }

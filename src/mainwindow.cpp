@@ -396,10 +396,7 @@ void MainWindow::updateStatusBar(ViewManager* av)
 
 void MainWindow::seedPointChanged()
 {
-	int x=0;
-	int y=0;
-    int z=0;
-
+    int x,y,z;
 	//small safety check
     if( multiViewManager !=0)
     {
@@ -409,6 +406,8 @@ void MainWindow::seedPointChanged()
         seedPoint += QString::number(x);
         seedPoint +=",";
         seedPoint += QString::number(y);
+        seedPoint +=",";
+        seedPoint += QString::number(z);
         seedPoint +=")";
         ui->seedPointValueLabel->setText(seedPoint);
 
@@ -798,13 +797,8 @@ void MainWindow::loadOriginalImage(QString file)
         connect(v[index],SIGNAL(mouseLeavesWidget(ViewManager*)), this, SLOT(updateStatusBar(ViewManager*)));
     }
 
-    //setup seedPointLine view being told about the seed point being change
-    //connect(seedPointManager,SIGNAL(seedPointChanged(int,int,int)), this, SLOT(seedPointChanged()));
-    //connect(viewManager,SIGNAL(sliceChanged(int)), this,SLOT(seedPointChanged()));
-
-    //setup zoom control
-    //connect(ui->actionZoom_in,SIGNAL(triggered()), multiViewManager->getActiveViewPointer(),SLOT(zoomIn()));
-    //connect(ui->actionZoom_out,SIGNAL(triggered()),,SLOT(zoomOut()));
+    //setup seedPointLabel view being told about the seed point being change
+    connect(multiViewManager,SIGNAL(seedPointChanged()),this,SLOT(seedPointChanged()));
 
     //setup so on segmentation completion we redraw
     //connect(segmenter,SIGNAL(segmentationDone(int)), viewManager, SLOT(update()));
