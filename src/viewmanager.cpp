@@ -49,17 +49,14 @@ panScale(1.0)
 	qvtkWidget->SetRenderWindow(imageViewer->GetRenderWindow());
 	imageViewer->SetupInteractor(qvtkWidget->GetRenderWindow()->GetInteractor());
 
-    //setup deafult
+    //setup default (this does zoom default too)
     setOrientation(vtkImageViewer2::SLICE_ORIENTATION_XY);
 
-    //setup zoom control
-    maxScale= ( imagePairManager->getYDim() )*( imagePairManager->getYSpacing() )/2.0;
+    //setup zoom control defaults
     minScale=1;
     zoomSteps=20;
     currentStep=0;
 
-    //Set the default zoom at start up
-    imageViewer->GetRenderer()->GetActiveCamera()->SetParallelScale(maxScale);
 
     //setup segblock image
     addSegblock();
@@ -633,14 +630,17 @@ bool ViewManager::setOrientation(unsigned int ort)
     {
         case vtkImageViewer2::SLICE_ORIENTATION_XY :
             orientation=vtkImageViewer2::SLICE_ORIENTATION_XY;
+            maxScale= ( imagePairManager->getYDim() )*( imagePairManager->getYSpacing() )/2.0;
         break;
 
         case vtkImageViewer2::SLICE_ORIENTATION_XZ :
             orientation=vtkImageViewer2::SLICE_ORIENTATION_XZ;
+            maxScale= ( imagePairManager->getZDim() )*( imagePairManager->getZSpacing() )/2.0;
         break;
 
         case vtkImageViewer2::SLICE_ORIENTATION_YZ :
             orientation=vtkImageViewer2::SLICE_ORIENTATION_YZ;
+            maxScale= ( imagePairManager->getZDim() )*( imagePairManager->getZSpacing() )/2.0;
         break;
 
         default :
@@ -650,6 +650,10 @@ bool ViewManager::setOrientation(unsigned int ort)
 
     imageViewer->SetSliceOrientation(orientation);
     applyCameraFixes();// correct camera positions if necessary
+
+    //Set the default zoom
+    imageViewer->GetRenderer()->GetActiveCamera()->SetParallelScale(maxScale);
+
 
     //the widgets need to be told the valid range
     sliceSpinBox->setRange(getSliceMin(),getSliceMax());
