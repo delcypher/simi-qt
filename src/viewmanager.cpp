@@ -54,7 +54,6 @@ panScale(1.0)
     zoomSteps=20;
     currentStep=0;
 
-
     //setup segblock image
     addSegblock();
 
@@ -65,6 +64,10 @@ panScale(1.0)
 
     //setup default orientation (this does zoom default too)
     setOrientation(defaultOrientation);
+
+    //set default flip
+    flipView(false);
+
 
     //If the seed point is changed by the user we should redraw the crosshair
     /* connect(seedPointManager, SIGNAL(seedPointChanged(int,int,int)),
@@ -190,6 +193,11 @@ bool ViewManager::setConstrast(double minIntensity, double maxIntensity)
 int ViewManager::getCurrentSlice()
 {
     return imageViewer->GetSlice();
+}
+
+bool ViewManager::isFlipped()
+{
+    return (panSign==1)?false:true;
 }
 
 

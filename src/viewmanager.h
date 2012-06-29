@@ -56,6 +56,8 @@ class ViewManager : public QObject
 		*/
 		int getCurrentSlice();
 
+		bool isFlipped();
+
 		/*!
 		*  \return The last x position that the mouse was at in terms of voxel coordinates in the original image.
 		*/

@@ -94,7 +94,19 @@ void MainWindow::on_actionAbout_triggered()
 	"<p>" << PROGRAM_NAME << " is a program for structure identification in medical images.</p>" <<
 	"<p><b>Authors</b>:<br>" << PROGRAM_AUTHORS << "</p>";
 
-	QMessageBox::about(this,tr("About ") + PROGRAM_NAME, about);
+    QMessageBox::about(this,tr("About ") + PROGRAM_NAME, about);
+}
+
+void MainWindow::on_actionZoom_in_triggered()
+{
+    if(multiViewManager!=0)
+        multiViewManager->getActiveViewPointer()->zoomIn();
+}
+
+void MainWindow::on_actionZoom_out_triggered()
+{
+    if(multiViewManager!=0)
+        multiViewManager->getActiveViewPointer()->zoomOut();
 }
 
 
@@ -774,6 +786,9 @@ void MainWindow::loadOriginalImage(QString file)
     //Set the default checked state for interpolation of original image
     ui->actionInterpolate_Image->setChecked(true);
 
+    //if the active view changes we need to handle a few UI changes
+    connect(multiViewManager,SIGNAL(viewChanged()),this,SLOT(viewChanged()));
+
     //setup statusbar update from views
     ViewManager* v[3] = {xyView, xzView, yzView};
     for(int index=0; index<3; index++ )
@@ -830,22 +845,19 @@ void MainWindow::loadOriginalImage(QString file)
 
 void MainWindow::on_actionRotate_view_by_180_toggled(bool flip)
 {
-    /* fix
-    if(viewManager!=0 && volumeRenderManager!=0)
+    if(multiViewManager!=0)
 	{
-		viewManager->flipView(flip);
-		volumeRenderManager->flipView(flip);
-    } */
+        multiViewManager->getActiveViewPointer()->flipView(flip);
+    }
 }
 
 void MainWindow::on_actionResetView_triggered()
 {
-    /*
-    if(viewManager!=0)
-	{
-		viewManager->resetPan();
-		viewManager->resetZoom();
-    } */
+    if(multiViewManager!=0)
+    {
+        multiViewManager->getActiveViewPointer()->resetPan();
+        multiViewManager->getActiveViewPointer()->resetZoom();
+    }
 }
 
 
@@ -955,3 +967,26 @@ void MainWindow::on_render3DSingleViewButton_toggled(bool checked)
         ui->yzFrame->show();
     }
 }
+
+void MainWindow::viewChanged()
+{
+    if(multiViewManager!=0)
+    {
+        //need to set flipped view checkbox as it was before
+        if(multiViewManager->getActiveViewPointer()->isFlipped())
+            ui->actionRotate_view_by_180->setChecked(true);
+        else
+            ui->actionRotate_view_by_180->setChecked(false);
+
+    }
+}
+
+void MainWindow::on_actionDump_debug_triggered()
+{
+    if(multiViewManager!=0)
+    {
+        multiViewManager->getActiveViewPointer()->debugDump();
+    }
+}
+
+

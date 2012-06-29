@@ -49,6 +49,9 @@ class MainWindow : public QMainWindow
 		void on_actionSlice_down_triggered();
 		void on_actionAbout_triggered();
 
+		void on_actionZoom_in_triggered();
+		void on_actionZoom_out_triggered();
+
 		void on_minIntensitySlider_valueChanged(int value);
 		void on_maxIntensitySlider_valueChanged(int value);
 		void updateStatusBar(ViewManager* av);
@@ -97,6 +100,10 @@ class MainWindow : public QMainWindow
         void on_xzSingleViewButton_toggled(bool checked);
 
         void on_render3DSingleViewButton_toggled(bool checked);
+
+        void viewChanged();
+
+        void on_actionDump_debug_triggered();
 
 protected:
         //! Handle QCloseEvents so that we can prompt the user to save if necessary
