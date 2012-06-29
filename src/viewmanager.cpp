@@ -664,6 +664,7 @@ bool ViewManager::setOrientation(unsigned int ort)
         qWarning() << "Failed to set default slice!";
 
     applyCameraFixes();// correct camera positions if necessary
+    imageViewer->UpdateDisplayExtent();
 
     //Set the default zoom
     imageViewer->GetRenderer()->GetActiveCamera()->SetParallelScale(maxScale);
