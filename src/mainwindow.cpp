@@ -368,11 +368,9 @@ void MainWindow::on_doSegmentation2D_clicked()
 	}
 }
 
-void MainWindow::updateStatusBar()
+void MainWindow::updateStatusBar(ViewManager* av)
 {
-    ViewManager* av;
-    if(multiViewManager!=0 && (av = multiViewManager->getActiveViewPointer()) &&
-        av->mouseIsOverWidget())
+    if(av!=0 && av->mouseIsOverWidget())
 	{
 		QString message("");
 		QTextStream messageStream(&message);
@@ -775,10 +773,14 @@ void MainWindow::loadOriginalImage(QString file)
     //Set the default checked state for interpolation of original image
     ui->actionInterpolate_Image->setChecked(true);
 
-    //setup statusbar update from viewmanager
-    //connect(viewManager,SIGNAL(mouseHasMoved()), this, SLOT(updateStatusBar()));
-    //connect(viewManager,SIGNAL(mouseEntersWidget()), this, SLOT(updateStatusBar()));
-    //connect(viewManager,SIGNAL(mouseLeavesWidget()), this, SLOT(updateStatusBar()));
+    //setup statusbar update from views
+    ViewManager* v[3] = {xyView, xzView, yzView};
+    for(int index=0; index<3; index++ )
+    {
+        connect(v[index],SIGNAL(mouseHasMoved(ViewManager*)), this, SLOT(updateStatusBar(ViewManager*)));
+        connect(v[index],SIGNAL(mouseEntersWidget(ViewManager*)), this, SLOT(updateStatusBar(ViewManager*)));
+        connect(v[index],SIGNAL(mouseLeavesWidget(ViewManager*)), this, SLOT(updateStatusBar(ViewManager*)));
+    }
 
     //setup seedPointLine view being told about the seed point being change
     //connect(seedPointManager,SIGNAL(seedPointChanged(int,int,int)), this, SLOT(seedPointChanged()));

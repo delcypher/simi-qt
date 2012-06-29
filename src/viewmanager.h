@@ -196,15 +196,15 @@ class ViewManager : public QObject
 
 		/*! Emitted everytime the mouse moves within the QVTKWidget that this class renders in to.
 		*/
-		void mouseHasMoved();
+		void mouseHasMoved(ViewManager* self);
 
 		/*! Emitted everytime the mouse moves over the QVTKWidget that this class renders in to.
 		*/
-		void mouseEntersWidget();
+		void mouseEntersWidget(ViewManager* self);
 
 		/*! Emitted everytime the mouse leaves the QVTKWidget that this class renders in to.
 		*/
-		void mouseLeavesWidget();
+		void mouseLeavesWidget(ViewManager* self);
 
         /*! Emitted when slice is changed, pan, zoom or left click are used */
         void requestActive();

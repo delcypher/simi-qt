@@ -396,7 +396,7 @@ void ViewManager::vtkEventHandler(vtkObject *caller, unsigned long vtkEvent, voi
 
 
         //Inform other classes that the mouse has moved.
-        emit mouseHasMoved();
+        emit mouseHasMoved(this);
     }
     else
         inImage=false; //not in the image!
@@ -515,13 +515,13 @@ void ViewManager::vtkEventHandler(vtkObject *caller, unsigned long vtkEvent, voi
 
         case vtkCommand::EnterEvent :
             mouseOverWidget=true;
-            emit mouseIsOverWidget();
+            emit mouseEntersWidget(this);
         break;
 
         case vtkCommand::LeaveEvent :
             mouseOverWidget=false;
             dragOn=false; //disable dragging so that when cursor goes back over widget we don't continue to drag
-            emit mouseLeavesWidget();
+            emit mouseLeavesWidget(this);
         break;
 
 		default:

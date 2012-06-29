@@ -51,7 +51,7 @@ class MainWindow : public QMainWindow
 
 		void on_minIntensitySlider_valueChanged(int value);
 		void on_maxIntensitySlider_valueChanged(int value);
-		void updateStatusBar();
+		void updateStatusBar(ViewManager* av);
 		void seedPointChanged();
 		void on_actionClear_Segmentation_on_All_Slices_triggered();
 		void on_actionClear_Blocking_on_All_Slices_triggered();
