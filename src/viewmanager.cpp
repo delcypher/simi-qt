@@ -694,18 +694,31 @@ bool ViewManager::setOrientation(unsigned int ort)
             orientation=vtkImageViewer2::SLICE_ORIENTATION_XY;
             maxScale= ( imagePairManager->getYDim() )*( imagePairManager->getYSpacing() )/2.0;
             qDebug() << "Setting Orientation to XY";
+
+            //calculate half crosshair lengths
+            crossHairXlength = imagePairManager->getXDim()*imagePairManager->getXSpacing()/2.0;
+            crossHairYlength = imagePairManager->getYDim()*imagePairManager->getYSpacing()/2.0;
+
         break;
 
         case vtkImageViewer2::SLICE_ORIENTATION_XZ :
             orientation=vtkImageViewer2::SLICE_ORIENTATION_XZ;
             maxScale= ( imagePairManager->getZDim() )*( imagePairManager->getZSpacing() )/2.0;
             qDebug() << "Setting Orientation to XZ";
+
+            //calculate half crosshair lengths
+            crossHairXlength = imagePairManager->getXDim()*imagePairManager->getXSpacing()/2.0;
+            crossHairYlength = imagePairManager->getZDim()*imagePairManager->getZSpacing()/2.0;
         break;
 
         case vtkImageViewer2::SLICE_ORIENTATION_YZ :
             orientation=vtkImageViewer2::SLICE_ORIENTATION_YZ;
             maxScale= ( imagePairManager->getZDim() )*( imagePairManager->getZSpacing() )/2.0;
             qDebug() << "Setting Orientation to YZ";
+
+            //calculate half crosshair lengths
+            crossHairXlength = imagePairManager->getYDim()*imagePairManager->getYSpacing()/2.0;
+            crossHairYlength = imagePairManager->getZDim()*imagePairManager->getZSpacing()/2.0;
         break;
 
         default :
@@ -861,10 +874,9 @@ bool ViewManager::setCrosshairAlpha(double alpha)
 
 void ViewManager::addCrosshair()
 {
-	//Calculate half the length of the crosshair lines
-	crossHairXlength = imagePairManager->getXDim()*imagePairManager->getXSpacing()/2.0;
-	crossHairYlength = imagePairManager->getYDim()*imagePairManager->getYSpacing()/2.0;
-
+    /*the co-ordinates used for the crosshair are of no real consequence as they
+     * are overwriten in redrawCrossHair();
+     */
 
 	hcrosshairSource = vtkLineSource::New();
 	hcrosshairSource->SetPoint1(-256,0,1000);
