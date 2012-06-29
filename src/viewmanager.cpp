@@ -595,87 +595,60 @@ void ViewManager::redrawCrossHair()
     }
     else
     {
-        double zPosition;
-        vtkCamera* cam = imageViewer->GetRenderer()->GetActiveCamera();
-        double projectDirection[3];
-        cam->GetDirectionOfProjection(projectDirection);
-
-
-
-        /* These co-ordinates are named in terms of a co-ordinate system attached to the camera (not the world co-ordinate system).
-         *
-         */
-        double zPrime=0.0;
-        double Xoffset=0.0;
-        double Xposition=0.0;
-        double Yoffset=0.0;
-        double Yposition=0.0;
-        /* Use the Z-range (camera co-ordinate system) of of the original image to tell help tell us where to place the line.
-        *  We need to direction of projection so that we always place the line infront of the original image
-        *  from the camera's perspective
-        */
-        double* imageActorRange;
-
         hcrosshairActor->GetProperty()->SetOpacity(crossHairAlpha);
         vcrosshairActor->GetProperty()->SetOpacity(crossHairAlpha);
+
+
+        /* We calculate the positions of the seed point in the world co-ordinate system.
+         * Unfortunately we have to take the camera into account later so we may write over some over
+         * some of these values so the crosshair is shown correctly.
+         */
+        double xPosition, xOffset, yPosition, yOffset, zPosition;
+        zPosition = imagePairManager->getZSpacing()*seedZ;
+
+        yOffset= imagePairManager->getYSpacing()*imagePairManager->getYDim()/2.0;
+        yPosition = seedY*imagePairManager->getYSpacing();
+
+        xOffset = imagePairManager->getXSpacing()*imagePairManager->getXDim()/2.0;
+        xPosition = seedX*imagePairManager->getXSpacing();
 
         switch(orientation)
         {
             case vtkImageViewer2::SLICE_ORIENTATION_XY:
-                imageActorRange = imageViewer->GetImageActor()->GetZRange();
 
-                //position in front of camera.
-                zPrime = imageActorRange[1] + ( (projectDirection[2] < 0)?1:-1 );
+                //The camera will be looking down/up the z-axis position cross hair so we place it on top of the slice
+                zPosition = (imageViewer->GetImageActor()->GetZRange() )[0];
 
-                Yoffset= imagePairManager->getYSpacing()*imagePairManager->getYDim()/2.0;
-                Yposition = seedY*imagePairManager->getYSpacing();
-
-                Xoffset = imagePairManager->getXSpacing()*imagePairManager->getXDim()/2.0;
-                Xposition = seedX*imagePairManager->getXSpacing();
-
-                hcrosshairSource->SetPoint1(-crossHairXlength, Yposition - Yoffset, zPrime);
-                hcrosshairSource->SetPoint2( crossHairXlength, Yposition -Yoffset , zPrime);
-                vcrosshairSource->SetPoint1(Xposition - Xoffset, -crossHairYlength, zPrime);
-                vcrosshairSource->SetPoint2(Xposition - Xoffset,  crossHairYlength, zPrime);
+                hcrosshairSource->SetPoint1(-crossHairXlength, yPosition - yOffset, zPosition);
+                hcrosshairSource->SetPoint2( crossHairXlength, yPosition -yOffset , zPosition);
+                vcrosshairSource->SetPoint1(xPosition - xOffset, -crossHairYlength, zPosition);
+                vcrosshairSource->SetPoint2(xPosition - xOffset,  crossHairYlength, zPosition);
 
             break;
 
             case vtkImageViewer2::SLICE_ORIENTATION_XZ:
 
-                imageActorRange = imageViewer->GetImageActor()->GetYRange();
-                //position in front of camera
-                zPrime = imageActorRange[1] + ( ( projectDirection[1] < 0)?1:-1 );
-                //qDebug() << "Z cam guess:" << zPrime << "from " <<  imageActorRange[1];
 
-                Yposition= seedZ*imagePairManager->getZSpacing();
-                Yoffset=0;
+                //The camera will be looking down/up the y-axis. Position crosshair on top of slice
+                yPosition= (imageViewer->GetImageActor()->GetYRange() )[0];
 
-                Xposition = seedX*imagePairManager->getXSpacing();
-                Xoffset = imagePairManager->getXSpacing()*imagePairManager->getXDim()/2.0;
-
-
-                hcrosshairSource->SetPoint1(-crossHairXlength, zPrime ,Yposition - Yoffset);
-                hcrosshairSource->SetPoint2( crossHairXlength, zPrime ,Yposition -Yoffset);
-                vcrosshairSource->SetPoint1(Xposition - Xoffset, zPrime, 0);
-                vcrosshairSource->SetPoint2(Xposition - Xoffset, zPrime, 2*crossHairYlength);
+                hcrosshairSource->SetPoint1(-crossHairXlength, yPosition ,zPosition);
+                hcrosshairSource->SetPoint2( crossHairXlength, yPosition ,zPosition);
+                vcrosshairSource->SetPoint1(xPosition - xOffset, yPosition, 0);
+                vcrosshairSource->SetPoint2(xPosition - xOffset, yPosition, 2*crossHairYlength);
 
             break;
 
             case vtkImageViewer2::SLICE_ORIENTATION_YZ:
-                imageActorRange = imageViewer->GetImageActor()->GetXRange();
-                //position in front of camera
-                zPrime = imageActorRange[1] + ( ( projectDirection[0] < 0)?1:-1 );
 
-                Xposition = seedZ*imagePairManager->getZSpacing();
+                //The camera will looking down/up the x-axis. Position crosshair on top of slice
+                xPosition = (imageViewer->GetImageActor()->GetXRange() )[0];
 
-                Yposition = seedY*imagePairManager->getYSpacing();
-                Yoffset = imagePairManager->getYSpacing()*imagePairManager->getYDim()/2.0;
+                hcrosshairSource->SetPoint1(xPosition, -crossHairXlength ,zPosition);
+                hcrosshairSource->SetPoint2(xPosition, crossHairXlength,zPosition);
 
-                hcrosshairSource->SetPoint1(zPrime, -crossHairXlength ,Xposition);
-                hcrosshairSource->SetPoint2(zPrime, crossHairXlength,Xposition);
-
-                vcrosshairSource->SetPoint1(zPrime, Yposition - Yoffset , -crossHairYlength);
-                vcrosshairSource->SetPoint2(zPrime, Yposition - Yoffset , crossHairYlength);
+                vcrosshairSource->SetPoint1(xPosition, yPosition - yOffset , 0);
+                vcrosshairSource->SetPoint2(xPosition, yPosition - yOffset , 2*crossHairYlength);
 
 
             break;
