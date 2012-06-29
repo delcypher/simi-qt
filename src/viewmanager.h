@@ -39,7 +39,7 @@ class ViewManager : public QObject
 		* \param segmentationAlphaSpinBox is the the Widget used to control the segmentation Alpha. It is automatically configured by this constructor.
 		* \param crosshairAlphaSpinBox is the the Widget used to control the crosshair Alpha. It is automatically configured by this constructor.
 		*/
-        ViewManager(ImagePairManager* imagePairManager, QVTKWidget* vtkWidget, QSpinBox* sliceSpinBox, QSlider* sliceSlider, QDoubleSpinBox* blockingAlphaSpinBox, QDoubleSpinBox* segmentationAlphaSpinBox, QDoubleSpinBox* crosshairAlphaSpinBox);
+        ViewManager(ImagePairManager* imagePairManager, QVTKWidget* vtkWidget, QSpinBox* sliceSpinBox, QSlider* sliceSlider, QDoubleSpinBox* blockingAlphaSpinBox, QDoubleSpinBox* segmentationAlphaSpinBox, QDoubleSpinBox* crosshairAlphaSpinBox, unsigned int defaultOrientation);
 
 		//! Destructor
 		~ViewManager();

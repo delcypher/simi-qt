@@ -11,7 +11,7 @@
 #include <vtkProperty.h>
 
 
-ViewManager::ViewManager(ImagePairManager* imagePairManager, QVTKWidget* qvtkWidget, QSpinBox* sliceSpinBox, QSlider* sliceSlider, QDoubleSpinBox* blockingAlphaSpinBox, QDoubleSpinBox* segmentationAlphaSpinBox, QDoubleSpinBox* crosshairAlphaSpinBox) :
+ViewManager::ViewManager(ImagePairManager* imagePairManager, QVTKWidget* qvtkWidget, QSpinBox* sliceSpinBox, QSlider* sliceSlider, QDoubleSpinBox* blockingAlphaSpinBox, QDoubleSpinBox* segmentationAlphaSpinBox, QDoubleSpinBox* crosshairAlphaSpinBox, unsigned int defaultOrientation) :
 dragOn(false),
 mouseX(0),
 mouseY(0),
@@ -64,7 +64,7 @@ panScale(1.0)
     enableInterpolation(true); //enable interpolation on original image by default
 
     //setup default orientation (this does zoom default too)
-    setOrientation(vtkImageViewer2::SLICE_ORIENTATION_XY);
+    setOrientation(defaultOrientation);
 
     //If the seed point is changed by the user we should redraw the crosshair
     /* connect(seedPointManager, SIGNAL(seedPointChanged(int,int,int)),
@@ -629,16 +629,19 @@ bool ViewManager::setOrientation(unsigned int ort)
         case vtkImageViewer2::SLICE_ORIENTATION_XY :
             orientation=vtkImageViewer2::SLICE_ORIENTATION_XY;
             maxScale= ( imagePairManager->getYDim() )*( imagePairManager->getYSpacing() )/2.0;
+            qDebug() << "Setting Orientation to XY";
         break;
 
         case vtkImageViewer2::SLICE_ORIENTATION_XZ :
             orientation=vtkImageViewer2::SLICE_ORIENTATION_XZ;
             maxScale= ( imagePairManager->getZDim() )*( imagePairManager->getZSpacing() )/2.0;
+            qDebug() << "Setting Orientation to XZ";
         break;
 
         case vtkImageViewer2::SLICE_ORIENTATION_YZ :
             orientation=vtkImageViewer2::SLICE_ORIENTATION_YZ;
             maxScale= ( imagePairManager->getZDim() )*( imagePairManager->getZSpacing() )/2.0;
+            qDebug() << "Setting Orientation to YZ";
         break;
 
         default :
@@ -649,7 +652,8 @@ bool ViewManager::setOrientation(unsigned int ort)
     imageViewer->SetSliceOrientation(orientation);
 
     //set default slice
-    setSlice(getSliceMin());
+    if(!setSlice(getSliceMin()) )
+        qWarning() << "Failed to set default slice!";
 
     applyCameraFixes();// correct camera positions if necessary
 

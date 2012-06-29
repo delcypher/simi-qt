@@ -29,7 +29,7 @@
          <item>
           <layout class="QVBoxLayout" name="verticalLayout_2">
            <item>
-            <widget class="QVTKWidget" name="xyQvtkWidget" native="true">
+            <widget class="QVTKWidget" name="xyQvtkWidget">
              <property name="minimumSize">
               <size>
                <width>300</width>
@@ -106,7 +106,7 @@
          <item>
           <layout class="QVBoxLayout" name="verticalLayout_4">
            <item>
-            <widget class="QVTKWidget" name="yzQvtkWidget" native="true">
+            <widget class="QVTKWidget" name="yzQvtkWidget">
              <property name="minimumSize">
               <size>
                <width>300</width>
@@ -183,7 +183,7 @@
          <item>
           <layout class="QVBoxLayout" name="verticalLayout_3">
            <item>
-            <widget class="QVTKWidget" name="xzQvtkWidget" native="true">
+            <widget class="QVTKWidget" name="xzQvtkWidget">
              <property name="minimumSize">
               <size>
                <width>300</width>
@@ -260,7 +260,7 @@
          <item>
           <layout class="QVBoxLayout" name="verticalLayout_5">
            <item>
-            <widget class="QVTKWidget" name="render3DQvtkWidget" native="true">
+            <widget class="QVTKWidget" name="render3DQvtkWidget">
              <property name="minimumSize">
               <size>
                <width>300</width>
@@ -783,7 +783,7 @@
      <x>0</x>
      <y>0</y>
      <width>1100</width>
-     <height>21</height>
+     <height>20</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -807,6 +807,9 @@
     <addaction name="separator"/>
     <addaction name="actionResetView"/>
     <addaction name="actionRotate_view_by_180"/>
+    <addaction name="separator"/>
+    <addaction name="actionClear_Drawing"/>
+    <addaction name="actionClear_Segmentation"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
@@ -816,13 +819,6 @@
     <addaction name="actionAboutQt"/>
     <addaction name="actionDocumentation"/>
     <addaction name="actionDump_debug"/>
-   </widget>
-   <widget class="QMenu" name="menuSlice">
-    <property name="title">
-     <string>Active Image</string>
-    </property>
-    <addaction name="actionClear_Drawing"/>
-    <addaction name="actionClear_Segmentation"/>
    </widget>
    <widget class="QMenu" name="menuGlobal">
     <property name="title">
@@ -835,7 +831,6 @@
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuGlobal"/>
-   <addaction name="menuSlice"/>
    <addaction name="menuImage"/>
    <addaction name="menuHelp"/>
   </widget>

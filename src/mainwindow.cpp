@@ -718,8 +718,8 @@ void MainWindow::loadOriginalImage(QString file)
                             ui->xySliceSlider,
                             ui->blockingAlphadoubleSpinBox,
                             ui->segmentationAlphadoubleSpinBox,
-                            ui->crosshairAlphadoubleSpinBox);
-    xyView->setOrientation(vtkImageViewer2::SLICE_ORIENTATION_XY);
+                            ui->crosshairAlphadoubleSpinBox,
+                            vtkImageViewer2::SLICE_ORIENTATION_XY);
 
     //setup xz view
     xzView = new ViewManager(imagePairManager,
@@ -728,8 +728,8 @@ void MainWindow::loadOriginalImage(QString file)
                             ui->xzSliceSlider,
                             ui->blockingAlphadoubleSpinBox,
                             ui->segmentationAlphadoubleSpinBox,
-                            ui->crosshairAlphadoubleSpinBox);
-    xzView->setOrientation(vtkImageViewer2::SLICE_ORIENTATION_XZ);
+                            ui->crosshairAlphadoubleSpinBox,
+                            vtkImageViewer2::SLICE_ORIENTATION_XZ);
 
     //setup yzview
     yzView = new ViewManager(imagePairManager,
@@ -738,8 +738,9 @@ void MainWindow::loadOriginalImage(QString file)
                             ui->yzSliceSlider,
                             ui->blockingAlphadoubleSpinBox,
                             ui->segmentationAlphadoubleSpinBox,
-                            ui->crosshairAlphadoubleSpinBox);
-    yzView->setOrientation(vtkImageViewer2::SLICE_ORIENTATION_YZ);
+                            ui->crosshairAlphadoubleSpinBox,
+                            vtkImageViewer2::SLICE_ORIENTATION_YZ);
+
 
     //setup the multiview manager with XY as default view
     multiViewManager = new MultiViewManager(xyView,
