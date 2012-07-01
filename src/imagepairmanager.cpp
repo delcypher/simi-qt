@@ -2,7 +2,7 @@
 #include <QDebug>
 #include <QApplication>
 
-ImagePairManager::ImagePairManager()
+ImagePairManager::ImagePairManager() : xDim(0), yDim(0), zDim(0), extentXMin(0), extentXMax(0), extentYMin(0), extentYMax(0), extentZMin(0), extentZMax(0)
 {
 	reader = vtkStructuredPointsReader::New();
 	readerSegBlock = vtkStructuredPointsReader::New();
@@ -256,6 +256,10 @@ bool ImagePairManager::loadImageFromSource(vtkStructuredPoints *src)
 	//determine extents
 	int extent[6];
 	original->GetExtent(extent);
+	extentXMin = extent[0];
+	extentXMax = extent[1];
+	extentYMin = extent[2];
+	extentYMax = extent[3];
 	extentZMin = extent[4];
 	extentZMax = extent[5];
 
@@ -292,7 +296,8 @@ bool ImagePairManager::loadImageFromSource(vtkStructuredPoints *src)
 	//should probably initialise now...
 	debugDump();
 
-	return true;
+    return true;
 }
+
 
 

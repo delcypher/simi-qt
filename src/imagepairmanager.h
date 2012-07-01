@@ -69,11 +69,19 @@ class ImagePairManager : public QObject
         */
         int getXDim() {return xDim;}
 
+        int getXMin() { return extentXMin;}
+
+        int getXMax() { return extentXMax;}
+
+
         /*! \return The number of voxels in the y direction in original or segblock (they are identical)
         * \sa original
         * \sa segblock
         */
 		int getYDim() {return yDim;}
+
+        int getYMin() {return extentYMin;}
+        int getYMax() {return extentYMax;}
 
         /*! \return The number of voxels in the z direction in original or segblock (they are identical)
         * \sa original
@@ -189,8 +197,12 @@ class ImagePairManager : public QObject
 		int zDim;
 
 		//Extents
-		int extentZMax;
+		int extentXMin;
+		int extentXMax;
+		int extentYMin;
+		int extentYMax;
 		int extentZMin;
+		int extentZMax;
 
 		void debugDump();
 

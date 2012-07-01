@@ -18,6 +18,7 @@
 #include "drawmanager.h"
 #include "segmenter.h"
 #include "volumerendermanager.h"
+#include "boundarymanager.h"
 
 //Include Main page for Doxygen
 #include "doxygenmain.h"
@@ -119,6 +120,7 @@ protected:
 		DrawManager* drawManager;
 		Segmenter* segmenter;
 		VolumeRenderManager* volumeRenderManager;
+		BoundaryManager* boundaryManager;
 
 		QFileInfo imageInfo;
 		QDir workPath; //Directory used file open dialogs

@@ -21,6 +21,7 @@ MainWindow::MainWindow() : imageInfo(""), workPath(QDir::home())
     xzView=0;
     yzView=0;
     multiViewManager=0;
+    boundaryManager=0;
 	drawManager=0;
 	segmenter=0;
 	volumeRenderManager=0;
@@ -683,6 +684,9 @@ void MainWindow::cleanUp()
     if(imagePairManager!=0)
         delete imagePairManager;
 
+    if(boundaryManager!=0)
+        delete boundaryManager;
+
     if(xyView!=0)
         delete xyView;
 
@@ -721,6 +725,16 @@ void MainWindow::loadOriginalImage(QString file)
     }
 
 
+    //setup boundary manager
+    boundaryManager = new BoundaryManager(imagePairManager,
+                                            ui->minXSpinBox,
+                                            ui->maxXSpinBox,
+                                            ui->minYSpinBox,
+                                            ui->maxYSpinBox,
+                                            ui->minZSpinBox,
+                                            ui->maxZSpinBox,
+                                            ui->boundaryResetButton,
+                                            this);
 
     //setup xy view
     xyView = new ViewManager(imagePairManager,
