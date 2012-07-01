@@ -615,12 +615,15 @@ void ViewManager::redrawCrossHair()
         xOffset = imagePairManager->getXSpacing()*imagePairManager->getXDim()/2.0;
         xPosition = seedX*imagePairManager->getXSpacing();
 
+        //Get a vector describing the projection of direction
+        double* projectionDir = imageViewer->GetRenderer()->GetActiveCamera()->GetDirectionOfProjection();
+
         switch(orientation)
         {
             case vtkImageViewer2::SLICE_ORIENTATION_XY:
 
-                //The camera will be looking down/up the z-axis position cross hair so we place it on top of the slice
-                zPosition = (imageViewer->GetImageActor()->GetZRange() )[0];
+                //The camera will be looking down/up the z-axis position cross hair in front of slice
+                zPosition = (imageViewer->GetImageActor()->GetZRange() )[0] + ((projectionDir[2] < 0)?1:-1);
 
                 hcrosshairSource->SetPoint1(-crossHairXlength, yPosition - yOffset, zPosition);
                 hcrosshairSource->SetPoint2( crossHairXlength, yPosition -yOffset , zPosition);
@@ -632,8 +635,8 @@ void ViewManager::redrawCrossHair()
             case vtkImageViewer2::SLICE_ORIENTATION_XZ:
 
 
-                //The camera will be looking down/up the y-axis. Position crosshair on top of slice
-                yPosition= (imageViewer->GetImageActor()->GetYRange() )[0];
+                //The camera will be looking down/up the y-axis. Position crosshair in front of slice
+                yPosition= (imageViewer->GetImageActor()->GetYRange() )[0] + ((projectionDir[1] < 0)?1:-1);
 
                 hcrosshairSource->SetPoint1(-crossHairXlength, yPosition ,zPosition);
                 hcrosshairSource->SetPoint2( crossHairXlength, yPosition ,zPosition);
@@ -644,8 +647,8 @@ void ViewManager::redrawCrossHair()
 
             case vtkImageViewer2::SLICE_ORIENTATION_YZ:
 
-                //The camera will looking down/up the x-axis. Position crosshair on top of slice
-                xPosition = (imageViewer->GetImageActor()->GetXRange() )[0];
+                //The camera will looking down/up the x-axis. Position crosshair in front of slice
+                xPosition = (imageViewer->GetImageActor()->GetXRange() )[0] + ((projectionDir[0] < 0)?1:-1);
 
                 hcrosshairSource->SetPoint1(xPosition, -crossHairXlength ,zPosition);
                 hcrosshairSource->SetPoint2(xPosition, crossHairXlength,zPosition);
