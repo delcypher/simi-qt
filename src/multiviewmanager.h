@@ -20,7 +20,7 @@ class MultiViewManager : public QObject
         unsigned int getActiveView();
         ViewManager* getActiveViewPointer();
         bool getSeedPoint(int& x, int& y, int& z);
-        void update();
+
         void enableInterpolation(bool enable);
         void enablePanning(bool e);
         bool isCrosshairInBoundary();
@@ -37,6 +37,7 @@ class MultiViewManager : public QObject
         void setYZActive();
         bool setSeedPoint(int x, int y, int z);
         void redrawCrosshair();
+        void update();
 
     private slots:
         void checkCrosshairInBoundary();

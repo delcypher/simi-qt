@@ -184,36 +184,26 @@ void MainWindow::on_actionHandTool_toggled(bool t)
 
 void MainWindow::on_actionPenTool_toggled(bool t)
 {
-    qDebug() << "Pen tool activated";
-    /*
-    //safety check
-    if(viewManager==0 || drawManager==0)
+    if(multiViewManager==0)
         return;
 
-    //disable other connections
-    //disable seedTool connection
-     disconnect(viewManager,
-		SIGNAL(viewLeftClicked(int,int,int)),
-        seedPointManager,
-		SLOT(setSeedPoint(int,int,int))
-        );
+    if(t)
+    {
+        qDebug() << "Pen tool enabled";
 
-    //disable eraseTool connection
-    disconnect(viewManager,
-		SIGNAL(dragEvent(int,int,int)),
-		drawManager,
-		SLOT(erase(int,int,int))
-		);
+        connect(xyView,SIGNAL(dragEvent(int,int,int)),drawManager,SLOT(draw(int,int,int)));
+        connect(xzView,SIGNAL(dragEvent(int,int,int)),drawManager,SLOT(draw(int,int,int)));
+        connect(yzView,SIGNAL(dragEvent(int,int,int)),drawManager,SLOT(draw(int,int,int)));
 
-    //disable panning
-    viewManager->enablePanning(false);
+    }
+    else
+    {
+        qDebug() << "Pen tool disabled";
 
-    //enable connection
-    connect(viewManager,
-		SIGNAL(dragEvent(int,int,int)),
-		drawManager,
-		SLOT(draw(int,int,int))
-        ); */
+        disconnect(xyView,SIGNAL(dragEvent(int,int,int)),drawManager,SLOT(draw(int,int,int)));
+        disconnect(xzView,SIGNAL(dragEvent(int,int,int)),drawManager,SLOT(draw(int,int,int)));
+        disconnect(yzView,SIGNAL(dragEvent(int,int,int)),drawManager,SLOT(draw(int,int,int)));
+    }
 }
 
 void MainWindow::on_actionCrosshairTool_toggled(bool t)
@@ -235,80 +225,30 @@ void MainWindow::on_actionCrosshairTool_toggled(bool t)
         disconnect(xzView,SIGNAL(viewLeftClicked(int,int,int)),multiViewManager,SLOT(setSeedPoint(int,int,int)));
         disconnect(yzView,SIGNAL(viewLeftClicked(int,int,int)),multiViewManager,SLOT(setSeedPoint(int,int,int)));
     }
-
-    /*
-    //safety check
-    if(viewManager==0  || drawManager==0)
-        return;
-
-    //disable other connections
-    //disable seedTool connection
-    disconnect(viewManager,
-		SIGNAL(viewLeftClicked(int,int,int)),
-        seedPointManager,
-		SLOT(setSeedPoint(int,int,int))
-        );
-
-    //disable penTool connection
-    disconnect(viewManager,
-		SIGNAL(dragEvent(int,int,int)),
-		drawManager,
-		SLOT(draw(int,int,int))
-		);
-
-    //disable eraseTool connection
-    disconnect(viewManager,
-		SIGNAL(dragEvent(int,int,int)),
-		drawManager,
-		SLOT(erase(int,int,int))
-		);
-
-    //disable panning
-    viewManager->enablePanning(false);
-
-
-    //enable connection
-     connect(viewManager,
-		SIGNAL(viewLeftClicked(int,int,int)),
-        seedPointManager,
-		SLOT(setSeedPoint(int,int,int))
-        ); */
-
 }
 
 void MainWindow::on_actionEraseTool_toggled(bool t)
 {
-    qDebug() << "Erase tool activated";
-    /*
-    //safety check
-    if(viewManager==0 ||  drawManager==0)
+    if(multiViewManager==0)
         return;
 
-    //disable seedTool connection
-     disconnect(viewManager,
-		SIGNAL(viewLeftClicked(int,int,int)),
-        seedPointManager,
-		SLOT(setSeedPoint(int,int,int))
-        );
+    if(t)
+    {
+        qDebug() << "Erase tool enabled";
 
-    //disable penTool connection
-    disconnect(viewManager,
-		SIGNAL(dragEvent(int,int,int)),
-		drawManager,
-		SLOT(draw(int,int,int))
-		);
+        connect(xyView,SIGNAL(dragEvent(int,int,int)),drawManager,SLOT(erase(int,int,int)));
+        connect(xzView,SIGNAL(dragEvent(int,int,int)),drawManager,SLOT(erase(int,int,int)));
+        connect(yzView,SIGNAL(dragEvent(int,int,int)),drawManager,SLOT(erase(int,int,int)));
 
-    //disable panning
-    viewManager->enablePanning(false);
+    }
+    else
+    {
+        qDebug() << "Erase tool disabled";
 
-    //enable connection
-    connect(viewManager,
-		SIGNAL(dragEvent(int,int,int)),
-		drawManager,
-		SLOT(erase(int,int,int))
-        ); */
-
-
+        disconnect(xyView,SIGNAL(dragEvent(int,int,int)),drawManager,SLOT(erase(int,int,int)));
+        disconnect(xzView,SIGNAL(dragEvent(int,int,int)),drawManager,SLOT(erase(int,int,int)));
+        disconnect(yzView,SIGNAL(dragEvent(int,int,int)),drawManager,SLOT(erase(int,int,int)));
+    }
 
 }
 
@@ -599,10 +539,9 @@ void MainWindow::on_actionClear_Blocking_on_All_Slices_triggered()
 {
 	qDebug() << "Clearing all blocking voxels!";
 
-	showWaitDialog();
-
     if(imagePairManager!=0 && multiViewManager!=0 && volumeRenderManager!=0)
     {
+        showWaitDialog();
         imagePairManager->setAllSimBlockVoxels(ImagePairManager::BLOCKING, ImagePairManager::BACKGROUND);
         multiViewManager->update();
         volumeRenderManager->render3D();
@@ -785,7 +724,7 @@ void MainWindow::loadOriginalImage(QString file)
     //setup drawManager
     if(drawManager!=0)
         delete drawManager;
-    //drawManager = new DrawManager(imagePairManager,ui->drawSizeSpinBox,ui->drawOnComboBox, ui->minZSliceSpinBox, ui->maxZSliceSpinBox, ui->segReadOnly);
+    drawManager = new DrawManager(imagePairManager,ui->drawSizeSpinBox,ui->drawOnComboBox, ui->minZSpinBox, ui->maxZSpinBox, ui->segReadOnly);
 
     //setup segmenter
     if(segmenter!=0)
@@ -795,7 +734,7 @@ void MainWindow::loadOriginalImage(QString file)
     //setup volumeRenderManager
     if(volumeRenderManager!=0)
         delete volumeRenderManager;
-    //volumeRenderManager = new VolumeRenderManager(imagePairManager,ui->qvtk3Ddisplayer);
+    volumeRenderManager = new VolumeRenderManager(imagePairManager,ui->render3DQvtkWidget);
 
     contrastControlSetup();
     toolbarSetup();
@@ -826,7 +765,7 @@ void MainWindow::loadOriginalImage(QString file)
     //connect(segmenter,SIGNAL(segmentationDone(int)), viewManager, SLOT(update()));
 
     //setup on drawing complete we redraw
-    //connect(drawManager,SIGNAL(drawingDone()),viewManager,SLOT(update()));
+    connect(drawManager,SIGNAL(drawingDone()),multiViewManager,SLOT(update()));
 
     //Update the work path to the location of the new image
     workPath.setPath(imageInfo.absolutePath());
