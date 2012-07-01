@@ -80,7 +80,6 @@ class MainWindow : public QMainWindow
 
         void on_actionInterpolate_Image_toggled(bool enable);
 
-		void tryEnableSegmentationWidgets();
 		void enableSegmentationWidgets();
 		void disableSegmentationWidgets();
 

@@ -309,14 +309,13 @@ void MainWindow::on_doSegmentation2D_clicked()
 {
 	if(segmenter!=0)
 	{
-                //disable segmentation widgets whilst segmenting
-		disableSegmentationWidgets();
-                int pos_z = 0;// viewManager->getCurrentSlice();
-                int pos_x, pos_y;
+        //disable segmentation widgets whilst segmenting
+        disableSegmentationWidgets();
+        int x,y,z;
+        multiViewManager->getSeedPoint(x,y,z);
 
 
-
-                segmenter->doSegmentation2D(pos_x, pos_y, pos_z, ui->minSegIntensitySlider->value(), ui->maxSegIntensitySlider->value());
+        segmenter->doSegmentation2D(x, y, z, ui->minSegIntensitySlider->value(), ui->maxSegIntensitySlider->value());
 		enableSegmentationWidgets();
 	}
 }
@@ -356,8 +355,6 @@ void MainWindow::seedPointChanged()
 
         ui->seedPointValueLabel->setText(seedPoint);
 
-        //enable the segmentation widgets (TODO : REMove)
-        tryEnableSegmentationWidgets();
 	}
 }
 
@@ -468,13 +465,6 @@ void MainWindow::on_actionInterpolate_Image_toggled(bool enable)
     {
         multiViewManager->enableInterpolation(enable);
     }
-}
-
-
-void MainWindow::tryEnableSegmentationWidgets()
-{
-    int dummy;
-    //TODO REmove function!
 }
 
 
@@ -729,7 +719,7 @@ void MainWindow::loadOriginalImage(QString file)
     //setup segmenter
     if(segmenter!=0)
         delete segmenter;
-    //segmenter = new Segmenter(seedPointManager,imagePairManager,ui->kernelComboBox);
+    segmenter = new Segmenter(imagePairManager,ui->kernelComboBox);
 
     //setup volumeRenderManager
     if(volumeRenderManager!=0)
@@ -762,18 +752,13 @@ void MainWindow::loadOriginalImage(QString file)
     connect(boundaryManager,SIGNAL(boundaryChanged()),this,SLOT(seedPointChanged()));
 
     //setup so on segmentation completion we redraw
-    //connect(segmenter,SIGNAL(segmentationDone(int)), viewManager, SLOT(update()));
+    connect(segmenter,SIGNAL(segmentationDone(int)), multiViewManager, SLOT(update()));
 
     //setup on drawing complete we redraw
     connect(drawManager,SIGNAL(drawingDone()),multiViewManager,SLOT(update()));
 
     //Update the work path to the location of the new image
     workPath.setPath(imageInfo.absolutePath());
-
-
-
-    //allow debug information to be shown from menu
-    //connect(ui->actionDump_debug,SIGNAL(triggered()),viewManager,SLOT(debugDump()));
 
     //allow load/save segblock menus now
     ui->actionLoad_Segmentation->setEnabled(true);
@@ -782,9 +767,8 @@ void MainWindow::loadOriginalImage(QString file)
     //At start up no seed point will be set so disable segmentation widgets
     disableSegmentationWidgets();
 
-
-    //When the user changes slice we may need to disable/enabled the segmentation widgets
-    //connect(viewManager,SIGNAL(sliceChanged(int)), this, SLOT(tryEnableSegmentationWidgets()));
+    //When the user actually picks a seed point we can enable the segmentation widgets
+    connect(multiViewManager,SIGNAL(seedPointChanged()), this, SLOT(enableSegmentationWidgets()));
 
     /*When segmentation is done force redraw for volumeRenderManager
             * Note if we do 3D segmentation it seems to update itself... not sure why
