@@ -48,8 +48,12 @@ void DrawManager::drawAlgorithm(int &xVoxel, int &yVoxel, int &zVoxel, int &mode
 	qDebug() << "DrawManager::drawAlgorithm->boundary(" << boundary[0] << "," << boundary[1] << "," << boundary[2] << ","
 			 << boundary[3] << "," << boundary[4] << "," << boundary[5] << ")";
 
-	//Check for draw type and mode
+	//Initialise require variables
 	int blockType;
+	int yLim = drawSize->value() - 1;
+	int xLim = drawSize->value() - 1;
+
+	//Check for draw type
 	if (mode == DrawManager::DRAW)
 	{
 		//Set blocking according to the drawType spinbox
@@ -65,9 +69,9 @@ void DrawManager::drawAlgorithm(int &xVoxel, int &yVoxel, int &zVoxel, int &mode
 
 
 		//Set corresponding pixels to the corresponding blocking type
-		for (int y = -(drawSize->value()); y <= drawSize->value(); y++)
+		for (int y = -yLim; y <= yLim; y++)
 		{
-			for (int x = -(drawSize->value()); x <= drawSize->value(); x++)
+			for (int x = -xLim; x <= xLim; x++)
 			{
 				//Check boundary condition
 				if (xVoxel + x < boundary[0] || xVoxel + x > boundary[1] || yVoxel + y < boundary[2] || yVoxel + y > boundary[3])
@@ -164,9 +168,9 @@ void DrawManager::drawAlgorithm(int &xVoxel, int &yVoxel, int &zVoxel, int &mode
 		blockType = ImagePairManager::BACKGROUND;
 
 		//Set corresponding pixels to the corresponding blocking type
-		for (int y = -(drawSize->value()); y <= drawSize->value(); y++)
+		for (int y = -yLim; y <= yLim; y++)
 		{
-			for (int x = -(drawSize->value()); x <= drawSize->value(); x++)
+			for (int x = -xLim; x <= xLim; x++)
 			{
 				//Check boundary condition
 				if (xVoxel + x < boundary[0] || xVoxel + x > boundary[1] || yVoxel + y < boundary[2] || yVoxel + y > boundary[3])
