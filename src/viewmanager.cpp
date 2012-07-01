@@ -234,23 +234,26 @@ bool ViewManager::setSlice(int slice)
         if(myManager!=0)
         {
             int seedX,seedY,seedZ;
-            myManager->getSeedPoint(seedX,seedY,seedZ);
 
-            switch(orientation)
+            //check a seed point is set first
+            if(myManager->getSeedPoint(seedX,seedY,seedZ))
             {
-                case vtkImageViewer2::SLICE_ORIENTATION_XY:
-                    seedZ=getCurrentSlice();
-                break;
+                switch(orientation)
+                {
+                    case vtkImageViewer2::SLICE_ORIENTATION_XY:
+                        seedZ=getCurrentSlice();
+                    break;
 
-                case vtkImageViewer2::SLICE_ORIENTATION_XZ:
-                    seedY=getCurrentSlice();
-                break;
+                    case vtkImageViewer2::SLICE_ORIENTATION_XZ:
+                        seedY=getCurrentSlice();
+                    break;
 
-                case vtkImageViewer2::SLICE_ORIENTATION_YZ:
-                    seedX=getCurrentSlice();
+                    case vtkImageViewer2::SLICE_ORIENTATION_YZ:
+                        seedX=getCurrentSlice();
+                }
+
+                myManager->setSeedPoint(seedX,seedY,seedZ);
             }
-
-            myManager->setSeedPoint(seedX,seedY,seedZ);
 
         }
 
