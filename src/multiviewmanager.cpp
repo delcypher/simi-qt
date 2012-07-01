@@ -2,7 +2,8 @@
 #include <QDebug>
 
 
-MultiViewManager::MultiViewManager(ViewManager *xy,
+MultiViewManager::MultiViewManager(BoundaryManager* boundaryManager,
+ViewManager *xy,
 ViewManager *xz,
 ViewManager *yz,
 QPushButton *xyButton,
@@ -13,6 +14,11 @@ xSeed(-1),
 ySeed(-1),
 zSeed(-1)
 {
+    this->boundaryManager = boundaryManager;
+
+    //if the boundary changes we may need to change the seed point colour (informs user seed point out of boundary)
+    connect(boundaryManager,SIGNAL(boundaryChanged()),this,SLOT(checkCrosshairInBoundary()));
+
     //add view managers
     xyView = xy;
     xzView = xz;
@@ -100,7 +106,7 @@ bool MultiViewManager::setSeedPoint(int x, int y, int z)
     emit seedPointChanged();
     qDebug() << "Seed point set to:(" << xSeed << "," << ySeed << "," << zSeed << ")";
 
-    redrawCrosshair();
+    checkCrosshairInBoundary();
 
     return true;
 }
@@ -111,6 +117,25 @@ void MultiViewManager::redrawCrosshair()
     xyView->redrawCrossHair();
     xzView->redrawCrossHair();
     yzView->redrawCrossHair();
+
+}
+
+void MultiViewManager::checkCrosshairInBoundary()
+{
+    //Note no need to call redrawCrosshair() as these calls do it automatically
+    if(isCrosshairInBoundary())
+    {
+        xyView->setCrosshairColour(1.0,1.0,0.0); // Yellow in boundary colour
+        xzView->setCrosshairColour(1.0,1.0,0.0); // Yellow in boundary colour
+        yzView->setCrosshairColour(1.0,1.0,0.0); // Yellow in boundary colour
+    }
+    else
+    {
+        xyView->setCrosshairColour(1.0,0.0,1.0); // Fuschia in boundary colour
+        xzView->setCrosshairColour(1.0,0.0,1.0); // Fuschia in boundary colour
+        yzView->setCrosshairColour(1.0,0.0,1.0); // Fuschia in boundary colour
+    }
+
 
 }
 
@@ -145,6 +170,15 @@ void MultiViewManager::enablePanning(bool e)
     }
     else
         qWarning() << "Failed to enable/disable panning";
+}
+
+bool MultiViewManager::isCrosshairInBoundary()
+{
+    //Note no need to call redrawCrosshair() as these calls do it automatically
+    if(boundaryManager->isInBoundary(xSeed,ySeed,zSeed))
+        return true;
+    else
+        return false;
 }
 
 

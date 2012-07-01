@@ -762,6 +762,22 @@ int ViewManager::getSliceMax()
     return imageViewer->GetSliceMax();
 }
 
+bool ViewManager::setCrosshairColour(double r, double g, double b)
+{
+    if( r >= 0.0 && r <= 1.0 && g >= 0.0 && g <= 1.0 && b >= 0.0 && b <= 1.0)
+    {
+        hcrosshairActor->GetProperty()->SetColor(r,g,b);
+        vcrosshairActor->GetProperty()->SetColor(r,g,b);
+        qDebug() << "Crosshair Colour set to r:" << r << " g:" << g << " b:" << b;
+
+        redrawCrossHair();
+
+        return true;
+    }
+    else
+        return false;
+}
+
 void ViewManager::addSegblock()
 {
 	lut= vtkLookupTable::New();

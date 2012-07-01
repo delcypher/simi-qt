@@ -115,6 +115,8 @@ class ViewManager : public QObject
         int getSliceMin();
         int getSliceMax();
 
+        bool setCrosshairColour(double r, double g, double b);
+
 	
 	public slots:
 		/*! Change the slice show by the QVTKWidget that this class renders in to.

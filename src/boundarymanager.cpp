@@ -1,4 +1,5 @@
 #include "boundarymanager.h"
+#include <QDebug>
 
 BoundaryManager::BoundaryManager(ImagePairManager* imagePairManager,
                                 QSpinBox* xMin,
@@ -83,6 +84,8 @@ int BoundaryManager::getZMax()
 
 bool BoundaryManager::isInBoundary(int x, int y, int z)
 {
+    qDebug() << "Is " << x << "," << y << "," << z << " is boundary?";
+
     if(x < xMinSpinBox->value() || x > xMaxSpinBox->value() || y < yMinSpinBox->value() || y > yMaxSpinBox->value() || z < zMinSpinBox->value() || z > zMaxSpinBox->value())
         return false; // not inside boundary
     else

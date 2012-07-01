@@ -6,13 +6,14 @@
 #include "viewmanager.h"
 #include <QVTKWidget.h>
 #include <vtkImageViewer2.h>
+#include "boundarymanager.h"
 
 class MultiViewManager : public QObject
 {
     Q_OBJECT
 
     public:
-        MultiViewManager(ViewManager* xy, ViewManager* xz, ViewManager* yz,
+        MultiViewManager(BoundaryManager* boundaryManager, ViewManager* xy, ViewManager* xz, ViewManager* yz,
                         QPushButton* xyButton, QPushButton* xzButton,
                         QPushButton* yzButton,
                         unsigned int defaultView);
@@ -22,6 +23,7 @@ class MultiViewManager : public QObject
         void update();
         void enableInterpolation(bool enable);
         void enablePanning(bool e);
+        bool isCrosshairInBoundary();
 
 
     signals:
@@ -36,8 +38,12 @@ class MultiViewManager : public QObject
         bool setSeedPoint(int x, int y, int z);
         void redrawCrosshair();
 
+    private slots:
+        void checkCrosshairInBoundary();
+
 
     private:
+        BoundaryManager* boundaryManager;
         ViewManager* xyView;
         ViewManager* xzView;
         ViewManager* yzView;

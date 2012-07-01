@@ -410,6 +410,10 @@ void MainWindow::seedPointChanged()
         seedPoint +=",";
         seedPoint += QString::number(z);
         seedPoint +=")";
+
+        if(!multiViewManager->isCrosshairInBoundary())
+            seedPoint += " [Out of Boundary]";
+
         ui->seedPointValueLabel->setText(seedPoint);
 
         //enable the segmentation widgets (TODO : REMove)
@@ -768,7 +772,8 @@ void MainWindow::loadOriginalImage(QString file)
 
 
     //setup the multiview manager with XY as default view
-    multiViewManager = new MultiViewManager(xyView,
+    multiViewManager = new MultiViewManager(boundaryManager,
+                                            xyView,
                                             xzView,
                                             yzView,
                                             ui->xyActiveButton,
@@ -813,6 +818,9 @@ void MainWindow::loadOriginalImage(QString file)
 
     //setup seedPointLabel view being told about the seed point being change
     connect(multiViewManager,SIGNAL(seedPointChanged()),this,SLOT(seedPointChanged()));
+
+    //if the seed point goes in/out of boundary then we need to update the GUI
+    connect(boundaryManager,SIGNAL(boundaryChanged()),this,SLOT(seedPointChanged()));
 
     //setup so on segmentation completion we redraw
     //connect(segmenter,SIGNAL(segmentationDone(int)), viewManager, SLOT(update()));
