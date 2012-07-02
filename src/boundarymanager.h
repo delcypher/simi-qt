@@ -26,6 +26,9 @@ class BoundaryManager : public QObject
         int getZMin();
         int getZMax();
         bool isInBoundary(int x, int y, int z);
+        bool isInXRange(int x);
+        bool isInYRange(int y);
+        bool isInZRange(int z);
 
 
     signals:

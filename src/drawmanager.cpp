@@ -29,8 +29,8 @@ DrawManager::~DrawManager()
 void DrawManager::draw(int xVoxel, int yVoxel, int zVoxel)
 {
 	// Set draw mode and call draw algorithm function
-    int mode =0;// DrawManager::DRAW;
-	drawAlgorithm(xVoxel, yVoxel, zVoxel, mode);
+    DrawMode mode = static_cast<DrawManager::DrawMode>(drawType->currentIndex());
+    drawAlgorithm(xVoxel, yVoxel, zVoxel, mode);
 
 	//Inform other classes that we're done (so they can update)
 	imagePairManager->segblock->Modified(); //Mark the segblock as modified so VTK know's to trigger an update along the pipline
@@ -40,8 +40,7 @@ void DrawManager::draw(int xVoxel, int yVoxel, int zVoxel)
 void DrawManager::erase(int xVoxel, int yVoxel, int zVoxel)
 {
 	// Set draw mode and call draw algorithm function
-    int mode = 0;//DrawManager::ERASE;
-	drawAlgorithm(xVoxel, yVoxel, zVoxel, mode);
+    drawAlgorithm(xVoxel, yVoxel, zVoxel, ERASE_SINGLE_SLICE);
 
 	//Inform other classes that we're done (so they can update)
 	imagePairManager->segblock->Modified(); //Mark the segblock as modified so VTK know's to trigger an update along the pipline
@@ -97,157 +96,219 @@ void DrawManager::setupWidgets(unsigned int ort)
     drawType->setCurrentIndex(selectedIndex);
 }
 
-void DrawManager::drawAlgorithm(int &xVoxel, int &yVoxel, int &zVoxel, int &mode)
+void DrawManager::drawAlgorithm(int &xVoxel, int &yVoxel, int &zVoxel, DrawManager::DrawMode mode)
 {
-//	//Get the boundary of the segblock
-//	int* boundary = imagePairManager->segblock->GetExtent();
+    int abscissaMin=0;
+    int abscissaMax=0;
+    int ordinateMin=0;
+    int ordinateMax=0;
+    int depthMin=0;
+    int depthMax=0;
+    unsigned char* voxel=0;
 
-//	qDebug() << "DrawManager::drawAlgorithm->boundary(" << boundary[0] << "," << boundary[1] << "," << boundary[2] << ","
-//			 << boundary[3] << "," << boundary[4] << "," << boundary[5] << ")";
+    //this determines how many voxels either side of the clicked voxel are drawn to make
+    // a square (or cube)
+    int numVoxels= drawSize->value() -1;
 
-//	//Initialise require variables
-//	int blockType;
-//	int yLim = drawSize->value() - 1;
-//	int xLim = drawSize->value() - 1;
+    vtkStructuredPoints* segblock = imagePairManager->segblock;
 
-//	//Check for draw type
-//	if (mode == DrawManager::DRAW)
-//	{
-//		//Set blocking according to the drawType spinbox
-//		if (drawType->currentText() == "Blocking (Current Slice)" || drawType->currentText() == "Blocking (Z Slices Range)"
-//				|| drawType->currentText() == "Blocking (All Slices)")
-//		{
-//			blockType = ImagePairManager::BLOCKING;
-//		}
-//		else if (drawType->currentText() == "Segmentation")
-//		{
-//			blockType = ImagePairManager::SEGMENTATION;
-//		}
+    bool segmentationReadOnly = segReadOnly->isChecked();
+
+    //determine block type to draw
+    ImagePairManager::BlockType block;
+    switch(mode)
+    {
+        case BLOCKING_SINGLE_SLICE:
+        case BLOCKING_MULTIPLE_SLICES:
+            block=ImagePairManager::BLOCKING;
+        break;
+        case SEGMENTATION_SINGLE_SLICE:
+            block=ImagePairManager::SEGMENTATION;
+        break;
+        case ERASE_SINGLE_SLICE:
+            block=ImagePairManager::BACKGROUND;
+        break;
+        default:
+            qWarning() << "Drawing mode not supported";
+            return;
+    }
+
+    //use orientation to determine limits
+    switch(orientation)
+    {
+        case vtkImageViewer2::SLICE_ORIENTATION_XY:
+            abscissaMin= xVoxel - numVoxels;
+            abscissaMax= xVoxel + numVoxels;
+            ordinateMin= yVoxel - numVoxels;
+            ordinateMax= yVoxel + numVoxels;
+
+            if(mode==BLOCKING_MULTIPLE_SLICES)
+            {
+                depthMin=boundaryManager->getZMin();
+                depthMax=boundaryManager->getZMax();
+
+                if(zVoxel > depthMax || zVoxel < depthMin)
+                    return; //Can't draw because out of range
+            }
+            else
+            {
+                //We are drawing on a single slice
+
+                if(!boundaryManager->isInZRange(zVoxel))
+                    return; //can't draw because out of range
+                depthMin=zVoxel;
+                depthMax=zVoxel;
+            }
+
+            //make corrections if we're on the edge of boundary
+            if(!boundaryManager->isInXRange(abscissaMin))
+                abscissaMin=boundaryManager->getXMin();
+
+            if(!boundaryManager->isInXRange(abscissaMax))
+                abscissaMax=boundaryManager->getXMax();
+
+            if(!boundaryManager->isInYRange(ordinateMin))
+                ordinateMin=boundaryManager->getYMin();
+
+            if(!boundaryManager->isInYRange(ordinateMax))
+                ordinateMax=boundaryManager->getYMax();
 
 
-//		//Set corresponding pixels to the corresponding blocking type
-//		for (int y = -yLim; y <= yLim; y++)
-//		{
-//			for (int x = -xLim; x <= xLim; x++)
-//			{
-//				//Check boundary condition
-//				if (xVoxel + x < boundary[0] || xVoxel + x > boundary[1] || yVoxel + y < boundary[2] || yVoxel + y > boundary[3])
-//				{
-//					qDebug() << "DrawManager::drawAlgorithm->OUT_OF_BOUND_AT(" << xVoxel + x << "," << yVoxel + y << ")";
-//				}
-//				//Segmentation read-only mode is toggled
-//				else if (segReadOnly->checkState() == 2)
-//				{
-//					{
-//						//Check for blockType - whether to draw to single, particular slices, or all slices
-//						if (drawType->currentText() == "Blocking (All Slices)")
-//						{
-//							for (int z = boundary[4]; z <= boundary[5]; z++)
-//							{
-//								unsigned char* voxel = static_cast<unsigned char*>(imagePairManager->segblock->GetScalarPointer(xVoxel + x, yVoxel + y, z));
-//								if (*voxel == ImagePairManager::SEGMENTATION)
-//								{
-//									qDebug() << "DrawManager::drawAlgorithm->CANNOT_DRAWN_ON_SEGMENTATION(" << xVoxel + x << "," << yVoxel + y << ")";
-//								}
-//								else
-//								{
-//									*voxel = blockType;
-//								}
-//							}
-//							qDebug() << "DrawManager::drawAlgorithm->DRAWN_AT(" << xVoxel + x << "," << yVoxel + y << ") for all slices";
-//						}
-//						else if (drawType->currentText() == "Blocking (Z Slices Range)")
-//						{
-//							for (int z = minZSlice->value(); z <= maxZSlice->value(); z++)
-//							{
-//								unsigned char* voxel = static_cast<unsigned char*>(imagePairManager->segblock->GetScalarPointer(xVoxel + x, yVoxel + y, z));
-//								if (*voxel == ImagePairManager::SEGMENTATION)
-//								{
-//									qDebug() << "DrawManager::drawAlgorithm->CANNOT_DRAWN_ON_SEGMENTATION(" << xVoxel + x << "," << yVoxel + y << ")";
-//								}
-//								else
-//								{
-//									*voxel = blockType;
-//								}
-//							}
-//							qDebug() << "DrawManager::drawAlgorithm->DRAWN_AT(" << xVoxel + x << "," << yVoxel + y << ") for the provided Z Slices range";
-//						}
-//						else
-//						{
-//							unsigned char* voxel = static_cast<unsigned char*>(imagePairManager->segblock->GetScalarPointer(xVoxel + x, yVoxel + y, zVoxel));
-//							if (*voxel == ImagePairManager::SEGMENTATION)
-//							{
-//								qDebug() << "DrawManager::drawAlgorithm->CANNOT_DRAWN_ON_SEGMENTATION(" << xVoxel + x << "," << yVoxel + y << ")";
-//							}
-//							else
-//							{
-//								*voxel = blockType;
-//							}
-//							qDebug() << "DrawManager::drawAlgorithm->DRAWN_AT(" << xVoxel + x << "," << yVoxel + y << ") for single slices";
-//						}
-//					}
-//				}
-//				//Draw on anything
-//				else
-//				{
-//					//Check for blockType - whether to draw to single, particular slices, or all slices
-//					if (drawType->currentText() == "Blocking (All Slices)")
-//					{
-//						for (int z = boundary[4]; z <= boundary[5]; z++)
-//						{
-//							unsigned char* voxel = static_cast<unsigned char*>(imagePairManager->segblock->GetScalarPointer(xVoxel + x, yVoxel + y, z));
-//							*voxel = blockType;
-//						}
-//						qDebug() << "DrawManager::drawAlgorithm->DRAWN_AT(" << xVoxel + x << "," << yVoxel + y << ") for all slices";
-//					}
-//					else if (drawType->currentText() == "Blocking (Z Slices Range)")
-//					{
-//						for (int z = minZSlice->value(); z <= maxZSlice->value(); z++)
-//						{
-//							unsigned char* voxel = static_cast<unsigned char*>(imagePairManager->segblock->GetScalarPointer(xVoxel + x, yVoxel + y, z));
-//							*voxel = blockType;
-//						}
-//						qDebug() << "DrawManager::drawAlgorithm->DRAWN_AT(" << xVoxel + x << "," << yVoxel + y << ") for the provided Z Slices range";
-//					}
-//					else
-//					{
-//						unsigned char* voxel = static_cast<unsigned char*>(imagePairManager->segblock->GetScalarPointer(xVoxel + x, yVoxel + y, zVoxel));
-//						*voxel = blockType;
-//						qDebug() << "DrawManager::drawAlgorithm->DRAWN_AT(" << xVoxel + x << "," << yVoxel + y << ") for single slices";
-//					}
-//				}
-//			}
-//		}
-//	}
-//	else if (mode == DrawManager::ERASE)
-//	{
-//		//Set blocking to erase
-//		blockType = ImagePairManager::BACKGROUND;
 
-//		//Set corresponding pixels to the corresponding blocking type
-//		for (int y = -yLim; y <= yLim; y++)
-//		{
-//			for (int x = -xLim; x <= xLim; x++)
-//			{
-//				//Check boundary condition
-//				if (xVoxel + x < boundary[0] || xVoxel + x > boundary[1] || yVoxel + y < boundary[2] || yVoxel + y > boundary[3])
-//				{
-//					qDebug() << "DrawManager::drawAlgorithm->OUT_OF_BOUND_AT(" << xVoxel + x << "," << yVoxel + y << ")";
-//				}
-//				else
-//				{
-//					unsigned char* voxel = static_cast<unsigned char*>(imagePairManager->segblock->GetScalarPointer(xVoxel + x, yVoxel + y, zVoxel));
-//					if (segReadOnly->checkState() == 2 && *voxel == ImagePairManager::SEGMENTATION)
-//					{
-//						qDebug() << "DrawManager::drawAlgorithm->CANNOT_DRAWN_ON_SEGMENTATION(" << xVoxel + x << "," << yVoxel + y << ")";
-//					}
-//					else
-//					{
-//						*voxel = blockType;
-//						qDebug() << "DrawManager::drawAlgorithm->ERASE_AT(" << xVoxel + x << "," << yVoxel + y << ")";
-//					}
-//				}
-//			}
-//		}
-//	}
+            //loop over relavant voxels
+            for(int abscissa=abscissaMin; abscissa <= abscissaMax; abscissa++)
+            {
+                for(int ordinate=ordinateMin; ordinate <= ordinateMax; ordinate++)
+                {
+                    for(int depth=depthMin; depth <= depthMax; depth++)
+                    {
+                        voxel = static_cast<unsigned char*>(segblock->GetScalarPointer(abscissa,ordinate,depth));
+
+                        if(segmentationReadOnly && *voxel == ImagePairManager::SEGMENTATION)
+                            break;//do not modify
+
+                        *voxel = block;
+                    }
+                }
+            }
+
+        break;
+
+        case vtkImageViewer2::SLICE_ORIENTATION_XZ:
+            abscissaMin= xVoxel - numVoxels;
+            abscissaMax= xVoxel + numVoxels;
+            ordinateMin= zVoxel - numVoxels;
+            ordinateMax= zVoxel + numVoxels;
+
+            if(mode==BLOCKING_MULTIPLE_SLICES)
+            {
+                depthMin=boundaryManager->getYMin();
+                depthMax=boundaryManager->getYMax();
+
+                if(yVoxel > depthMax || yVoxel < depthMin)
+                    return; //Can't draw because out of range
+            }
+            else
+            {
+                //We are drawing on a single slice
+
+                if(!boundaryManager->isInZRange(yVoxel))
+                    return; //can't draw because out of range
+                depthMin=yVoxel;
+                depthMax=yVoxel;
+            }
+
+            //make corrections if we're on the edge of boundary
+            if(!boundaryManager->isInXRange(abscissaMin))
+                abscissaMin=boundaryManager->getXMin();
+
+            if(!boundaryManager->isInXRange(abscissaMax))
+                abscissaMax=boundaryManager->getXMax();
+
+            if(!boundaryManager->isInZRange(ordinateMin))
+                ordinateMin=boundaryManager->getZMin();
+
+            if(!boundaryManager->isInZRange(ordinateMax))
+                ordinateMax=boundaryManager->getZMax();
+
+            //loop over relavant voxels
+            for(int abscissa=abscissaMin; abscissa <= abscissaMax; abscissa++)
+            {
+                for(int ordinate=ordinateMin; ordinate <= ordinateMax; ordinate++)
+                {
+                    for(int depth=depthMin; depth <= depthMax; depth++)
+                    {
+                        voxel = static_cast<unsigned char*>(segblock->GetScalarPointer(abscissa,depth,ordinate));
+
+                        if(segmentationReadOnly && *voxel == ImagePairManager::SEGMENTATION)
+                            break;//do not modify
+
+                        *voxel = block;
+                    }
+                }
+            }
+
+        break;
+
+        case vtkImageViewer2::SLICE_ORIENTATION_YZ:
+            abscissaMin= yVoxel - numVoxels;
+            abscissaMax= yVoxel + numVoxels;
+            ordinateMin= zVoxel - numVoxels;
+            ordinateMax= zVoxel + numVoxels;
+
+            if(mode==BLOCKING_MULTIPLE_SLICES)
+            {
+                depthMin=boundaryManager->getXMin();
+                depthMax=boundaryManager->getXMax();
+
+                if(xVoxel > depthMax || xVoxel < depthMin)
+                    return; //Can't draw because out of range
+            }
+            else
+            {
+                //We are drawing on a single slice
+
+                if(!boundaryManager->isInXRange(xVoxel))
+                    return; //can't draw because out of range
+                depthMin=xVoxel;
+                depthMax=xVoxel;
+            }
+
+            //make corrections if we're on the edge of boundary
+            if(!boundaryManager->isInYRange(abscissaMin))
+                abscissaMin=boundaryManager->getYMin();
+
+            if(!boundaryManager->isInYRange(abscissaMax))
+                abscissaMax=boundaryManager->getYMax();
+
+            if(!boundaryManager->isInZRange(ordinateMin))
+                ordinateMin=boundaryManager->getZMin();
+
+            if(!boundaryManager->isInZRange(ordinateMax))
+                ordinateMax=boundaryManager->getZMax();
+
+            //loop over relavant voxels
+            for(int abscissa=abscissaMin; abscissa <= abscissaMax; abscissa++)
+            {
+                for(int ordinate=ordinateMin; ordinate <= ordinateMax; ordinate++)
+                {
+                    for(int depth=depthMin; depth <= depthMax; depth++)
+                    {
+                        voxel = static_cast<unsigned char*>(segblock->GetScalarPointer(depth,abscissa,ordinate));
+
+                        if(segmentationReadOnly && *voxel == ImagePairManager::SEGMENTATION)
+                            break;//do not modify
+
+                        *voxel = block;
+                    }
+                }
+            }
+
+        break;
+
+        default:
+            qWarning() << "Orientation not supported!";
+            return;
+    }
+
 }

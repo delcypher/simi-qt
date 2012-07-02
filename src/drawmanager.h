@@ -62,7 +62,7 @@ class DrawManager : public QObject
 			*/
 		void erase(int xVoxel, int yVoxel, int zVoxel);
 
-        void setupWidgets(unsigned int ort);
+        void setupWidgets(unsigned int ort0);
 
 	private:
         ImagePairManager* imagePairManager;
@@ -71,7 +71,7 @@ class DrawManager : public QObject
         QComboBox* drawType;
 		QCheckBox* segReadOnly;
 
-		void drawAlgorithm(int &xVoxel, int &yVoxel, int &zVoxel, int &mode); // helper function for draw and erase function
+        inline void drawAlgorithm(int &xVoxel, int &yVoxel, int &zVoxel,DrawManager::DrawMode mode); // helper function for draw and erase function
 
         unsigned int orientation;
 	

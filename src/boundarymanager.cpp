@@ -92,6 +92,21 @@ bool BoundaryManager::isInBoundary(int x, int y, int z)
         return true; // point is inside boundary
 }
 
+bool BoundaryManager::isInXRange(int x)
+{
+    return (x < xMinSpinBox->value() || x > xMaxSpinBox->value())?false:true;
+}
+
+bool BoundaryManager::isInYRange(int y)
+{
+    return (y < yMinSpinBox->value() || y > yMaxSpinBox->value())?false:true;
+}
+
+bool BoundaryManager::isInZRange(int z)
+{
+    return (z < zMinSpinBox->value() || z > zMaxSpinBox->value())?false:true;
+}
+
 bool BoundaryManager::reset()
 {
     if(imagePairManager!=0)
