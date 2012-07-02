@@ -1057,6 +1057,53 @@
    <header>QVTKWidget.h</header>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>xySingleViewButton</tabstop>
+  <tabstop>xyActiveButton</tabstop>
+  <tabstop>xySliceSlider</tabstop>
+  <tabstop>xySliceSpinBox</tabstop>
+  <tabstop>yzSingleViewButton</tabstop>
+  <tabstop>yzActiveButton</tabstop>
+  <tabstop>yzSliceSlider</tabstop>
+  <tabstop>yzSliceSpinBox</tabstop>
+  <tabstop>xzSingleViewButton</tabstop>
+  <tabstop>xzActiveButton</tabstop>
+  <tabstop>xzSliceSlider</tabstop>
+  <tabstop>xzSliceSpinBox</tabstop>
+  <tabstop>render3DSingleViewButton</tabstop>
+  <tabstop>render3DButton</tabstop>
+  <tabstop>minIntensitySlider</tabstop>
+  <tabstop>maxIntensitySlider</tabstop>
+  <tabstop>crosshairAlphaSlider</tabstop>
+  <tabstop>segmentationAlphaSlider</tabstop>
+  <tabstop>blockingAlphaSlider</tabstop>
+  <tabstop>minIntensitySpinBox</tabstop>
+  <tabstop>maxIntensitySpinBox</tabstop>
+  <tabstop>crosshairAlphadoubleSpinBox</tabstop>
+  <tabstop>segmentationAlphadoubleSpinBox</tabstop>
+  <tabstop>blockingAlphadoubleSpinBox</tabstop>
+  <tabstop>boundaryResetButton</tabstop>
+  <tabstop>minXSpinBox</tabstop>
+  <tabstop>maxXSpinBox</tabstop>
+  <tabstop>minYSpinBox</tabstop>
+  <tabstop>maxYSpinBox</tabstop>
+  <tabstop>minZSpinBox</tabstop>
+  <tabstop>maxZSpinBox</tabstop>
+  <tabstop>minSegIntensitySlider</tabstop>
+  <tabstop>maxSegIntensitySlider</tabstop>
+  <tabstop>minSegIntensitySpinBox</tabstop>
+  <tabstop>maxSegIntensitySpinBox</tabstop>
+  <tabstop>doSegmentation2D</tabstop>
+  <tabstop>doSegmentation3D</tabstop>
+  <tabstop>drawOnComboBox</tabstop>
+  <tabstop>drawSizeSpinBox</tabstop>
+  <tabstop>segReadOnly</tabstop>
+  <tabstop>kernelComboBox</tabstop>
+  <tabstop>doDilate2D</tabstop>
+  <tabstop>doErode2D</tabstop>
+  <tabstop>doClose2D</tabstop>
+  <tabstop>doOpen2D</tabstop>
+ </tabstops>
  <resources>
   <include location="mainwindow.qrc"/>
  </resources>
