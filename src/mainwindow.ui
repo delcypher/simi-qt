@@ -327,47 +327,6 @@
         <layout class="QGridLayout" name="gridLayout_10">
          <item row="0" column="0">
           <layout class="QGridLayout" name="contrastLayout">
-           <item row="1" column="0">
-            <widget class="QLabel" name="maxIntensityLabel">
-             <property name="text">
-              <string>Maximum Intensity: </string>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="0">
-            <widget class="QLabel" name="crosshairAlphaLabel">
-             <property name="text">
-              <string>Crosshair opacity</string>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="0">
-            <widget class="QLabel" name="minIntensityLabel">
-             <property name="text">
-              <string>Minimum Intensity: </string>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="2">
-            <widget class="QSpinBox" name="maxIntensitySpinBox"/>
-           </item>
-           <item row="0" column="1">
-            <widget class="QSlider" name="minIntensitySlider">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="2">
-            <widget class="QSpinBox" name="minIntensitySpinBox"/>
-           </item>
-           <item row="3" column="0">
-            <widget class="QLabel" name="segmentationAlphaLabel">
-             <property name="text">
-              <string>Segmentation Opacity:</string>
-             </property>
-            </widget>
-           </item>
            <item row="4" column="0">
             <widget class="QLabel" name="blockingAlphaLabel">
              <property name="text">
@@ -375,49 +334,8 @@
              </property>
             </widget>
            </item>
-           <item row="2" column="2">
-            <widget class="QDoubleSpinBox" name="crosshairAlphadoubleSpinBox">
-             <property name="maximum">
-              <double>1.000000000000000</double>
-             </property>
-             <property name="singleStep">
-              <double>0.050000000000000</double>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="2">
-            <widget class="QDoubleSpinBox" name="segmentationAlphadoubleSpinBox">
-             <property name="maximum">
-              <double>1.000000000000000</double>
-             </property>
-             <property name="singleStep">
-              <double>0.050000000000000</double>
-             </property>
-            </widget>
-           </item>
-           <item row="4" column="2">
-            <widget class="QDoubleSpinBox" name="blockingAlphadoubleSpinBox">
-             <property name="maximum">
-              <double>1.000000000000000</double>
-             </property>
-             <property name="singleStep">
-              <double>0.050000000000000</double>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="1">
-            <widget class="QSlider" name="maxIntensitySlider">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="1">
-            <widget class="QSlider" name="crosshairAlphaSlider">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-            </widget>
+           <item row="1" column="2">
+            <widget class="QSpinBox" name="maxIntensitySpinBox"/>
            </item>
            <item row="3" column="1">
             <widget class="QSlider" name="segmentationAlphaSlider">
@@ -432,6 +350,98 @@
               <enum>Qt::Horizontal</enum>
              </property>
             </widget>
+           </item>
+           <item row="3" column="2">
+            <widget class="QDoubleSpinBox" name="segmentationAlphadoubleSpinBox">
+             <property name="maximum">
+              <double>1.000000000000000</double>
+             </property>
+             <property name="singleStep">
+              <double>0.050000000000000</double>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="0">
+            <widget class="QLabel" name="segmentationAlphaLabel">
+             <property name="text">
+              <string>Segmentation Opacity:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QSlider" name="crosshairAlphaSlider">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QSlider" name="minIntensitySlider">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="2">
+            <widget class="QSpinBox" name="minIntensitySpinBox"/>
+           </item>
+           <item row="1" column="1">
+            <widget class="QSlider" name="maxIntensitySlider">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="0">
+            <widget class="QLabel" name="minIntensityLabel">
+             <property name="text">
+              <string>Minimum Intensity: </string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="maxIntensityLabel">
+             <property name="text">
+              <string>Maximum Intensity: </string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="2">
+            <widget class="QDoubleSpinBox" name="crosshairAlphadoubleSpinBox">
+             <property name="maximum">
+              <double>1.000000000000000</double>
+             </property>
+             <property name="singleStep">
+              <double>0.050000000000000</double>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="crosshairAlphaLabel">
+             <property name="text">
+              <string>Crosshair opacity</string>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="2">
+            <widget class="QDoubleSpinBox" name="blockingAlphadoubleSpinBox">
+             <property name="maximum">
+              <double>1.000000000000000</double>
+             </property>
+             <property name="singleStep">
+              <double>0.050000000000000</double>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="0">
+            <widget class="QLabel" name="boundingBoxAlphalabel">
+             <property name="text">
+              <string>Bounding Box Opacity:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="2">
+            <widget class="QDoubleSpinBox" name="boundingBoxAlphadoubleSpinBox"/>
            </item>
           </layout>
          </item>

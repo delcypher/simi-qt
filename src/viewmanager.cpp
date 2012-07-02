@@ -12,7 +12,8 @@
 #include "multiviewmanager.h"
 
 
-ViewManager::ViewManager(ImagePairManager* imagePairManager, QVTKWidget* qvtkWidget, QSpinBox* sliceSpinBox, QSlider* sliceSlider, QDoubleSpinBox* blockingAlphaSpinBox, QDoubleSpinBox* segmentationAlphaSpinBox, QDoubleSpinBox* crosshairAlphaSpinBox, unsigned int defaultOrientation) :
+ViewManager::ViewManager(ImagePairManager* imagePairManager, QVTKWidget* qvtkWidget, QSpinBox* sliceSpinBox, QSlider* sliceSlider, QDoubleSpinBox* blockingAlphaSpinBox, QDoubleSpinBox* segmentationAlphaSpinBox, QDoubleSpinBox* crosshairAlphaSpinBox, QDoubleSpinBox* boundingBoxAlphaSpinBox, unsigned int defaultOrientation) :
+boundingBoxAlpha(0.5),
 dragOn(false),
 mouseX(0),
 mouseY(0),
@@ -43,6 +44,7 @@ panScale(1.0)
     this->crosshairAlphaSpinBox=crosshairAlphaSpinBox;
     this->sliceSlider = sliceSlider;
     this->sliceSpinBox = sliceSpinBox;
+    this->boundingBoxAlphaSpinBox=boundingBoxAlphaSpinBox;
 
     this->myManager=0;
 
@@ -62,6 +64,9 @@ panScale(1.0)
 
     //setup crosshair
     addCrosshair();
+
+    //add bounding box
+    addBoundingBox();
 
     enableInterpolation(true); //enable interpolation on original image by default
 
@@ -157,6 +162,15 @@ panScale(1.0)
     crosshairAlphaSpinBox->setSingleStep(0.05);
     crosshairAlphaSpinBox->setValue(crossHairAlpha);
     connect(crosshairAlphaSpinBox, SIGNAL(valueChanged(double)), this, SLOT(setCrosshairAlpha(double)));
+
+    //initialise boundingBoxAlphaSpinBox
+    boundingBoxAlphaSpinBox->setRange(0.0,1.0);
+    boundingBoxAlphaSpinBox->setSingleStep(0.05);
+    boundingBoxAlphaSpinBox->setValue(crossHairAlpha);
+    connect(boundingBoxAlphaSpinBox, SIGNAL(valueChanged(double)), this, SLOT(setBoundingBoxAlpha(double)));
+
+
+
 
     //assume sliceSlider and sliceSpinBox already connected together
     //connect so that the user can change slice
@@ -261,6 +275,7 @@ bool ViewManager::setSlice(int slice)
 
 		//Redraw crosshair if necessary
 		redrawCrossHair();
+        redrawBoundingBox();
 
 		/* We need to make the view update so that the segblock data
 		*  is drawn correctly on top of the new slice
@@ -355,6 +370,23 @@ void ViewManager::debugDump()
     qDebug() << "Camera cliping range:- near:" << clippingRange[0] << ", far:" << clippingRange[1];
 
     qDebug() << "Camera parallel scale (for zoom):" << camera->GetParallelScale();
+
+    /*Bounding box info
+     */
+     double point[3];
+     boundingBoxActor->GetOrigin(point);
+     qDebug() << "Bounding box origin:" << point[0] << "," << point[1] << "," << point[2];
+
+     boundingBoxSource->GetCenter(point);
+     qDebug() << "Bounding box centre:" << point[0] << "," << point[1] << "," << point[2];
+     qDebug() << "Lengths :" << boundingBoxSource->GetXLength() << "," << boundingBoxSource->GetYLength() << "," << boundingBoxSource->GetZLength();
+
+     qDebug() << "xMin" << point[0] - boundingBoxSource->GetXLength();
+     qDebug() << "xMax" << point[0] + boundingBoxSource->GetXLength();
+     qDebug() << "yMin" << point[1] - boundingBoxSource->GetYLength();
+     qDebug() << "yMax" << point[1] + boundingBoxSource->GetYLength();
+     qDebug() << "zMin" << point[2] - boundingBoxSource->GetZLength();
+     qDebug() << "zMax" << point[2] + boundingBoxSource->GetZLength();
 
 
 
@@ -674,6 +706,73 @@ void ViewManager::redrawCrossHair()
 
 }
 
+void ViewManager::redrawBoundingBox()
+{
+    if(myManager!=0)
+    {
+        //calculate the dimensions of the bounding box
+        double minX= (myManager->boundaryManager->getXMin() - (imagePairManager->getXDim()/2.0 ))*imagePairManager->getXSpacing();
+        double maxX=(myManager->boundaryManager->getXMax() - (imagePairManager->getXDim()/2.0 ))*imagePairManager->getXSpacing();
+        double minY=(myManager->boundaryManager->getYMin() - (imagePairManager->getYDim()/2.0 ))*imagePairManager->getYSpacing();
+        double maxY=(myManager->boundaryManager->getYMax() - (imagePairManager->getYDim()/2.0 ))*imagePairManager->getYSpacing();
+        double minZ=(myManager->boundaryManager->getZMin() )*imagePairManager->getZSpacing();
+        double maxZ=(myManager->boundaryManager->getZMax() )*imagePairManager->getZSpacing();
+
+        boundingBoxActor->GetProperty()->SetOpacity(boundingBoxAlpha);
+
+        /*  We now tweak the bounding values depending on orientation so that the box is placed in front of the camera.
+         *  The depth length is adjusted to be some small value (it doesn't matter as using orthogonal projection).
+         *  If for the depth value we are outside bounding box we will hide it as we are out of boundary.
+         *
+         *  In doing this we are actually using the cube more as a square as we are not using the depth component.
+         */
+        //Get a vector describing the projection of direction
+        double* projectionDir = imageViewer->GetRenderer()->GetActiveCamera()->GetDirectionOfProjection();
+        switch(orientation)
+        {
+            case vtkImageViewer2::SLICE_ORIENTATION_XY:
+                minZ = (imageViewer->GetImageActor()->GetZRange() )[0] + ((projectionDir[2] < 0)?2:-2);
+                maxZ = (imageViewer->GetImageActor()->GetZRange() )[0] + ((projectionDir[2] < 0)?2:-2);
+
+                if(!myManager->boundaryManager->isInZRange(getCurrentSlice()))
+                    boundingBoxActor->VisibilityOff();
+                else
+                    boundingBoxActor->VisibilityOn();
+            break;
+
+            case vtkImageViewer2::SLICE_ORIENTATION_XZ:
+                minY = (imageViewer->GetImageActor()->GetYRange() )[0] + ((projectionDir[1] < 0)?1:-1);
+                maxY = (imageViewer->GetImageActor()->GetYRange() )[0] + ((projectionDir[1] < 0)?1:-1);
+
+                if(!myManager->boundaryManager->isInYRange(getCurrentSlice()))
+                    boundingBoxActor->VisibilityOff();
+                else
+                    boundingBoxActor->VisibilityOn();
+            break;
+
+            case vtkImageViewer2::SLICE_ORIENTATION_YZ:
+                minX = (imageViewer->GetImageActor()->GetXRange() )[0] + ((projectionDir[0] < 0)?1:-1);
+                maxX = (imageViewer->GetImageActor()->GetXRange() )[0] + ((projectionDir[0] < 0)?1:-1);
+
+
+                if(!myManager->boundaryManager->isInXRange(getCurrentSlice()))
+                    boundingBoxActor->VisibilityOff();
+                else
+                    boundingBoxActor->VisibilityOn();
+            break;
+
+        }
+
+
+        boundingBoxSource->SetBounds(minX,maxX,minY,maxY,minZ,maxZ);
+
+        boundingBoxSource->Update();
+
+        update();
+    }
+
+}
+
 
 void ViewManager::enablePanning(bool enabled)
 {
@@ -891,7 +990,17 @@ bool ViewManager::setCrosshairAlpha(double alpha)
 
 	crossHairAlpha=alpha;
 	redrawCrossHair();
-	return true;
+    return true;
+}
+
+bool ViewManager::setBoundingBoxAlpha(double alpha)
+{
+    if(alpha >1 || alpha <0)
+        return false;
+
+    boundingBoxAlpha=alpha;
+    redrawBoundingBox();
+    return true;
 }
 
 void ViewManager::addCrosshair()
@@ -931,6 +1040,41 @@ void ViewManager::addCrosshair()
 
 	imageViewer->GetRenderer()->AddActor(hcrosshairActor);
     imageViewer->GetRenderer()->AddActor(vcrosshairActor);
+}
+
+void ViewManager::addBoundingBox()
+{
+    boundingBoxSource = vtkCubeSource::New();
+    boundingBoxSource->SetXLength(10);
+    boundingBoxSource->SetYLength(10);
+    boundingBoxSource->SetZLength(10);
+    boundingBoxSource->SetCenter(0,0,0);
+
+    boundingBoxMapper = vtkPolyDataMapper::New();
+    boundingBoxMapper->SetInput(boundingBoxSource->GetOutput());
+
+    boundingBoxActor = vtkActor::New();
+    boundingBoxActor->SetMapper(boundingBoxMapper);
+    boundingBoxActor->GetProperty()->SetColor(0.0,1.0,0.0);
+    boundingBoxActor->GetProperty()->SetLineWidth(1.0);
+    boundingBoxActor->SetOrigin(0.0,0.0,0.0);
+    boundingBoxActor->GetProperty()->SetRepresentationToWireframe();
+    boundingBoxActor->SetPickable(false);
+    boundingBoxActor->GetProperty()->SetOpacity(boundingBoxAlpha);
+
+    /* These fix looking at the wireframe cube from other perspectives.
+     * Without it we don't see the proper colour and see nothing or black lines!
+     * I have no idea why this works. This is copied from a mailing list post
+     *
+     * http://vtk.1045678.n5.nabble.com/two-sided-rendering-of-wireframe-td1232972l.html
+     */
+    boundingBoxActor->GetProperty()->SetAmbient(1.0);
+    boundingBoxActor->GetProperty()->SetDiffuse(0.0);
+    boundingBoxActor->GetProperty()->SetSpecular(0.0);
+
+
+    imageViewer->GetRenderer()->AddActor(boundingBoxActor);
+
 }
 
 void ViewManager::applyCameraFixes()
@@ -989,5 +1133,9 @@ void ViewManager::applyCameraFixes()
 void ViewManager::setManager(MultiViewManager* viewManager)
 {
     if(viewManager!=0)
+    {
         this->myManager=viewManager;
+        //It is now safe/possible to draw the bounding box directly
+        redrawBoundingBox();
+    }
 }

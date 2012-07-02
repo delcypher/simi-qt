@@ -8,6 +8,7 @@
 #include <QVTKWidget.h>
 #include "imagepairmanager.h"
 #include "vtkImageViewer2.h"
+#include "boundarymanager.h"
 #include <vtkEventQtSlotConnect.h>
 #include <vtkCommand.h>
 #include <vtkRenderer.h>
@@ -17,6 +18,7 @@
 #include <vtkPolyDataMapper.h>
 #include <vtkActor.h>
 #include <vtkLineSource.h>
+#include <vtkCubeSource.h>
 
 //Forward Declare MultiViewManager
 class MultiViewManager;
@@ -43,7 +45,7 @@ class ViewManager : public QObject
 		* \param segmentationAlphaSpinBox is the the Widget used to control the segmentation Alpha. It is automatically configured by this constructor.
 		* \param crosshairAlphaSpinBox is the the Widget used to control the crosshair Alpha. It is automatically configured by this constructor.
 		*/
-        ViewManager(ImagePairManager* imagePairManager, QVTKWidget* vtkWidget, QSpinBox* sliceSpinBox, QSlider* sliceSlider, QDoubleSpinBox* blockingAlphaSpinBox, QDoubleSpinBox* segmentationAlphaSpinBox, QDoubleSpinBox* crosshairAlphaSpinBox, unsigned int defaultOrientation);
+        ViewManager(ImagePairManager* imagePairManager, QVTKWidget* vtkWidget, QSpinBox* sliceSpinBox, QSlider* sliceSlider, QDoubleSpinBox* blockingAlphaSpinBox, QDoubleSpinBox* segmentationAlphaSpinBox, QDoubleSpinBox* crosshairAlphaSpinBox, QDoubleSpinBox* boundingBoxAlphaSpinBox, unsigned int defaultOrientation);
 
 		//! Destructor
 		~ViewManager();
@@ -152,6 +154,8 @@ class ViewManager : public QObject
 		*/
 		bool setCrosshairAlpha(double alpha);
 
+        bool setBoundingBoxAlpha(double alpha);
+
 		/*! Rotate the view shown by the QVTKWidget (that this class renders in to) by 180 degrees. This is useful if the image is upside down!
 		*
 		*  \param flip is true if the view should be flipped. If not set to false.
@@ -225,11 +229,13 @@ class ViewManager : public QObject
 		void vtkEventHandler(vtkObject* caller, unsigned long vtkEvent, void* clientData, void* callData, vtkCommand* command);
 
 		void redrawCrossHair();
+        void redrawBoundingBox();
 
 
 	private:
 		void addSegblock();
 		void addCrosshair();
+        void addBoundingBox();
 		void applyCameraFixes();
 		void setManager(MultiViewManager* viewManager);
 
@@ -247,7 +253,13 @@ class ViewManager : public QObject
 
 		vtkSmartPointer<vtkLineSource> vcrosshairSource;
 		vtkSmartPointer<vtkPolyDataMapper> vcrosshairMapper;
-		vtkSmartPointer<vtkActor> vcrosshairActor;
+        vtkSmartPointer<vtkActor> vcrosshairActor;
+
+        vtkSmartPointer<vtkCubeSource> boundingBoxSource;
+        vtkSmartPointer<vtkPolyDataMapper> boundingBoxMapper;
+        vtkSmartPointer<vtkActor> boundingBoxActor;
+        QDoubleSpinBox* boundingBoxAlphaSpinBox;
+        double boundingBoxAlpha;
 
 		double minScale; //for Zoom
 		double maxScale; //for zoom

@@ -24,6 +24,11 @@ zSeed(-1)
     xzView = xz;
     yzView = yz;
 
+    //if boundary changes we will need to redraw the bounding box
+    connect(boundaryManager,SIGNAL(boundaryChanged()),xyView,SLOT(redrawBoundingBox()));
+    connect(boundaryManager,SIGNAL(boundaryChanged()),xzView,SLOT(redrawBoundingBox()));
+    connect(boundaryManager,SIGNAL(boundaryChanged()),yzView,SLOT(redrawBoundingBox()));
+
     //A view may request to become the active view
     connect(xy,SIGNAL(requestActive()),this,SLOT(setXYActive()));
     connect(xz,SIGNAL(requestActive()),this,SLOT(setXZActive()));

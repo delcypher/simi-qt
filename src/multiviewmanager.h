@@ -25,6 +25,7 @@ class MultiViewManager : public QObject
         void enablePanning(bool e);
         bool isCrosshairInBoundary();
 
+        BoundaryManager* boundaryManager;
 
     signals:
         void seedPointChanged();
@@ -44,7 +45,7 @@ class MultiViewManager : public QObject
 
 
     private:
-        BoundaryManager* boundaryManager;
+
         ViewManager* xyView;
         ViewManager* xzView;
         ViewManager* yzView;

@@ -680,6 +680,7 @@ void MainWindow::loadOriginalImage(QString file)
                             ui->blockingAlphadoubleSpinBox,
                             ui->segmentationAlphadoubleSpinBox,
                             ui->crosshairAlphadoubleSpinBox,
+                            ui->boundingBoxAlphadoubleSpinBox,
                             vtkImageViewer2::SLICE_ORIENTATION_XY);
 
     //setup xz view
@@ -690,6 +691,7 @@ void MainWindow::loadOriginalImage(QString file)
                             ui->blockingAlphadoubleSpinBox,
                             ui->segmentationAlphadoubleSpinBox,
                             ui->crosshairAlphadoubleSpinBox,
+                            ui->boundingBoxAlphadoubleSpinBox,
                             vtkImageViewer2::SLICE_ORIENTATION_XZ);
 
     //setup yzview
@@ -700,6 +702,7 @@ void MainWindow::loadOriginalImage(QString file)
                             ui->blockingAlphadoubleSpinBox,
                             ui->segmentationAlphadoubleSpinBox,
                             ui->crosshairAlphadoubleSpinBox,
+                            ui->boundingBoxAlphadoubleSpinBox,
                             vtkImageViewer2::SLICE_ORIENTATION_YZ);
 
 
