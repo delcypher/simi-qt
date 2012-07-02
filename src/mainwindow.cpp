@@ -240,10 +240,17 @@ void MainWindow::on_actionEraseTool_toggled(bool t)
         connect(xzView,SIGNAL(dragEvent(int,int,int)),drawManager,SLOT(erase(int,int,int)));
         connect(yzView,SIGNAL(dragEvent(int,int,int)),drawManager,SLOT(erase(int,int,int)));
 
+        /* The different drawing options don't apply to erasing
+         * so we disable the combobox
+         */
+        ui->drawOnComboBox->setDisabled(true);
     }
     else
     {
         qDebug() << "Erase tool disabled";
+
+        //re-enable drawing combo box
+        ui->drawOnComboBox->setDisabled(false);
 
         disconnect(xyView,SIGNAL(dragEvent(int,int,int)),drawManager,SLOT(erase(int,int,int)));
         disconnect(xzView,SIGNAL(dragEvent(int,int,int)),drawManager,SLOT(erase(int,int,int)));
@@ -714,7 +721,12 @@ void MainWindow::loadOriginalImage(QString file)
     //setup drawManager
     if(drawManager!=0)
         delete drawManager;
-    drawManager = new DrawManager(imagePairManager,ui->drawSizeSpinBox,ui->drawOnComboBox, ui->minZSpinBox, ui->maxZSpinBox, ui->segReadOnly);
+    drawManager = new DrawManager(imagePairManager,
+                                    ui->drawSizeSpinBox,
+                                    ui->drawOnComboBox,
+                                    boundaryManager,
+                                    ui->segReadOnly,
+                                    multiViewManager->getActiveView());
 
     //setup segmenter
     if(segmenter!=0)
@@ -734,7 +746,7 @@ void MainWindow::loadOriginalImage(QString file)
     ui->actionInterpolate_Image->setChecked(true);
 
     //if the active view changes we need to handle a few UI changes
-    connect(multiViewManager,SIGNAL(viewChanged()),this,SLOT(viewChanged()));
+    connect(multiViewManager,SIGNAL(viewChanged(uint)),this,SLOT(viewChanged()));
 
     //setup statusbar update from views
     ViewManager* v[3] = {xyView, xzView, yzView};
@@ -775,6 +787,8 @@ void MainWindow::loadOriginalImage(QString file)
             */
     connect(segmenter,SIGNAL(segmentationDone(int)),volumeRenderManager,SLOT(render3D()));
 
+    //when user changes active view we want the drawing widgets to update
+    connect(multiViewManager,SIGNAL(viewChanged(uint)),drawManager,SLOT(setupWidgets(uint)));
 
     //set window title
     QString newWindowTitle(PROGRAM_NAME);

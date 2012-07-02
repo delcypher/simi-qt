@@ -29,7 +29,7 @@
          <item>
           <layout class="QVBoxLayout" name="verticalLayout_2">
            <item>
-            <widget class="QVTKWidget" name="xyQvtkWidget">
+            <widget class="QVTKWidget" name="xyQvtkWidget" native="true">
              <property name="minimumSize">
               <size>
                <width>300</width>
@@ -106,7 +106,7 @@
          <item>
           <layout class="QVBoxLayout" name="verticalLayout_4">
            <item>
-            <widget class="QVTKWidget" name="yzQvtkWidget">
+            <widget class="QVTKWidget" name="yzQvtkWidget" native="true">
              <property name="minimumSize">
               <size>
                <width>300</width>
@@ -183,7 +183,7 @@
          <item>
           <layout class="QVBoxLayout" name="verticalLayout_3">
            <item>
-            <widget class="QVTKWidget" name="xzQvtkWidget">
+            <widget class="QVTKWidget" name="xzQvtkWidget" native="true">
              <property name="minimumSize">
               <size>
                <width>300</width>
@@ -260,7 +260,7 @@
          <item>
           <layout class="QVBoxLayout" name="verticalLayout_5">
            <item>
-            <widget class="QVTKWidget" name="render3DQvtkWidget">
+            <widget class="QVTKWidget" name="render3DQvtkWidget" native="true">
              <property name="minimumSize">
               <size>
                <width>300</width>
@@ -663,28 +663,7 @@
             </widget>
            </item>
            <item row="0" column="1" colspan="2">
-            <widget class="QComboBox" name="drawOnComboBox">
-             <item>
-              <property name="text">
-               <string>Blocking (Current Slice)</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Blocking (Z Slices Range)</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Blocking (All Slices)</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Segmentation</string>
-              </property>
-             </item>
-            </widget>
+            <widget class="QComboBox" name="drawOnComboBox"/>
            </item>
            <item row="2" column="1" colspan="2">
             <widget class="QCheckBox" name="segReadOnly">
@@ -783,7 +762,7 @@
      <x>0</x>
      <y>0</y>
      <width>1100</width>
-     <height>20</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">

@@ -28,7 +28,7 @@ class MultiViewManager : public QObject
 
     signals:
         void seedPointChanged();
-        void viewChanged();
+        void viewChanged(unsigned int v);
 
 
     public slots:

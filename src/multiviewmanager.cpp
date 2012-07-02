@@ -189,7 +189,7 @@ void MultiViewManager::setXYActive()
     xyButton->setChecked(true);
     xzButton->setChecked(false);
     yzButton->setChecked(false);
-    emit viewChanged();
+    emit viewChanged(activeView);
     qDebug() << "XY activated.";
 }
 
@@ -200,7 +200,7 @@ void MultiViewManager::setXZActive()
     xyButton->setChecked(false);
     xzButton->setChecked(true);
     yzButton->setChecked(false);
-    emit viewChanged();
+    emit viewChanged(activeView);
     qDebug() << "XZ activated.";
 }
 
@@ -211,6 +211,6 @@ void MultiViewManager::setYZActive()
     xyButton->setChecked(false);
     xzButton->setChecked(false);
     yzButton->setChecked(true);
-    emit viewChanged();
+    emit viewChanged(activeView);
     qDebug() << "YZ activated.";
 }

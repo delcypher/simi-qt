@@ -10,6 +10,7 @@
 #include <QSpinBox>
 #include <QComboBox>
 #include <QCheckBox>
+#include "boundarymanager.h"
 
 /*!
   The class provides blocking and segmentation drawing and erasing tools.
@@ -22,10 +23,23 @@ class DrawManager : public QObject
 
 	public:
 		//! Class constructor.
-		DrawManager(ImagePairManager* imagePairManager, QSpinBox* drawSize, QComboBox* drawType, QSpinBox* minZSlice, QSpinBox* maxZSlice, QCheckBox* segmentation);
+        DrawManager(ImagePairManager* imagePairManager,
+                    QSpinBox* drawSize,
+                    QComboBox* drawType,
+                    BoundaryManager* boundaryManager,
+                    QCheckBox* segmentation,
+                    unsigned int initialOrientation);
 
 		//! Class destructor.
 		~DrawManager();
+
+        enum DrawMode
+        {
+            BLOCKING_SINGLE_SLICE,
+            BLOCKING_MULTIPLE_SLICES,
+            SEGMENTATION_SINGLE_SLICE,
+            ERASE_SINGLE_SLICE
+        };
 	
 	signals:
         /*! Emitted when drawing is complete */
@@ -48,22 +62,18 @@ class DrawManager : public QObject
 			*/
 		void erase(int xVoxel, int yVoxel, int zVoxel);
 
+        void setupWidgets(unsigned int ort);
+
 	private:
         ImagePairManager* imagePairManager;
+        BoundaryManager* boundaryManager;
         QSpinBox* drawSize;
         QComboBox* drawType;
-		QSpinBox* minZSlice;
-		QSpinBox* maxZSlice;
 		QCheckBox* segReadOnly;
 
 		void drawAlgorithm(int &xVoxel, int &yVoxel, int &zVoxel, int &mode); // helper function for draw and erase function
 
-		enum DrawMode
-		{
-			DRAW,
-			ERASE
-		};
-
+        unsigned int orientation;
 	
 };
 
