@@ -781,10 +781,10 @@ void MainWindow::loadOriginalImage(QString file)
     //When the user actually picks a seed point we can enable the segmentation widgets
     connect(multiViewManager,SIGNAL(seedPointChanged()), this, SLOT(enableSegmentationWidgets()));
 
-    /*When segmentation is done force redraw for volumeRenderManager
-    * Note if we do 3D segmentation it seems to update itself... not sure why
+    /* When segmentation is done force redraw for volumeRenderManager
+     * Note if we do 3D segmentation it seems to update itself... not sure why
      */
-    connect(segmenter,SIGNAL(segmentationDone(int)),volumeRenderManager,SLOT(render3D()));
+    connect(segmenter,SIGNAL(segmentationDone()),volumeRenderManager,SLOT(render3D()));
 
     //when user changes active view we want the drawing widgets to update
     connect(multiViewManager,SIGNAL(viewChanged(uint)),drawManager,SLOT(setupWidgets(uint)));
