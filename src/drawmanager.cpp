@@ -212,7 +212,7 @@ void DrawManager::drawAlgorithm(int &xVoxel, int &yVoxel, int &zVoxel, DrawManag
             {
                 //We are drawing on a single slice
 
-                if(!boundaryManager->isInZRange(yVoxel))
+                if(!boundaryManager->isInYRange(yVoxel))
                     return; //can't draw because out of range
                 depthMin=yVoxel;
                 depthMax=yVoxel;
