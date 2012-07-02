@@ -314,7 +314,7 @@ void MainWindow::on_maxSegIntensitySlider_valueChanged(int value)
 
 void MainWindow::on_doSegmentation2D_clicked()
 {
-	if(segmenter!=0)
+    if(segmenter!=0 && multiViewManager!=0)
 	{
         //disable segmentation widgets whilst segmenting
         disableSegmentationWidgets();
@@ -322,7 +322,7 @@ void MainWindow::on_doSegmentation2D_clicked()
         multiViewManager->getSeedPoint(x,y,z);
 
 
-        segmenter->doSegmentation2D(x, y, z, ui->minSegIntensitySlider->value(), ui->maxSegIntensitySlider->value());
+        segmenter->doSegmentation2D(x, y, z, ui->minSegIntensitySlider->value(), ui->maxSegIntensitySlider->value(), multiViewManager->getActiveView());
 		enableSegmentationWidgets();
 	}
 }
@@ -367,39 +367,40 @@ void MainWindow::seedPointChanged()
 
 void MainWindow::on_doSegmentation3D_clicked()
 {
-        if(segmenter!=0)
+    if(segmenter!=0)
+    {
+        //disable segmentation widgets whilst segmenting
+        disableSegmentationWidgets();
+
+        //segmentation parameters
+
+        int pos_x, pos_y, pos_z;
+        multiViewManager->getSeedPoint(pos_x,pos_y,pos_z);
+
+
+        if(segmenter->isWorking())
         {
-                //disable segmentation widgets whilst segmenting
-		disableSegmentationWidgets();
-
-                //segmentation parameters
-                int pos_z = 0;// viewManager->getCurrentSlice();
-                int pos_x, pos_y;
-
-
-                if(segmenter->isWorking())
-                {
-                    qWarning() << "Can't do segmentation as it is already running";
-                    return;
-                }
-
-                //Modify the dialog to have a cancel button
-                showWaitDialog();
-                progressDialog->setCancelButtonText(QString("Stop"));
-                connect(progressDialog,SIGNAL(canceled()), segmenter, SLOT(cancel3D()));
-
-                //segmenter->doSegmentation3D(pos_x, pos_y, pos_z, ui->minSegIntensitySlider->value(), ui->maxSegIntensitySlider->value(), ui->minZSliceSpinBox->value(), ui->maxZSliceSpinBox->value());
-                hideWaitDialog();
-
-		//reenable segmentation widgets
-		enableSegmentationWidgets();
-
-                //remove cancel button and connection for other dialogs
-                progressDialog->setCancelButtonText(QString());
-                disconnect(progressDialog,SIGNAL(canceled()), segmenter, SLOT(cancel3D()));
-
-                qDebug() << "3D segmentation complete.";
+            qWarning() << "Can't do segmentation as it is already running";
+            return;
         }
+
+        //Modify the dialog to have a cancel button
+        showWaitDialog();
+        progressDialog->setCancelButtonText(QString("Stop"));
+        connect(progressDialog,SIGNAL(canceled()), segmenter, SLOT(cancel3D()));
+
+        segmenter->doSegmentation3D(pos_x, pos_y, pos_z, ui->minSegIntensitySlider->value(), ui->maxSegIntensitySlider->value());
+        hideWaitDialog();
+
+        //reenable segmentation widgets
+        enableSegmentationWidgets();
+
+        //remove cancel button and connection for other dialogs
+        progressDialog->setCancelButtonText(QString());
+        disconnect(progressDialog,SIGNAL(canceled()), segmenter, SLOT(cancel3D()));
+
+        qDebug() << "3D segmentation complete.";
+    }
 }
 
 void MainWindow::on_actionClear_Drawing_triggered()
@@ -731,7 +732,7 @@ void MainWindow::loadOriginalImage(QString file)
     //setup segmenter
     if(segmenter!=0)
         delete segmenter;
-    segmenter = new Segmenter(imagePairManager,ui->kernelComboBox);
+    segmenter = new Segmenter(imagePairManager,boundaryManager,ui->kernelComboBox);
 
     //setup volumeRenderManager
     if(volumeRenderManager!=0)
@@ -764,7 +765,7 @@ void MainWindow::loadOriginalImage(QString file)
     connect(boundaryManager,SIGNAL(boundaryChanged()),this,SLOT(seedPointChanged()));
 
     //setup so on segmentation completion we redraw
-    connect(segmenter,SIGNAL(segmentationDone(int)), multiViewManager, SLOT(update()));
+    connect(segmenter,SIGNAL(segmentationDone()), multiViewManager, SLOT(update()));
 
     //setup on drawing complete we redraw
     connect(drawManager,SIGNAL(drawingDone()),multiViewManager,SLOT(update()));

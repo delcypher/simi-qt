@@ -9,6 +9,7 @@
 #include <QComboBox>
 #include "imagepairmanager.h"
 #include <list>
+#include "boundarymanager.h"
 
 using std::list;
 
@@ -38,7 +39,7 @@ class Segmenter : public QObject
 
         public:
                 //! Class constructor.
-                Segmenter(ImagePairManager* imagePairManager, QComboBox* kernelType);
+                Segmenter(ImagePairManager* imagePairManager, BoundaryManager* boundaryManager,QComboBox* kernelType);
 
                 //! Class destructor.
                 ~Segmenter();
@@ -63,7 +64,7 @@ class Segmenter : public QObject
                          \param minThreshold minimum level of intensity that will pass the segmentation.
                          \param maxThreshold maximum level of intensity that will pass the segmentation.
                       */
-                void doSegmentation2D(int pos_x, int pos_y, int pos_z, int minThreshold, int maxThreshold);
+                void doSegmentation2D(int pos_x, int pos_y, int pos_z, int minThreshold, int maxThreshold, unsigned int orientation);
 
                 //! 3D segmentation algorithm. Performs segmentation on a range of slices.
                       /*!
@@ -75,7 +76,7 @@ class Segmenter : public QObject
                          \param min_Z segmentation lower slice limit.
                          \param max_Z segmentation upper slice limit.
                       */
-                void doSegmentation3D(int pos_x, int pos_y, int pos_z, int minThreshold, int maxThreshold, int min_Z, int max_Z);
+                void doSegmentation3D(int pos_x, int pos_y, int pos_z, int minThreshold, int maxThreshold);
 
                 //! Morphological open algorithm (erosion followed by dilation).
                       /*!
@@ -109,22 +110,21 @@ class Segmenter : public QObject
                       /*!
                          \param sliceNumber third dimension (z axis).
                       */
-                void segmentationDone(int sliceNumber);
+                void segmentationDone();
 
         public slots:
                 //! Slot for stopping 3D segmentation.
                 bool cancel3D();
 
         private:
-                ImagePairManager* imagePairManager;                           
+                ImagePairManager* imagePairManager;
+                BoundaryManager* boundaryManager;
 
-                bool predicate2D(Node& node, int minThreshold, int maxThreshold);
+                bool predicate3D(Node& node, int minThreshold, int maxThreshold);
 
-                bool predicate3D(Node& node, int minThreshold, int maxThreshold, int min_Z, int max_Z);
+                void doSegmentationIter2D_I(Node start, int minThreshold, int maxThreshold, unsigned int orientation);
 
-                void doSegmentationIter2D_I(Node start, int minThreshold, int maxThreshold);
-
-                void doSegmentationIter3D_I(Node start, int minThreshold, int maxThreshold, int min_Z, int max_Z);
+                void doSegmentationIter3D_I(Node start, int minThreshold, int maxThreshold);
 
                 void erode(int pos_z, Kernel kernel);
 
@@ -140,12 +140,10 @@ class Segmenter : public QObject
 
                 char*** visited3D;
 
-                char** visited2D;
-
                 list<Node> visited3D_list;
-                list<Node> visited2D_list;
 
                 bool segmentation_running;
+
 
 		friend class SegmenterTester;//! Friend class is unit test
 };

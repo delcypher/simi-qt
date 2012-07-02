@@ -1,19 +1,20 @@
 #include "segmenter.h"
 #include <QDebug>
 #include <QApplication>
+#include "vtkImageViewer2.h"
 
 
-Segmenter::Segmenter(ImagePairManager* imagePairManager, QComboBox* kernelType)
+Segmenter::Segmenter(ImagePairManager* imagePairManager, BoundaryManager* boundaryManager, QComboBox* kernelType)
 {
         this->imagePairManager = imagePairManager;
+        this->boundaryManager = boundaryManager;
         this->kernelType = kernelType;
 
         segmentation_running = false;
 
-        int* dims = imagePairManager->original->GetDimensions();
-        img_x = dims[0];
-        img_y = dims[1];
-        img_z = dims[2];
+        img_x = imagePairManager->getXDim();
+        img_y = imagePairManager->getYDim();
+        img_z = imagePairManager->getZDim();
 
         //set visited3D block
         visited3D = new char**[img_x];
@@ -29,16 +30,6 @@ Segmenter::Segmenter(ImagePairManager* imagePairManager, QComboBox* kernelType)
                         for (int k=0; k<img_z; k++)
                                 visited3D[i][j][k] = 0;
 
-        //set visited2D block
-        visited2D = new char*[img_x];
-        for (int i=0; i<img_x; i++)
-                visited2D[i] = new char[img_y];
-
-        //fill visited2D block with zeros
-        for (int i=0; i<img_x; i++)
-                for (int j=0; j<img_y; j++)
-                        visited2D[i][j] = 0;
-
         qDebug() << "Constructing segmenter: " << img_x << " " << img_y << " " << img_z;
 }
 
@@ -51,54 +42,51 @@ Segmenter::~Segmenter()
         for (int i=0; i<img_x; i++)
                 delete[] visited3D[i];
         delete[] visited3D;
-
-        //release memory for 2D visited block
-        for (int i=0; i<img_x; i++)
-                delete[] visited2D[i];
-        delete[] visited2D;
 }
 
-void Segmenter::doSegmentation2D(int pos_x, int pos_y, int pos_z, int minThreshold, int maxThreshold)
+void Segmenter::doSegmentation2D(int pos_x, int pos_y, int pos_z, int minThreshold, int maxThreshold, unsigned int orientation)
 {
-        qDebug() << "Segmenter::doSegmentation2D(" << pos_z << "," << minThreshold << "," << maxThreshold << ")";
+    qDebug() << "Segmenter::doSegmentation2D(" << pos_z << "," << minThreshold << "," << maxThreshold << ")";
 
-        //run algorithm        
-        doSegmentationIter2D_I(Node(pos_x, pos_y, pos_z), minThreshold, maxThreshold);
 
-        //signal that we're complete
-        imagePairManager->segblock->Modified(); //Mark the segblock as modified so VTK know's to trigger an update along the pipline
-        emit segmentationDone(pos_z);
+    //run algorithm
+    doSegmentationIter2D_I(Node(pos_x, pos_y, pos_z), minThreshold, maxThreshold, orientation);
+
+    //signal that we're complete
+    imagePairManager->segblock->Modified(); //Mark the segblock as modified so VTK know's to trigger an update along the pipline
+    emit segmentationDone();
 }
 
-void Segmenter::doSegmentation3D(int pos_x, int pos_y, int pos_z, int minThreshold, int maxThreshold, int min_Z, int max_Z)
+void Segmenter::doSegmentation3D(int pos_x, int pos_y, int pos_z, int minThreshold, int maxThreshold)
 {
-        qDebug() << "Segmenter::doSegmentation3D(" << pos_z << "," << minThreshold << "," << maxThreshold << ")";
+    qDebug() << "Segmenter::doSegmentation3D(" << pos_z << "," << minThreshold << "," << maxThreshold << ")";
 
-        //enable event flag
-        segmentation_running = true;
 
-        //run algorithm       
-        doSegmentationIter3D_I(Node(pos_x, pos_y, pos_z), minThreshold, maxThreshold, min_Z, max_Z);
+    //enable event flag
+    segmentation_running = true;
 
-        //signal that we're complete
-        imagePairManager->segblock->Modified(); //Mark the segblock as modified so VTK know's to trigger an update along the pipline
-        emit segmentationDone(pos_z);
+    //run algorithm
+    doSegmentationIter3D_I(Node(pos_x, pos_y, pos_z), minThreshold, maxThreshold);
 
-        //disable event flag
-        segmentation_running = false;
+    //signal that we're complete
+    imagePairManager->segblock->Modified(); //Mark the segblock as modified so VTK know's to trigger an update along the pipline
+    emit segmentationDone();
+
+    //disable event flag
+    segmentation_running = false;
 }
 
-void Segmenter::doSegmentationIter2D_I(Node start, int minThreshold, int maxThreshold)
+void Segmenter::doSegmentationIter2D_I(Node start, int minThreshold, int maxThreshold, unsigned int orientation)
 {
         //set emtpty queue
         list<Node> queue;
 
-        //clear the visited2D block
-        while(!visited2D_list.empty())
+        //clear the visited3D block
+        while(!visited3D_list.empty())
         {
-                Node n = visited2D_list.back();
-                visited2D[n.pos_x][n.pos_y] = 0;
-                visited2D_list.pop_back();
+                Node n = visited3D_list.back();
+                visited3D[n.pos_x][n.pos_y][n.pos_z] = 0;
+                visited3D_list.pop_back();
         }
 
         // add the start node
@@ -108,17 +96,39 @@ void Segmenter::doSegmentationIter2D_I(Node start, int minThreshold, int maxThre
         {
                 Node n = queue.back();
                 queue.pop_back();
-                if (predicate2D(n, minThreshold, maxThreshold))
+                if (predicate3D(n, minThreshold, maxThreshold))
                 {
-                        queue.push_back(Node(n.pos_x-1, n.pos_y, n.pos_z));
-                        queue.push_back(Node(n.pos_x+1, n.pos_y, n.pos_z));
-                        queue.push_back(Node(n.pos_x, n.pos_y-1, n.pos_z));
-                        queue.push_back(Node(n.pos_x, n.pos_y+1, n.pos_z));
+                        switch(orientation)
+                        {
+                            case vtkImageViewer2::SLICE_ORIENTATION_XY:
+                                queue.push_back(Node(n.pos_x-1, n.pos_y, n.pos_z));
+                                queue.push_back(Node(n.pos_x+1, n.pos_y, n.pos_z));
+                                queue.push_back(Node(n.pos_x, n.pos_y-1, n.pos_z));
+                                queue.push_back(Node(n.pos_x, n.pos_y+1, n.pos_z));
+                            break;
+
+                            case vtkImageViewer2::SLICE_ORIENTATION_XZ:
+                                queue.push_back(Node(n.pos_x-1, n.pos_y, n.pos_z));
+                                queue.push_back(Node(n.pos_x+1, n.pos_y, n.pos_z));
+                                queue.push_back(Node(n.pos_x, n.pos_y, n.pos_z +1));
+                                queue.push_back(Node(n.pos_x, n.pos_y, n.pos_z -1));
+                            break;
+
+                            case vtkImageViewer2::SLICE_ORIENTATION_YZ:
+                                queue.push_back(Node(n.pos_x, n.pos_y +1, n.pos_z));
+                                queue.push_back(Node(n.pos_x, n.pos_y -1, n.pos_z));
+                                queue.push_back(Node(n.pos_x, n.pos_y, n.pos_z +1));
+                                queue.push_back(Node(n.pos_x, n.pos_y, n.pos_z -1));
+                            break;
+
+                            default:
+                                qWarning() << "Segmenger : Orientation not supported!";
+                        }
                 }
         }
 }
 
-void Segmenter::doSegmentationIter3D_I(Node start, int minThreshold, int maxThreshold, int min_Z, int max_Z)
+void Segmenter::doSegmentationIter3D_I(Node start, int minThreshold, int maxThreshold)
 {
         //set emtpty queue
         list<Node> queue;
@@ -144,7 +154,7 @@ void Segmenter::doSegmentationIter3D_I(Node start, int minThreshold, int maxThre
         {
                 Node n = queue.back();
                 queue.pop_back();
-                if (predicate3D(n, minThreshold, maxThreshold, min_Z, max_Z))
+                if (predicate3D(n, minThreshold, maxThreshold))
                 {
                         queue.push_back(Node(n.pos_x-1, n.pos_y, n.pos_z));
                         queue.push_back(Node(n.pos_x+1, n.pos_y, n.pos_z));
@@ -156,6 +166,7 @@ void Segmenter::doSegmentationIter3D_I(Node start, int minThreshold, int maxThre
                 }
 
                 counter++;
+                //dirty hack to prevent GUI from freezing
                 if (counter % 10000 == 0)
                 {
                         QApplication::processEvents();
@@ -164,34 +175,11 @@ void Segmenter::doSegmentationIter3D_I(Node start, int minThreshold, int maxThre
         }
 }
 
-bool Segmenter::predicate2D(Node& node, int minThreshold, int maxThreshold)
+
+bool Segmenter::predicate3D(Node& node, int minThreshold, int maxThreshold)
 {
-        if (node.pos_x < 0 || node.pos_x == img_x || node.pos_y < 0 || node.pos_y == img_y)
-                return false;
-
-        char* pixel_segmentation = static_cast<char*>(imagePairManager->segblock->GetScalarPointer(node.pos_x, node.pos_y, node.pos_z));
-        char pixel_visited = visited2D[node.pos_x][node.pos_y];
-        short* pixel_original = static_cast<short*>(imagePairManager->original->GetScalarPointer(node.pos_x, node.pos_y, node.pos_z));
-
-        if (pixel_visited == 1)
-                return false;
-        if ((char)pixel_segmentation[0] == imagePairManager->BLOCKING)
-                return false;
-        if ((short)pixel_original[0] < minThreshold || (short)pixel_original[0] > maxThreshold)
-                return false;
-
-        //otherwise mark as visited
-        visited2D[node.pos_x][node.pos_y] = 1;
-        visited2D_list.push_back(Node(node.pos_x, node.pos_y, node.pos_z));
-
-        //update segmentation results
-        pixel_segmentation[0] = imagePairManager->SEGMENTATION;
-        return true;
-}
-
-bool Segmenter::predicate3D(Node& node, int minThreshold, int maxThreshold, int min_Z, int max_Z)
-{
-        if (node.pos_x < 0 || node.pos_x == img_x || node.pos_y < 0 || node.pos_y == img_y || node.pos_z < 0 || node.pos_z == img_z || node.pos_z < min_Z || node.pos_z > max_Z)
+        //Check if Node is in the current boundary
+        if(!boundaryManager->isInBoundary(node.pos_x, node.pos_y, node.pos_z))
                 return false;
 
         char* pixel_segmentation = static_cast<char*>(imagePairManager->segblock->GetScalarPointer(node.pos_x, node.pos_y, node.pos_z));
@@ -199,7 +187,7 @@ bool Segmenter::predicate3D(Node& node, int minThreshold, int maxThreshold, int 
         short* pixel_original = static_cast<short*>(imagePairManager->original->GetScalarPointer(node.pos_x, node.pos_y, node.pos_z));
 
         if (pixel_visited == 1)
-                return false;
+                return false;//We've already visited this voxel
         if ((char)pixel_segmentation[0] == imagePairManager->BLOCKING)
                 return false;
         if ((short)pixel_original[0] < minThreshold || (short)pixel_original[0] > maxThreshold)
@@ -359,7 +347,7 @@ void Segmenter::doMorphClose(int pos_z)
 
         //signal that we're complete
         imagePairManager->segblock->Modified(); //Mark the segblock as modified so VTK know's to trigger an update along the pipline
-        emit segmentationDone(pos_z);
+        emit segmentationDone();
 }
 
 void Segmenter::doMorphOpen(int pos_z)
@@ -377,7 +365,7 @@ void Segmenter::doMorphOpen(int pos_z)
 
         //signal that we're complete
         imagePairManager->segblock->Modified(); //Mark the segblock as modified so VTK know's to trigger an update along the pipline
-        emit segmentationDone(pos_z);
+        emit segmentationDone();
 }
 
 void Segmenter::doDilate(int pos_z)
@@ -394,7 +382,7 @@ void Segmenter::doDilate(int pos_z)
 
         //signal that we're complete
         imagePairManager->segblock->Modified(); //Mark the segblock as modified so VTK know's to trigger an update along the pipline
-        emit segmentationDone(pos_z);
+        emit segmentationDone();
 }
 
 void Segmenter::doErode(int pos_z)
@@ -411,7 +399,7 @@ void Segmenter::doErode(int pos_z)
 
         //signal that we're complete
         imagePairManager->segblock->Modified(); //Mark the segblock as modified so VTK know's to trigger an update along the pipline
-        emit segmentationDone(pos_z);
+        emit segmentationDone();
 }
 
 bool Segmenter::isWorking()
