@@ -543,49 +543,46 @@ void MainWindow::on_actionClear_Blocking_on_All_Slices_triggered()
         volumeRenderManager->render3D();
         hideWaitDialog();
 	}
-
-
-
 }
 
 void MainWindow::on_doDilate2D_clicked()
 {
-        /*
+
         if(segmenter!=0)
         {
-                int pos_z = viewManager->getCurrentSlice();
+                int pos_z = xyView->getCurrentSlice();
                 segmenter->doDilate(pos_z);
-        } */
+        }
 }
 
 void MainWindow::on_doErode2D_clicked()
 {
-        /*
+
         if(segmenter!=0)
         {
-                int pos_z = viewManager->getCurrentSlice();
+                int pos_z = xyView->getCurrentSlice();
                 segmenter->doErode(pos_z);
-        } */
+        }
 }
 
 void MainWindow::on_doClose2D_clicked()
 {
-        /*
+
         if(segmenter!=0)
         {
-                int pos_z = viewManager->getCurrentSlice();
+                int pos_z = xyView->getCurrentSlice();
                 segmenter->doMorphClose(pos_z);
-        } */
+        }
 }
 
 void MainWindow::on_doOpen2D_clicked()
 {
-       /*
+
         if(segmenter!=0)
         {
-                int pos_z = viewManager->getCurrentSlice();
+                int pos_z = xyView->getCurrentSlice();
                 segmenter->doMorphOpen(pos_z);
-        } */
+        }
 }
 
 void MainWindow::showWaitDialog()
