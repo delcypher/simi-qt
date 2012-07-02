@@ -37,6 +37,14 @@ BoundaryManager::BoundaryManager(ImagePairManager* imagePairManager,
     zMaxSpinBox->setMinimum(imagePairManager->getZMin());
     zMaxSpinBox->setMaximum(imagePairManager->getZMax());
 
+    //allow user to type a multiple numbers in before a signal is triggered
+    xMinSpinBox->setKeyboardTracking(false);
+    xMaxSpinBox->setKeyboardTracking(false);
+    yMinSpinBox->setKeyboardTracking(false);
+    yMaxSpinBox->setKeyboardTracking(false);
+    zMinSpinBox->setKeyboardTracking(false);
+    zMaxSpinBox->setKeyboardTracking(false);
+
     //connect signals and slots
     connect(xMinSpinBox,SIGNAL(valueChanged(int)),this,SLOT(on_xMin_valueChanged(int)));
     connect(xMaxSpinBox,SIGNAL(valueChanged(int)),this,SLOT(on_xMax_valueChanged(int)));
