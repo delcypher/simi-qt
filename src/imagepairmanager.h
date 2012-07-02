@@ -145,13 +145,14 @@ class ImagePairManager : public QObject
 		};
 
         /*! Set all the voxels in a particular slice of segblock that have value from to the value to
+        *   \param orientation is the slice orientation to modify. Acceptible values are the enum values prefixed with "SLICE_ORIENTATION_" in VtkImageViewer2
         *   \param slice is the the slice number.
         *   \param from is the value of voxels in the slice to change
         *   \param to is the value to set for voxels that are being changed.
         *   \return True if successful otherwise false.
         *   \sa segblock
         */
-		bool setAll(int slice, ImagePairManager::BlockType from, ImagePairManager::BlockType to);
+        bool setAll(unsigned int orientation, int slice, ImagePairManager::BlockType from, ImagePairManager::BlockType to);
 
 
         /*! Set all the voxels in all slices that have value from to the value to

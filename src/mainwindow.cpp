@@ -405,23 +405,21 @@ void MainWindow::on_doSegmentation3D_clicked()
 
 void MainWindow::on_actionClear_Drawing_triggered()
 {
-    /* TODO FIX!
-    if(imagePairManager!=0 && viewManager!=0)
+    if(imagePairManager!=0 && multiViewManager!=0)
     {
-        imagePairManager->setAll(viewManager->getCurrentSlice(), ImagePairManager::BLOCKING, ImagePairManager::BACKGROUND);
-        viewManager->update();
-    } */
+        imagePairManager->setAll(multiViewManager->getActiveView(),multiViewManager->getActiveViewPointer()->getCurrentSlice() , ImagePairManager::BLOCKING, ImagePairManager::BACKGROUND);
+        multiViewManager->update();
+    }
 }
 
 void MainWindow::on_actionClear_Segmentation_triggered()
 {
-    /* TODO FIX!
-    if(imagePairManager!=0 && viewManager!=0)
+    if(imagePairManager!=0 && multiViewManager!=0)
     {
-        imagePairManager->setAll(viewManager->getCurrentSlice(), ImagePairManager::SEGMENTATION, ImagePairManager::BACKGROUND);
-	volumeRenderManager->render3D();
-        viewManager->update();
-    } */
+        imagePairManager->setAll(multiViewManager->getActiveView(), multiViewManager->getActiveViewPointer()->getCurrentSlice(), ImagePairManager::SEGMENTATION, ImagePairManager::BACKGROUND);
+        volumeRenderManager->render3D();
+        multiViewManager->update();
+    }
 }
 
 void MainWindow::on_actionLoad_Segmentation_triggered()
@@ -784,8 +782,8 @@ void MainWindow::loadOriginalImage(QString file)
     connect(multiViewManager,SIGNAL(seedPointChanged()), this, SLOT(enableSegmentationWidgets()));
 
     /*When segmentation is done force redraw for volumeRenderManager
-            * Note if we do 3D segmentation it seems to update itself... not sure why
-            */
+    * Note if we do 3D segmentation it seems to update itself... not sure why
+     */
     connect(segmenter,SIGNAL(segmentationDone(int)),volumeRenderManager,SLOT(render3D()));
 
     //when user changes active view we want the drawing widgets to update

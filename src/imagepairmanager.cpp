@@ -1,4 +1,5 @@
 #include "imagepairmanager.h"
+#include <vtkImageViewer2.h>
 #include <QDebug>
 #include <QApplication>
 
@@ -75,7 +76,7 @@ double ImagePairManager::getMaximumIntensity()
     return range[1];
 }
 
-bool ImagePairManager::setAll(int slice, ImagePairManager::BlockType from, ImagePairManager::BlockType to)
+bool ImagePairManager::setAll(unsigned int orientation, int slice, ImagePairManager::BlockType from, ImagePairManager::BlockType to)
 {
     if(segblock==NULL)
     {
@@ -83,44 +84,78 @@ bool ImagePairManager::setAll(int slice, ImagePairManager::BlockType from, Image
         return false;
     }
 
-        //get ranges to loop over
-    /*
-    * [0] : x_min
-    * [1] : x_max
-    * [2] : y_min
-    * [3] : y_max
-    * [4] : z_min
-    * [5] : z_max
-    */
-    int extent[6];
-    segblock->GetExtent(extent);
+    int abscissaMin=0;
+    int abscissaMax=0;
+    int ordinateMin=0;
+    int ordinateMax=0;
 
-    char* voxel=NULL;
-
-    if( slice < getZMin() || slice > getZMax())
+    switch(orientation)
     {
-        qWarning() << "Slice " << slice << " is not in the valid range [" << getZMin() << "," << getZMax() << "]";
-        return false;
-    }
+        case vtkImageViewer2::SLICE_ORIENTATION_XY:
+            abscissaMin=getXMin();
+            abscissaMax=getXMax();
+            ordinateMin=getYMin();
+            ordinateMax=getYMax();
 
-    qDebug() << "ImagePairManager::setAll() on slice " << slice << ". Set from " << from << " to " << to;
-    for(int x= extent[0]; x <= extent[1]; x++)
-    {
-	for(int y= extent[2]; y <= extent[3]; y++)
-        {
-            voxel = static_cast<char*>(segblock->GetScalarPointer(x,y,slice));
-
-            if(voxel==0)
+            if(slice > getZMax() || slice < getZMin())
             {
-                qWarning() << "Error getting pointer to voxel at (" << x << "," << "y" << "," << slice << ")";
+                qWarning() << "Z slice :" << slice << "is out of range!";
                 return false;
             }
 
-            //check to see if voxel value is set to from
-            if(*voxel== from)
+        break;
+
+        case vtkImageViewer2::SLICE_ORIENTATION_XZ:
+            abscissaMin=getXMin();
+            abscissaMax=getXMax();
+            ordinateMin=getZMin();
+            ordinateMax=getZMax();
+
+            if(slice > getYMax() || slice < getYMin())
             {
-                *voxel = to;
+                qWarning() << "Y slice :" << slice << "is out of range!";
+                return false;
             }
+
+        break;
+
+        case vtkImageViewer2::SLICE_ORIENTATION_YZ:
+            abscissaMin=getYMin();
+            abscissaMax=getYMax();
+            ordinateMin=getZMin();
+            ordinateMax=getZMax();
+
+            if(slice > getXMax() || slice < getXMin())
+            {
+                qWarning() << "X slice :" << slice << "is out of range!";
+                return false;
+            }
+
+        break;
+
+        default:
+            qWarning() << "Orientation not supported!";
+            return false;
+    }
+
+    unsigned char* block;
+    for(int abscissa = abscissaMin; abscissa <= abscissaMax; abscissa++)
+    {
+        for(int ordinate= ordinateMin; ordinate <= ordinateMax; ordinate++)
+        {
+            switch(orientation)
+            {
+                case vtkImageViewer2::SLICE_ORIENTATION_XY:
+                    block = static_cast<unsigned char*>(segblock->GetScalarPointer(abscissa,ordinate,slice)); break;
+                case vtkImageViewer2::SLICE_ORIENTATION_XZ:
+                    block = static_cast<unsigned char*>(segblock->GetScalarPointer(abscissa,slice,ordinate)); break;
+                case vtkImageViewer2::SLICE_ORIENTATION_YZ:
+                    block = static_cast<unsigned char*>(segblock->GetScalarPointer(slice,abscissa,ordinate)); break;
+            }
+
+            //change voxel if of correct type
+            if(*block == from)
+                *block = to;
         }
     }
 
