@@ -515,10 +515,10 @@ void ViewManager::vtkEventHandler(vtkObject *caller, unsigned long vtkEvent, voi
                     switch(orientation)
                     {
                         case vtkImageViewer2::SLICE_ORIENTATION_XY:
-                                cam->SetPosition(originalCamPos[0] - panSign*xOffset,
+                                cam->SetPosition(originalCamPos[0] + panSign*xOffset,
                                     originalCamPos[1] +panSign*yOffset,
                                     originalCamPos[2]);
-                                cam->SetFocalPoint(originalCamFocalPoint[0] - panSign*xOffset,
+                                cam->SetFocalPoint(originalCamFocalPoint[0] + panSign*xOffset,
                                         originalCamFocalPoint[1] + panSign*yOffset,
                                         originalCamFocalPoint[2]);
                                 break;
@@ -942,12 +942,9 @@ void ViewManager::applyCameraFixes()
     switch(orientation)
     {
         case vtkImageViewer2::SLICE_ORIENTATION_XY:
-            /* Workaround:
-             * The camera is looking down the z-axis (0,0,-1) which I don't want so we make it so we are looking
-             * up the z-axis (0,0,1).
-             */
-            camera->SetPosition(0,0,imagePairManager->getZDim()*imagePairManager->getZSpacing()*-2.0);
-            camera->SetFocalPoint(0,0,imagePairManager->getZDim()*imagePairManager->getZSpacing()*2.0);
+            camera->SetPosition(0,0,imagePairManager->getZDim()*imagePairManager->getZSpacing()*2.0);
+            camera->SetPosition(0,0,imagePairManager->getZDim()*imagePairManager->getZSpacing()/2.0);
+
         break;
 
         case vtkImageViewer2::SLICE_ORIENTATION_XZ:
