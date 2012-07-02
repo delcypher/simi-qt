@@ -1087,7 +1087,7 @@ void ViewManager::applyCameraFixes()
     {
         case vtkImageViewer2::SLICE_ORIENTATION_XY:
             camera->SetPosition(0,0,imagePairManager->getZDim()*imagePairManager->getZSpacing()*2.0);
-            camera->SetPosition(0,0,imagePairManager->getZDim()*imagePairManager->getZSpacing()/2.0);
+            camera->SetFocalPoint(0,0,imagePairManager->getZDim()*imagePairManager->getZSpacing()/2.0);
 
         break;
 
