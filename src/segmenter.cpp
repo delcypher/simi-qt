@@ -27,10 +27,7 @@ Segmenter::Segmenter(ImagePairManager* imagePairManager, BoundaryManager* bounda
                         visited3D[i][j] = new char[img_z];
 
         //fill visited3D with zeros
-        for (int i=0; i<img_x; i++)
-                for (int j=0; j<img_y; j++)
-                        for (int k=0; k<img_z; k++)
-                                visited3D[i][j][k] = 0;
+        clearVistedArray();
 
         qDebug() << "Constructing segmenter: " << img_x << " " << img_y << " " << img_z;
 
@@ -181,12 +178,7 @@ void Segmenter::doSegmentationIter2D_I(Node start, int minThreshold, int maxThre
         list<Node> queue;
 
         //clear the visited3D block
-        while(!visited3D_list.empty())
-        {
-                Node n = visited3D_list.back();
-                visited3D[n.pos_x][n.pos_y][n.pos_z] = 0;
-                visited3D_list.pop_back();
-        }
+        clearVistedArray();
 
         // add the start node
         queue.push_back(start);
@@ -253,12 +245,7 @@ void Segmenter::doSegmentationIter3D_I(Node start, int minThreshold, int maxThre
         list<Node> queue;
 
         //clear the visited3D block
-        while(!visited3D_list.empty())
-        {
-                Node n = visited3D_list.back();
-                visited3D[n.pos_x][n.pos_y][n.pos_z] = 0;
-                visited3D_list.pop_back();
-        }
+        clearVistedArray();
 
         // add the start node
         queue.push_back(start);
@@ -319,7 +306,6 @@ bool Segmenter::predicate3D(Node& node, int minThreshold, int maxThreshold)
 
         //otherwise mark as visited
         visited3D[node.pos_x][node.pos_y][node.pos_z] = 1;
-        visited3D_list.push_back(Node(node.pos_x, node.pos_y, node.pos_z));
 
         //update segmentation results
         pixel_segmentation[0] = imagePairManager->SEGMENTATION;
@@ -354,6 +340,15 @@ int Segmenter::contains_segmentation(int pos_x, int pos_y, int pos_z, Morphology
         }
 
         return output;
+}
+
+void Segmenter::clearVistedArray()
+{
+        //fill visited3D with zeros
+        for (int i=0; i<img_x; i++)
+                for (int j=0; j<img_y; j++)
+                        for (int k=0; k<img_z; k++)
+                                visited3D[i][j][k] = 0;
 }
 
 void Segmenter::dilate(int pos_z, Kernel kernel)

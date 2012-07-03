@@ -135,6 +135,8 @@ class Segmenter : public QThread
 
                 int contains_segmentation(int pos_x, int pos_y, int pos_z, Morphology type, Kernel kernel);
 
+                void clearVistedArray();
+
                 int img_x;
                 int img_y;
                 int img_z;
@@ -142,8 +144,6 @@ class Segmenter : public QThread
                 QComboBox* kernelType;
 
                 char*** visited3D;
-
-                list<Node> visited3D_list;
 
                 //used to protect the variables below
                 QMutex mutex;
