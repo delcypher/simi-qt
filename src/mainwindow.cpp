@@ -321,9 +321,10 @@ void MainWindow::on_doSegmentation2D_clicked()
         int x,y,z;
         multiViewManager->getSeedPoint(x,y,z);
 
-
+        //show wait dialog (it will closed when we are notified segmentation is finished)
+        showWaitDialog();
+        qDebug() << "Requesting doSegmentation2D()";
         segmenter->doSegmentation2D(x, y, z, ui->minSegIntensitySlider->value(), ui->maxSegIntensitySlider->value(), multiViewManager->getActiveView());
-		enableSegmentationWidgets();
 	}
 }
 
@@ -377,29 +378,13 @@ void MainWindow::on_doSegmentation3D_clicked()
         int pos_x, pos_y, pos_z;
         multiViewManager->getSeedPoint(pos_x,pos_y,pos_z);
 
-
-        if(segmenter->isWorking())
-        {
-            qWarning() << "Can't do segmentation as it is already running";
-            return;
-        }
-
         //Modify the dialog to have a cancel button
         showWaitDialog();
-        progressDialog->setCancelButtonText(QString("Stop"));
-        connect(progressDialog,SIGNAL(canceled()), segmenter, SLOT(cancel3D()));
 
+        //request to start segmentation
+        qDebug() << "Requesting doSegmentation3D()";
         segmenter->doSegmentation3D(pos_x, pos_y, pos_z, ui->minSegIntensitySlider->value(), ui->maxSegIntensitySlider->value());
-        hideWaitDialog();
 
-        //reenable segmentation widgets
-        enableSegmentationWidgets();
-
-        //remove cancel button and connection for other dialogs
-        progressDialog->setCancelButtonText(QString());
-        disconnect(progressDialog,SIGNAL(canceled()), segmenter, SLOT(cancel3D()));
-
-        qDebug() << "3D segmentation complete.";
     }
 }
 
@@ -598,7 +583,9 @@ void MainWindow::showWaitDialog()
 
 		progressDialog->setMinimumDuration(0);// do no assumed time calculation
 
-		progressDialog->setCancelButton(0); // disable the cancel button
+		progressDialog->setCancelButtonText(QString("Stop"));
+
+		connect(progressDialog, SIGNAL(canceled()), segmenter, SLOT(cancel()));
 
 		progressDialog->setValue(1);
 
@@ -781,6 +768,9 @@ void MainWindow::loadOriginalImage(QString file)
     //When the user actually picks a seed point we can enable the segmentation widgets
     connect(multiViewManager,SIGNAL(seedPointChanged()), this, SLOT(enableSegmentationWidgets()));
 
+    //When segmentation completes we need to update the UI
+    connect(segmenter,SIGNAL(segmentationDone()), this, SLOT(segmentationDone()));
+
     /* When segmentation is done force redraw for volumeRenderManager
      * Note if we do 3D segmentation it seems to update itself... not sure why
      */
@@ -939,6 +929,15 @@ void MainWindow::on_actionDump_debug_triggered()
     {
         multiViewManager->getActiveViewPointer()->debugDump();
     }
+}
+
+void MainWindow::segmentationDone()
+{
+    //we've been told segmentation is done so we should sort out the UI
+    enableSegmentationWidgets();
+    hideWaitDialog();
+
+    qDebug() << "MainWindow::segmentationDone()";
 }
 
 

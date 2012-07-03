@@ -105,6 +105,8 @@ class MainWindow : public QMainWindow
 
         void on_actionDump_debug_triggered();
 
+        void segmentationDone();
+
 protected:
         //! Handle QCloseEvents so that we can prompt the user to save if necessary
 		void closeEvent(QCloseEvent* close);

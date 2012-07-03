@@ -2,15 +2,17 @@
 #include <QDebug>
 #include <QApplication>
 #include "vtkImageViewer2.h"
+#include <QMutexLocker>
 
 
-Segmenter::Segmenter(ImagePairManager* imagePairManager, BoundaryManager* boundaryManager, QComboBox* kernelType)
+Segmenter::Segmenter(ImagePairManager* imagePairManager, BoundaryManager* boundaryManager, QComboBox* kernelType, QObject* parent) : QThread(parent)
 {
         this->imagePairManager = imagePairManager;
         this->boundaryManager = boundaryManager;
         this->kernelType = kernelType;
 
-        segmentation_running = false;
+        task=SLEEP; //Set inital task to sleep.
+        abort=false;
 
         img_x = imagePairManager->getXDim();
         img_y = imagePairManager->getYDim();
@@ -31,10 +33,15 @@ Segmenter::Segmenter(ImagePairManager* imagePairManager, BoundaryManager* bounda
                                 visited3D[i][j][k] = 0;
 
         qDebug() << "Constructing segmenter: " << img_x << " " << img_y << " " << img_z;
+
+        //start the thread
+        start();
 }
 
 Segmenter::~Segmenter()
 {
+        wait(); //wait for run() to terminate
+
         //release memory for 3D visited block
         for (int i=0; i<img_x; i++)
                 for (int j=0; j<img_y; j++)
@@ -44,36 +51,128 @@ Segmenter::~Segmenter()
         delete[] visited3D;
 }
 
+void Segmenter::run()
+{
+    //stack copy of needed variables (it could be dangerous to members)
+    int seedX=0;
+    int seedY=0;
+    int seedZ=0;
+    int minThreshold=0;
+    int maxThreshold=0;
+    unsigned int orientation=0;
+    Segmenter::Tasks currentTask;
+
+    //loop forever
+    while(true)
+    {
+        //Assign stack copy of variables from our members
+        mutex.lock();
+        seedX=this->mSeedX;
+        seedY=this->mSeedY;
+        seedZ=this->mSeedZ;
+        minThreshold=this->mMinThreshold;
+        maxThreshold=this->mMaxThreshold;
+        orientation=mOrientation;
+        currentTask=this->task;
+        mutex.unlock();
+
+        switch(currentTask)
+        {
+            case SLEEP:
+                mutex.lock();
+                    qDebug() << "Segmenter going to sleep";
+                    workToDo.wait(&mutex);//sleep
+                    qDebug() << "Segmenter has woken up!";
+                mutex.unlock();
+
+            break;
+
+            case SEGMENTATION_2D:
+                qDebug() << "Segmenter doing 2D segmentation";
+                doSegmentationIter2D_I(Node(seedX, seedY, seedZ), minThreshold, maxThreshold, orientation);
+                imagePairManager->segblock->Modified(); //Mark the segblock as modified so VTK knows to trigger an update along the pipline
+                emit segmentationDone();
+
+                //It looks like we are done so let's request to go to sleep
+                mutex.lock();
+                this->task=SLEEP;
+                mutex.unlock();
+            break;
+
+            case SEGMENTATION_3D:
+                qDebug() << "Segmenter doing 3D segmentation";
+                doSegmentationIter3D_I(Node(seedX, seedY, seedZ), minThreshold, maxThreshold);
+                imagePairManager->segblock->Modified(); //Mark the segblock as modified so VTK knows to trigger an update along the pipline
+                emit segmentationDone();
+
+                //It looks like we are done so let's request to go to sleep
+                mutex.lock();
+                this->task=SLEEP;
+                mutex.unlock();
+            break;
+        }
+
+        //check if we need to abort (Warning not using a mutex here!)
+        if(abort)
+            return;
+
+
+
+    }
+}
+
 void Segmenter::doSegmentation2D(int pos_x, int pos_y, int pos_z, int minThreshold, int maxThreshold, unsigned int orientation)
 {
-    qDebug() << "Segmenter::doSegmentation2D(" << pos_z << "," << minThreshold << "," << maxThreshold << ")";
+    //set parameters
+    QMutexLocker locker(&mutex); //lock mutex until we go out of scope
+
+    //check thread is not doing work
+    if(task!=SLEEP)
+    {
+        qWarning() << "Cannot do doSegmentation2D(). Thread appears to already be working!";
+        return;
+    }
 
 
-    //run algorithm
-    doSegmentationIter2D_I(Node(pos_x, pos_y, pos_z), minThreshold, maxThreshold, orientation);
+    mSeedX = pos_x;
+    mSeedY = pos_y;
+    mSeedZ = pos_z;
+    mMinThreshold = minThreshold;
+    mMaxThreshold = maxThreshold;
+    mOrientation = orientation;
+    task = SEGMENTATION_2D; //Set the thread's task
 
-    //signal that we're complete
-    imagePairManager->segblock->Modified(); //Mark the segblock as modified so VTK know's to trigger an update along the pipline
-    emit segmentationDone();
+    if(!isRunning())
+        start();
+    else
+        workToDo.wakeOne(); //The Thread may be sleeping, wake it up!
+
 }
 
 void Segmenter::doSegmentation3D(int pos_x, int pos_y, int pos_z, int minThreshold, int maxThreshold)
 {
-    qDebug() << "Segmenter::doSegmentation3D(" << pos_z << "," << minThreshold << "," << maxThreshold << ")";
+    //set parameters
+    QMutexLocker locker(&mutex); //lock mutex until we go out of scope
+
+    //check thread is not doing work
+    if(task!=SLEEP)
+    {
+        qWarning() << "Cannot do doSegmentation3D(). Thread appears to already be working!";
+        return;
+    }
 
 
-    //enable event flag
-    segmentation_running = true;
+    mSeedX = pos_x;
+    mSeedY = pos_y;
+    mSeedZ = pos_z;
+    mMinThreshold = minThreshold;
+    mMaxThreshold = maxThreshold;
+    task = SEGMENTATION_3D; //Set the thread's task
 
-    //run algorithm
-    doSegmentationIter3D_I(Node(pos_x, pos_y, pos_z), minThreshold, maxThreshold);
-
-    //signal that we're complete
-    imagePairManager->segblock->Modified(); //Mark the segblock as modified so VTK know's to trigger an update along the pipline
-    emit segmentationDone();
-
-    //disable event flag
-    segmentation_running = false;
+    if(!isRunning())
+        start();
+    else
+        workToDo.wakeOne(); //The Thread may be sleeping, wake it up!
 }
 
 void Segmenter::doSegmentationIter2D_I(Node start, int minThreshold, int maxThreshold, unsigned int orientation)
@@ -91,6 +190,10 @@ void Segmenter::doSegmentationIter2D_I(Node start, int minThreshold, int maxThre
 
         // add the start node
         queue.push_back(start);
+
+        //counter for checking if we need to stop processing
+        int counter = 0;
+
 
         while (!queue.empty())
         {
@@ -125,6 +228,22 @@ void Segmenter::doSegmentationIter2D_I(Node start, int minThreshold, int maxThre
                                 qWarning() << "Segmenger : Orientation not supported!";
                         }
                 }
+
+                counter++;
+                //check every so often to see if we need to abort
+                if (counter % 10000 == 0)
+                {
+                        //check if we have been asked to cancel
+                        QMutexLocker locker(&mutex);
+
+                        if(task==SLEEP || abort)
+                        {
+                            qDebug() << "doSegmentationIter2D_I() aborting...";
+                            return;
+                        }
+
+                        counter = 0;
+                }
         }
 }
 
@@ -144,13 +263,10 @@ void Segmenter::doSegmentationIter3D_I(Node start, int minThreshold, int maxThre
         // add the start node
         queue.push_back(start);
 
-        //counter for the event loop
+        //counter for checking if we need to stop processing
         int counter = 0;
 
-        //process events
-        QApplication::processEvents();
-
-        while (!queue.empty() && segmentation_running)
+        while (!queue.empty())
         {
                 Node n = queue.back();
                 queue.pop_back();
@@ -166,10 +282,18 @@ void Segmenter::doSegmentationIter3D_I(Node start, int minThreshold, int maxThre
                 }
 
                 counter++;
-                //dirty hack to prevent GUI from freezing
+                //check every so often if we need to abort
                 if (counter % 10000 == 0)
                 {
-                        QApplication::processEvents();
+                        //check if we have been asked to cancel
+                        QMutexLocker locker(&mutex);
+
+                        if(task==SLEEP || abort)
+                        {
+                            qDebug() << "doSegmentationIter3D_I() aborting...";
+                            return;
+                        }
+
                         counter = 0;
                 }
         }
@@ -402,20 +526,13 @@ void Segmenter::doErode(int pos_z)
         emit segmentationDone();
 }
 
-bool Segmenter::isWorking()
-{
-        return segmentation_running;
-}
 
-bool Segmenter::cancel3D()
+void Segmenter::cancel()
 {
-        if (segmentation_running)
-        {
-                segmentation_running = false;
-                return true;
-        }
-        else
-                return false;
+      qDebug() << "Segmenter::cancel() : Requesting cancel";
+      QMutexLocker locker(&mutex);
+
+      task=SLEEP;
 }
 
 

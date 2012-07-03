@@ -10,6 +10,9 @@
 #include "imagepairmanager.h"
 #include <list>
 #include "boundarymanager.h"
+#include <QThread>
+#include <QMutex>
+#include <QWaitCondition>
 
 using std::list;
 
@@ -33,13 +36,13 @@ class SegmenterTester;
   It contains 2D and 3D versions of the flood fill algorithms to segment regions.
   Additionally it includes 2D morphological operators (dilate, erode, close, open).
 */
-class Segmenter : public QObject
+class Segmenter : public QThread
 {
         Q_OBJECT
 
         public:
                 //! Class constructor.
-                Segmenter(ImagePairManager* imagePairManager, BoundaryManager* boundaryManager,QComboBox* kernelType);
+                Segmenter(ImagePairManager* imagePairManager, BoundaryManager* boundaryManager,QComboBox* kernelType, QObject* parent=0);
 
                 //! Class destructor.
                 ~Segmenter();
@@ -102,9 +105,6 @@ class Segmenter : public QObject
                       */
                 void doErode(int pos_z);
 
-                //! Checks whether 3D segmentation is running.
-                bool isWorking();
-
         signals:
                 //! Signals that the segmentation algorithm has finished running.
                       /*!
@@ -113,8 +113,11 @@ class Segmenter : public QObject
                 void segmentationDone();
 
         public slots:
-                //! Slot for stopping 3D segmentation.
-                bool cancel3D();
+                //! Slot for stopping 2D/3D segmentation.
+                void cancel();
+
+        protected:
+            void run();
 
         private:
                 ImagePairManager* imagePairManager;
@@ -142,7 +145,25 @@ class Segmenter : public QObject
 
                 list<Node> visited3D_list;
 
-                bool segmentation_running;
+                //used to protect the variables below
+                QMutex mutex;
+                //Indicates
+                enum Tasks
+                {
+                    SLEEP,
+                    SEGMENTATION_2D,
+                    SEGMENTATION_3D
+                } task;
+                bool abort;
+
+                QWaitCondition workToDo;
+
+                int mSeedX;
+                int mSeedY;
+                int mSeedZ;
+                int mMinThreshold;
+                int mMaxThreshold;
+                unsigned int mOrientation;
 
 
 		friend class SegmenterTester;//! Friend class is unit test
